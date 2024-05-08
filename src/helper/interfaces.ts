@@ -39,14 +39,13 @@ export interface RawRates {
 
 export interface InsurerInfo {
   provider: string;
-  residencyCount: Number;
   startDate: Date;
   endDate: Date;
   residencies: string[];
   conversion: number;
   currency: string;
-
   splitFile?: string;
+  [key: string]: any;
 }
 
 export interface PlansInfo {

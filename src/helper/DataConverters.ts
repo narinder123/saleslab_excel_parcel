@@ -1,7 +1,7 @@
 import { BenefitTypes, variable } from "../constants";
 import { Utils } from "./Utils";
 import { Helpers } from "./functions";
-import { PlansInfo } from "./interfaces";
+import { InsurerInfo, PlansInfo } from "./interfaces";
 
 export const DataConverters = new (class {
   fetchSheet(filename: string) {
@@ -13,6 +13,26 @@ export const DataConverters = new (class {
       `./Inputs/${folderName}/${filename}.xlsx`,
       0
     );
+  }
+
+  fetchInsurerInfo(data: any[]): InsurerInfo {
+    let info: InsurerInfo = {
+      provider: "",
+      startDate: new Date(),
+      endDate: new Date(),
+      residencies: [""],
+      conversion: 1,
+      currency: "",
+      splitFile: "",
+    };
+
+    for (let key in info) {
+      if (data[0][key])
+        info[key] = data[0][key].toString().includes("/")
+          ? data[0][key].split("/").filter((v: string) => v)
+          : data[0][key];
+    }
+    return info;
   }
 
   fetchPlansInfo(data: any[], provider: string) {

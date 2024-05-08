@@ -65,7 +65,6 @@ export const Helpers = new (class helperFunction {
     comment,
     addUp,
   }: OutputSheetFnArguments) {
-    data = JSON.stringify(data);
     data = data.replace(/"-/g, "");
     data = data.replace(/-"/g, "");
     data = data.replace(/\n/g, "");
@@ -77,10 +76,14 @@ export const Helpers = new (class helperFunction {
     ${comment ? `// ${comment}` : ""}
     let ${folder} = ${data} ;
     module.exports = ${folder} ;`;
+    if (!fs.existsSync(`Outputs/${provider}`))
+      fs.mkdirSync(`Outputs/${provider}`);
 
-    if (!fs.existsSync(`Output/${folder}`)) fs.mkdirSync(`Output/${folder}`);
-    fs.appendFileSync(`Output/${folder}/${fileName}.js`, str);
-    Utils.log(`${folder}/${fileName} Created!`);
+    if (!fs.existsSync(`Outputs/${provider}/${folder}`))
+      fs.mkdirSync(`Outputs/${provider}/${folder}`);
+
+    fs.appendFileSync(`Outputs/${provider}/${folder}/${fileName}.js`, str);
+    Utils.log(`/${provider}${folder}/${fileName} Created!`);
   }
 
   getResidencyArr(residency: string): string[][] {
