@@ -1,0 +1,399 @@
+[
+    {
+        "User Type": "none",
+        "Benefit": "Annual Limit",
+        "Premier": "AED 20,000,000",
+        "Platinum": "AED 5,000,000 ",
+        "Gold": "AED 2,500,000 ",
+        "Silver": "AED 300,000",
+        "Bronze": "AED 250,000 ",
+        "Essential": "AED 160,000 "
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Geographical Coverage",
+        "Premier": "Worldwide",
+        "Platinum": "Worldwide",
+        "Gold": "Worldwide excluding USA & Canada",
+        "Silver": "Arab World Asia 2 Emergency cover: Worldwide excluding USA & Canada",
+        "Bronze": "Arab World Asia 2 Emergency cover: Worldwide excluding USA & Canada",
+        "Essential": "UAE Extended to Southeast Asia, India Subcontinent and Arab Country for inpatient treatment only on reimbursement basis for elective and emergency treatment "
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Network Details",
+        "Premier": "Within UAE: Exclusive 1 Outside UAE: WW",
+        "Platinum": "Within UAE: Exclusive 1  Outside UAE: WW",
+        "Gold": "Within UAE: Exclusive 1  Outside UAE: WW excl. US & Canada",
+        "Silver": "Within UAE: Standard 2 Outside UAE: AW Asia 2",
+        "Bronze": "Within UAE: Standard 3 Outside UAE: AW Asia 2",
+        "Essential": "Within UAE: 08 Outside UAE: Not Available"
+    },
+    {
+        "User Type": "type",
+        "Benefit": "General Benefits"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Claims Handling",
+        "Premier": "100% Reimbursement",
+        "Platinum": "80% reimbursement based on reasonable & customary charges or actual cost, whichever is less",
+        "Gold": "80% reimbursement based on reasonable & customary charges or actual cost, whichever is less",
+        "Silver": "80% reimbursement based on reasonable & customary charges or actual cost, whichever is less",
+        "Bronze": "80% reimbursement based on reasonable & customary charges or actual cost, whichever is less",
+        "Essential": "50% reimbursement based on reasonable & customary charges or actual cost, whichever is less"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Chronic Condition Cover",
+        "Premier": "Covered in full",
+        "Platinum": "Covered in full",
+        "Gold": "Covered in full",
+        "Bronze": "Covered in full",
+        "Essential": "Covered in full"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Pre-existing Cod in full",
+        "Silver": "Coverendition Cover",
+        "Premier": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided",
+        "Platinum": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided",
+        "Gold": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided",
+        "Silver": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided",
+        "Bronze": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided",
+        "Essential": "Covered up to AED 150,000 subject to declaration *Waiting period of 6 months applicable if evidence of COC is not provided"
+    },
+    {
+        "Benefit": "In-patient (Hospitalization & Surgery)"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Accommodation Type",
+        "Premier": "Private Room (Standard Suite)",
+        "Platinum": "Private Room (Standard Suite)",
+        "Gold": "Private Room (Deluxe)",
+        "Silver": "Private Room ",
+        "Bronze": "Private Room",
+        "Essential": "Semi-private Room (Shared)"
+    },
+    {
+        "User Type": "Starter",
+        "Benefit": "In-patient (Hospitalization & Surgery)",
+        "Premier": "Covered in full",
+        "Platinum": "Covered in full",
+        "Gold": "Covered in full",
+        "Silver": "Covered in full",
+        "Bronze": "Covered in full",
+        "Essential": "Covered in full"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Diagnostics & Test",
+        "Premier": "Covered in full",
+        "Platinum": "Covered in full",
+        "Gold": "Covered in full",
+        "Silver": "Covered in full",
+        "Bronze": "Covered in full",
+        "Essential": "Covered in full"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Surgeries & Anesthesia",
+        "Premier": "Covered in full",
+        "Platinum": "Covered in full",
+        "Gold": "Covered in full",
+        "Silver": "Covered in full",
+        "Bronze": "Covered in full",
+        "Essential": "Covered in full"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Oncology",
+        "Premier": "Covered in full",
+        "Platinum": "Covered in full",
+        "Gold": "Covered in full",
+        "Silver": "Covered in full",
+        "Bronze": "Covered in full",
+        "Essential": "Covered in full"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Organ Transplant",
+        "Premier": "Not Available",
+        "Platinum": "Not Available",
+        "Gold": "Not Available",
+        "Silver": "Not Available",
+        "Bronze": "Not Available",
+        "Essential": "Not Available"
+    },
+    {
+        "User Type": "type",
+        "Benefit": "Out-patient (Consultations, Lab & Diagnostics, Pharmacy, Physiotherapy)"
+    },
+    {
+        "User Type": "Starter",
+        "Benefit": "Out-patient benefits ",
+        "Premier": "Medicines and diagnostics & lab tests covered in full  Consultationss covered with NIL co-pay",
+        "Platinum": "Medicines and diagnostics & lab tests covered in full  Consultationss covered with 20% co-pay with AED 50  max",
+        "Gold": "Covered with limits (Medicines covered up to AED 10,000 with 10% co-pay), Diagnostics & lab tests covered in full Consultationss covered with 20% co-pay with AED 50  max",
+        "Silver": "Covered with limits (Medicines covered up to AED 10,000 with 10% co-pay), Diagnostics & lab tests covered in full Consultationss covered with 20% co-pay with AED 50  max",
+        "Bronze": "Covered with limits (Medicines covered up to AED 10,000 with 10% co-pay), Diagnostics & lab tests covered in full Consultationss covered with 20% co-pay with AED 50  max",
+        "Essential": "Covered with limits (Medicines covered up to AED 1,500 with 20% co-pay), Diagnostics & lab tests covered in full with 10% co-pay Consultationss covered with 20% co-pay with AED 50  max"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Out-patient Consultations",
+        "Premier": "0% co-pay",
+        "Platinum": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50",
+        "Gold": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50 *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Silver": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50 *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Bronze": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50 *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Essential": "20% co-pay"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Out-patient Specialists",
+        "Premier": "0% co-pay",
+        "Platinum": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50",
+        "Gold": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50",
+        "Silver": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50 *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Bronze": "Consultation within Abu Dhabi - A deductible of AED 50 applicable; Consultation outside Abu Dhabi– 20% max. AED 50 *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Essential": "Covered upon GP referral with 20% co-pay"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Out-patient Medicines",
+        "Premier": "Covered in full with 0% co-pay",
+        "Platinum": "Covered in full with 0% co-pay",
+        "Gold": "Covered up to AED 10,000 with 10% co-pay ",
+        "Silver": "Covered up to AED 10,000 with 10% co-pay ",
+        "Bronze": "Covered up to AED 10,000 with 10% co-pay ",
+        "Essential": "Covered up to AED 1,500 with 30%  co-pay "
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Vaccination",
+        "Premier": "Covered in full on reimbursement basis",
+        "Platinum": "Covered in full as per DHA guildelines on reimbursement basis",
+        "Gold": "Covered in full as per DHA guildelines on reimbursement basis",
+        "Silver": "Covered in full as per DHA guildelines on reimbursement basis",
+        "Bronze": "Covered in full as per DHA guildelines on reimbursement basis",
+        "Essential": "Covered for children up to 6 years as per MOH schedule  * Subject to pre-approval"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Scans & Diagnostic Tests",
+        "Premier": "Covered in full with 0% co-pay ",
+        "Platinum": "Covered in full with 0% co-pay ",
+        "Gold": "Covered in full with 0% co-pay *10% co-pay applicable in Cleveland Clinic Abu Dhabi",
+        "Silver": "Covered in full with 10% co-pay ",
+        "Bronze": "Covered in full with 10% co-pay ",
+        "Essential": "Covered in full with 20% co-pay "
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Physiotherapy",
+        "Premier": "Covered in full with 0% co-pay ",
+        "Platinum": "Covered in full with 0% co-pay ",
+        "Gold": "Covered in full with 0% co-pay ",
+        "Silver": "Covered in full up to 15 sessions per year with 10% co-pay ",
+        "Bronze": "Covered in full up to 15 sessions per year with 10% co-pay ",
+        "Essential": "Covered in full up to 6 sessions per year with 20% co-pay "
+    },
+    {
+        "User Type": "type",
+        "Benefit": "Maternity"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Maternity (Consultations, Scans and Delivery)",
+        "Premier": "OP- Covered in full up to AED 150,000  IP within UAE- Covered up to AED 150,000 IP outside UAE- Covered up to AED 75,000",
+        "Platinum": "OP- Covered in full up to AED 150,000  IP within UAE- Covered up to AED 50,000 IP outside UAE- Covered up to AED 15,000",
+        "Gold": "OP- Covered in full up to AED 150,000 IP within UAE- Covered up to AED 50,000 IP outside UAE- Covered up to AED 10,000",
+        "Silver": "OP- Covered in full up to AED 150,000 IP within UAE- Covered up to AED 30,000 IP outside UAE- Covered up to AED 10,000",
+        "Bronze": "OP- Covered in full up to AED 150,000 IP within UAE- Covered up to AED 25,000 IP outside UAE- Covered up to AED 10,000",
+        "Essential": "OP- Covered in full up to AED 150,000 Within UAE Normal Delivery- Covered up to AED 7,000 with 10% co-pay Within UAE C-section- Covered up to AED 10,000 with 10% co-pay Outside UAE Normal Delivery, C-section and complications covered up to AED 7,000 with 10% co-pay"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Maternity Waiting Period",
+        "Premier": "No Wait",
+        "Platinum": "No Wait",
+        "Gold": "No Wait",
+        "Silver": "No Wait",
+        "Bronze": "No Wait",
+        "Essential": "No Wait"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Complications of Pregnancy",
+        "Premier": "Medical Emergencies covered in full",
+        "Platinum": "Covered up to AED 150,000",
+        "Gold": "Covered up to AED 150,000",
+        "Silver": "Covered up to AED 150,000",
+        "Bronze": "Covered up to AED 150,000",
+        "Essential": "Covered up to AED 150,000"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "New Born Cover",
+        "Premier": "Covered up to AED 150,000 for first 30 days",
+        "Platinum": "Covered up to AED 150,000 for first 30 days",
+        "Gold": "Covered up to AED 150,000 for first 30 days",
+        "Silver": "Covered up to AED 150,000 for first 30 days",
+        "Bronze": "Covered up to AED 150,000 for first 30 days",
+        "Essential": "Covered up to AED 150,000 for first 30 days"
+    },
+    {
+        "User Type": "type",
+        "Benefit": "Dental Benefit"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Dental ",
+        "Premier": "Covered up to AED 15,000 with 20% co-pay",
+        "Platinum": "Dental is \"Optional\" this can be added on",
+        "Gold": "Dental is \"Optional\" this can be added on",
+        "Silver": "Dental is \"Optional\" this can be added on",
+        "Bronze": "Dental is \"Optional\" this can be added on",
+        "Essential": "Not Available"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Dental Waiting Period ",
+        "Premier": "No wait",
+        "Essential": "N/A"
+    },
+    {
+        "User Type": "type",
+        "Benefit": "Additional Benefits"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Optical Benefits",
+        "Premier": "Covered in full with limits and restrictions",
+        "Platinum": "Not Available",
+        "Gold": "Not Available",
+        "Silver": "Not Available",
+        "Bronze": "Not Available",
+        "Essential": "Not Available"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Wellness & Health Screening",
+        "Premier": "One annual check up covered up to AED 2,000 Cancer Screening  Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions",
+        "Platinum": "Cancer Screening Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions",
+        "Gold": "Cancer Screening Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions",
+        "Silver": "Cancer Screening Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions",
+        "Bronze": "Cancer Screening Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions",
+        "Essential": "Cancer Screening Available with limits and restrictions Preventive Services for diabetes available with limits and restrictions"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Alternative Medicines",
+        "Premier": "Covered up to AED 5,000 on reimbursement basis",
+        "Platinum": "Covered up to AED 2,500 on reimbursement basis",
+        "Gold": "Covered up to AED 2,500 on reimbursement basis",
+        "Silver": "Covered up to AED 2,500 on reimbursement basis",
+        "Bronze": "Covered up to AED 2,500 on reimbursement basis",
+        "Essential": "Covered up to AED 2,500 on reimbursement basis"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Mental Health Benefit",
+        "Premier": "Covered up to AED 10,000",
+        "Platinum": "Covered up to AED 10,000",
+        "Gold": "Covered up to AED 10,000",
+        "Silver": "Covered up to AED 10,000",
+        "Bronze": "Covered up to AED 10,000",
+        "Essential": "Covered up to AED 10,000"
+    },
+    {
+        "User Type": "All",
+        "Benefit": "Emergency Evacuation",
+        "Premier": "Not Available",
+        "Platinum": "Not Available",
+        "Gold": "Not Available",
+        "Silver": "Not Available",
+        "Bronze": "Not Available",
+        "Essential": "Not Available"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Virtual / Tele Doctor",
+        "Premier": "Available",
+        "Platinum": "Available",
+        "Gold": "Available",
+        "Silver": "Available",
+        "Bronze": "Available",
+        "Essential": "Available"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Other Services"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Member Web Portal",
+        "Premier": "Available",
+        "Platinum": "Available",
+        "Gold": "Available",
+        "Silver": "Available",
+        "Bronze": "Available",
+        "Essential": "Available"
+    },
+    {
+        "User Type": "Pro",
+        "Benefit": "Mobile Application",
+        "Premier": "Available",
+        "Platinum": "Available",
+        "Gold": "Available",
+        "Silver": "Available",
+        "Bronze": "Available",
+        "Essential": "Available"
+    },
+    {
+        "User Type": "type",
+        "Benefit": "Modes of Payment"
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Semi Annual Surcharge",
+        "Premier": "N/A",
+        "Platinum": "N/A",
+        "Gold": "N/A",
+        "Silver": "N/A",
+        "Bronze": "N/A",
+        "Essential": "N/A"
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Quarterly Surcharge",
+        "Premier": "N/A",
+        "Platinum": "N/A",
+        "Gold": "N/A",
+        "Silver": "N/A",
+        "Bronze": "N/A",
+        "Essential": "N/A"
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Monthly Surcharge",
+        "Premier": "N/A",
+        "Platinum": "N/A",
+        "Gold": "N/A",
+        "Silver": "N/A",
+        "Bronze": "N/A",
+        "Essential": "N/A"
+    },
+    {
+        "User Type": "none",
+        "Benefit": "Copays",
+        "Premier": "nil",
+        "Platinum": "nil",
+        "Gold": "nil",
+        "Silver": "nil",
+        "Bronze": "nil",
+        "Essential": "nil"
+    }
+]

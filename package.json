@@ -1,0 +1,21 @@
+{
+  "name": "excel-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescipt": "^1.0.0"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.30",
+    "prettier": "^3.2.5",
+    "xlsx": "^0.18.5"
+  }
+}
