@@ -2,7 +2,7 @@ import { Utils } from "../helper/Utils";
 import { PlansInfo } from "../helper/interfaces";
 
 export const createCoreIndexData = (data: PlansInfo[]) => {
-  const mongoId = (str: string) => `-generateMongoIdFromString(${str})-`;
+  const mongoId = (str: string) => `-generateMongoIdFromString('${str}')-`;
   const provider = data[0].provider;
   let Ids: any = {
     provider: mongoId(provider),

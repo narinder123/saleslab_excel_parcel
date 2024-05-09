@@ -80,6 +80,9 @@ const buildBasePremium = (
     (rate) =>
       rate.planName == plan && rate.copay == copay && rate.coverage == coverage
   );
+  // if (rates.length == 0) {
+  //   throw Error(`No premium found for ${plan} - ${coverage} - ${copay}`);
+  // }
   if (networks > 1) {
     let { min, max } = rates.reduce(
       (acc, v) => {

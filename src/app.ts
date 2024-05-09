@@ -47,6 +47,9 @@ let Output: any = {
   modifiers,
 };
 
+// Deleting the Provider's folder if exists for new data
+Helpers.createNewProviderFolder(InfoData.provider);
+
 for (let folder in Output) {
   Helpers.convertArrToOutputSheet({
     folder,

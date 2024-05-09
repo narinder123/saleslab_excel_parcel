@@ -7,9 +7,9 @@ export const createBenefitModifiers = (
   planData: PlansInfo
 ): Modifiers[] => {
   let benefits: Modifiers[] = [];
-  planData.benefits.map((benefit) => {
+  planData.benefits.map((benefit: string) => {
     let obj: Modifiers = {
-      _id: `${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(benefit)}`,
+      _id: `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(benefit)}-`,
       plans: [],
       title: benefit,
       label: benefit,
@@ -52,7 +52,10 @@ export const createBenefitModifiers = (
           ],
         };
       });
-    } else obj.description = benefitObj.options[0].value;
+    } else {
+      !benefitObj.options[0] && console.log("obj", benefitObj.options, benefit);
+      obj.description = benefitObj.options[0].value;
+    }
 
     benefits.push(obj);
   });
@@ -70,7 +73,7 @@ const buildBenefitOptions = (
 
   for (let key in data) {
     if (
-      !Utils.ShouldNotInclude(key, variable.UserType, variable.Benefit) &&
+      !Utils.ShouldNotInclude(key, variable.UserType, variable.Benefit) ||
       !Utils.ShouldNotInclude(
         data[key].toLowerCase(),
         "n/a",
@@ -85,7 +88,7 @@ const buildBenefitOptions = (
       res.options[index].plans.push(key);
     } else {
       if (data[key].includes("$")) {
-        let str = data[key];
+        let str = data[key].trim();
         let Copays = benefits.find((b) => b.Benefit == variable.Copays);
         Copays &&
           Copays[key]

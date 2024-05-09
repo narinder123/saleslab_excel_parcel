@@ -132,4 +132,10 @@ export const Helpers = new (class helperFunction {
     }
     return !bool;
   }
+
+  createNewProviderFolder(provider: string) {
+    // Deletes Output folder for every new sheet generated
+    fs.rmSync(`./Outputs/${provider}`, { recursive: true, force: true });
+    fs.mkdirSync(`Outputs/${provider}`);
+  }
 })();
