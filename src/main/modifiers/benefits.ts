@@ -1,4 +1,4 @@
-import { coreBenefitsTypes, variable } from "../../constants";
+import { coreBenefitsTypes, dependentTypeArr, variable } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import { Modifiers, PlansInfo, RawBenefits } from "../../helper/interfaces";
 
@@ -25,10 +25,8 @@ export const createBenefitModifiers = (
       options: [],
     };
 
-    let benefitObj = buildBenefitOptions(
-      data.find((v) => v.Benefit == benefit),
-      data
-    );
+    let benefitMod = data.find((v) => v.Benefit == benefit);
+    let benefitObj = buildBenefitOptions(benefitMod, data);
     benefitObj.plans.map((plan) =>
       obj.plans.push(
         `-${Utils.remove(planData.provider)}.plans.${Utils.remove(plan)}-`
@@ -55,6 +53,23 @@ export const createBenefitModifiers = (
     } else {
       !benefitObj.options[0] && console.log("obj", benefitObj.options, benefit);
       obj.description = benefitObj.options[0].value;
+    }
+
+    //  Adding dependsOn or dependentModifiers is exists
+    const dependentType = benefitMod
+      ? Object.keys(benefitMod).find(
+          (b: string) => !Utils.ShouldNotInclude(b, ...dependentTypeArr)
+        )
+      : false;
+    if (benefitMod && dependentType) {
+      obj[dependentType] = benefitMod[dependentType].includes("/")
+        ? benefitMod[dependentType]
+            .split("/")
+            .map(
+              (b) =>
+                `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(b)}-`
+            )
+        : `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(benefitMod[dependentType])}-`;
     }
 
     benefits.push(obj);

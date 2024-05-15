@@ -1,7 +1,10 @@
+import { dependentType, premiumMod } from "./helper/interfaces";
+
 export const fileTypes = {
   rateSheet: "rateSheet",
   benefits: "benefits",
   info: "info",
+  addons: "addons",
 };
 
 export const InfoTypes = ["plan", "network", "copay", "benefit"];
@@ -16,9 +19,14 @@ export const variable = {
   GeographicalCoverage: "Geographical Coverage",
   AnnualLimit: "Annual Limit",
   $_Copay: "$Copay",
+  frequencyFrom: ["rates", "benefit"],
+  addonsPlaceAt: {
+    inside: "inside options arr",
+    outside: "outside options arr",
+  },
 };
 
-export const EnumConditions = {
+export const EnumConditions: { [key: string]: string } = {
   plan: "-Enum.conditions.plans-",
   coverage: "-Enum.conditions.coverage-",
   network: "-Enum.conditions.modifier-",
@@ -28,6 +36,7 @@ export const EnumConditions = {
   category: "-Enum.customer.category-",
   relation: "-Enum.customer.relation-",
   maritalStatus: "-Enum.customer.maritalStatus-",
+  deductible: "Enum.conditions.deductible",
 };
 
 export const BenefitTypes = {
@@ -425,3 +434,61 @@ export const coreBenefitsTypes: { [key: string]: string } = {
   "Dental Waiting Period 1": "-core.benefitTypes.dentalWaitingPeriod-",
   "Medical Evacuation": "-core.benefitTypes.medicalEvacution-",
 };
+
+export const paymentFrequencies: {
+  [key: string]: {
+    label: string;
+    modOption: {
+      id: string;
+      description: string;
+      title: string;
+      label: string;
+      premiumMod: premiumMod;
+    };
+  };
+} = {
+  semiAnnual: {
+    label: "Semi Annual Surcharge",
+    modOption: {
+      id: "semi-annual-payment-surcharge",
+      description: "Semmi-annual payment",
+      title: "Semi-annual payment",
+      label: "Semi-annual",
+      premiumMod: {
+        type: "percentage",
+        price: [],
+      },
+    },
+  },
+  quater: {
+    label: "Quarterly Surcharge",
+    modOption: {
+      id: "quarterly-payment-surcharge",
+      title: "Quarterly Surcharge payment",
+      label: "Quarterly Surcharge",
+      description: "Quarterly Surcharge payment frequency",
+      premiumMod: {
+        type: "percentage",
+        price: [],
+      },
+    },
+  },
+  month: {
+    label: "Monthly Surcharge",
+    modOption: {
+      id: "monthly-payment-surcharge",
+      title: "Monthly Surcharge payment",
+      label: "Monthly Surcharge",
+      description: "Monthly Surcharge payment frequency",
+      premiumMod: {
+        type: "percentage",
+        price: [],
+      },
+    },
+  },
+};
+
+export const dependentTypeArr: dependentType[] = [
+  "dependsOn",
+  "dependentModifiers",
+];

@@ -1,7 +1,5 @@
-import { writeFileSync } from "fs";
-import { OutputDir, fileTypes } from "./constants";
+import { fileTypes } from "./constants";
 import { Helpers } from "./helper/functions";
-import { Utils } from "./helper/Utils";
 import { DataConverters } from "./helper/DataConverters";
 import { createCoreIndexData } from "./main/core";
 import { createPlansData } from "./main/plans";
@@ -36,31 +34,28 @@ const pricingTables = datas.flatMap(
     createPricingTableData(data, planDatas[i], InfoData, rates[i]).data
 );
 const modifiers = datas.flatMap((data, i) =>
-  createModifiersData(data, rates[i], planDatas[i], InfoData)
+  createModifiersData(data, rates[i], planDatas[i], InfoData, i)
 );
 
 let Output: any = {
-  core,
-  coverages,
-  plans,
-  pricingTables,
-  modifiers,
+  core: { data: core, Enum: false, core: false },
+  coverages: { data: coverages, Enum: false, core: true },
+  plans: { data: plans, Enum: false, core: true },
+  pricingTables: { data: pricingTables, Enum: false, core: true },
+  modifiers: { data: modifiers, Enum: false, core: true },
 };
 
 // Deleting the Provider's folder if exists for new data
 Helpers.createNewProviderFolder(InfoData.provider);
 
 for (let folder in Output) {
+  let { data, Enum, core } = Output[folder];
   Helpers.convertArrToOutputSheet({
     folder,
     fileName: "index",
-    data: JSON.stringify(Output[folder]),
+    data: JSON.stringify(data),
     provider: InfoData.provider,
-    core: true,
-    Enum: true,
+    core,
+    Enum,
   });
 }
-// writeFileSync(`${OutputDir}/planData.json`, JSON.stringify(planData));
-// writeFileSync(`${OutputDir}/data.json`, JSON.stringify(data));
-// writeFileSync(`${OutputDir}/Ids.json`, JSON.stringify(Ids));
-// writeFileSync(`${OutputDir}/plans.json`, JSON.stringify(plans));

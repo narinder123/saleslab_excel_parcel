@@ -8,12 +8,14 @@ import {
 import { createBenefitModifiers } from "./modifiers/benefits";
 import { createDeductibleModifiers } from "./modifiers/deductible";
 import { createNetworkModifiers } from "./modifiers/networks";
+import { createPaymentFrequencyModifier } from "./modifiers/paymentFrequency";
 
 export const createModifiersData = (
   PlanData: PlansInfo,
   Premiums: RawRates[],
   Benefits: RawBenefits[],
-  Info: InsurerInfo
+  Info: InsurerInfo,
+  index: number
 ): { data: Modifiers[]; splitFile: string[] } => {
   const deductibles = createDeductibleModifiers(PlanData, Premiums, Info);
   return {
@@ -21,6 +23,13 @@ export const createModifiersData = (
       ...createBenefitModifiers(Benefits, PlanData),
       ...createNetworkModifiers(PlanData),
       ...deductibles.data,
+      ...createPaymentFrequencyModifier(
+        Info,
+        Premiums,
+        Benefits,
+        PlanData,
+        index
+      ),
     ],
     splitFile: deductibles.splitFile,
   };

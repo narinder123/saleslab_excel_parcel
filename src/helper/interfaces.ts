@@ -45,6 +45,9 @@ export interface InsurerInfo {
   conversion: number;
   currency: string;
   splitFile?: string;
+  frequencies?: string[];
+  frequencyFrom?: "benefit" | "rates";
+  addons?: string[];
   [key: string]: any;
 }
 
@@ -132,7 +135,7 @@ export interface Modifiers {
   includedBenefits: string[];
   isOptional: boolean;
   description: string;
-  addonCost: any;
+  addonCost: premiumMod | {};
   premiumMod: any;
   conditions: any[];
   hasOptions: boolean;
@@ -140,6 +143,7 @@ export interface Modifiers {
   defaultOption?: any[];
   dependentModifiers?: string[];
   dependsOn?: string;
+  [key: string]: any;
 }
 
 export interface Option {
@@ -147,16 +151,32 @@ export interface Option {
   label: string;
   description?: string;
   premiumMod?: premiumMod;
-  conditions?: { type: string; value: string[] }[];
+  addonCost?: premiumMod;
+  conditions?: { type: string; value: string[] | string | number }[];
 }
 
 export interface premiumMod {
-  type: "conditional-override" | "conditional-fixed" | "fixed";
-  conditionalPrices?:
-    | {
-        conditions: { type: string; value: number | string }[];
-        price: PriceObj[];
-      }[]
-    | string;
+  type: "conditional-override" | "conditional-fixed" | "fixed" | "percentage";
+  conditionalPrices?: premiumCondition[] | string;
   price?: PriceObj[];
+}
+
+export interface premiumCondition {
+  conditions: { type: string; value: number | string }[];
+  price: PriceObj[];
+}
+
+export type dependentType = "dependsOn" | "dependentModifiers";
+
+export interface Addons {
+  sheetName: string;
+  isOptional: "true" | "false";
+  label: string;
+  type: "conditional-fixed" | "fixed" | "conditional-override";
+  description?: string;
+  placeAt: "inside options arr" | "outside options arr";
+  flag?: string;
+  plan?: string;
+  value?: string | number;
+  [key: string]: any;
 }

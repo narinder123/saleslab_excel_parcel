@@ -4,14 +4,14 @@ import { Helpers } from "./functions";
 import { InsurerInfo, PlansInfo } from "./interfaces";
 
 export const DataConverters = new (class {
-  fetchSheet(filename: string) {
+  fetchSheet(filename: string, index: number | string = 0) {
     let folderName = Helpers.getInputArguments().find(
       (arg) => arg.label == "name"
     )?.value;
 
     return Helpers.convertXlsxToArr(
       `./Inputs/${folderName}/${filename}.xlsx`,
-      0
+      index
     );
   }
 
@@ -24,6 +24,9 @@ export const DataConverters = new (class {
       conversion: 1,
       currency: "",
       splitFile: "",
+      frequencies: [],
+      frequencyFrom: "benefit",
+      addons: [],
     };
 
     for (let key in info) {
