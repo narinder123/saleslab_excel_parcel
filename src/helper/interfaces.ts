@@ -180,3 +180,17 @@ export interface Addons {
   value?: string | number;
   [key: string]: any;
 }
+
+export interface EnumConditionsTypes {
+  plan: string;
+  coverage: string;
+  network: string;
+  minAge: string;
+  maxAge: string;
+  gender: string;
+  category: string;
+  relation: string;
+  maritalStatus: string;
+  deductible: string;
+  [key: string]: string;
+}

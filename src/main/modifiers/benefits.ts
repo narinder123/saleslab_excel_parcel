@@ -1,4 +1,9 @@
-import { coreBenefitsTypes, dependentTypeArr, variable } from "../../constants";
+import {
+  EnumConditions,
+  coreBenefitsTypes,
+  dependentTypeArr,
+  variable,
+} from "../../constants";
 import { Utils } from "../../helper/Utils";
 import { Modifiers, PlansInfo, RawBenefits } from "../../helper/interfaces";
 
@@ -35,13 +40,13 @@ export const createBenefitModifiers = (
     if (benefitObj.options.length > 1) {
       obj.hasOptions = true;
       obj.options = benefitObj.options.map((option, i) => {
-        return {
+        let opt = {
           id: `option-${i + 1}`,
           label: option.value,
           description: option.value,
           conditions: [
             {
-              type: "-Enum.conditions.plans-",
+              type: EnumConditions.plan,
               value: option.plans.map(
                 (v) =>
                   `-${Utils.remove(planData.provider)}.plans.${Utils.remove(v)}-`
@@ -49,6 +54,13 @@ export const createBenefitModifiers = (
             },
           ],
         };
+        if (option.copay) {
+          opt.conditions.push({
+            type: EnumConditions.deductible,
+            value: [option.copay],
+          });
+        }
+        return opt;
       });
     } else {
       !benefitObj.options[0] && console.log("obj", benefitObj.options, benefit);
@@ -82,57 +94,74 @@ const buildBenefitOptions = (
   benefits: RawBenefits[]
 ) => {
   let res: {
-    options: { value: string; plans: string[] }[];
+    options: { value: string; plans: string[]; copay?: string }[];
     plans: string[];
   } = { options: [], plans: [] };
 
-  for (let key in data) {
+  for (let plan in data) {
     if (
-      !Utils.ShouldNotInclude(key, variable.UserType, variable.Benefit) ||
+      !Utils.ShouldNotInclude(plan, variable.UserType, variable.Benefit) ||
       !Utils.ShouldNotInclude(
-        data[key].toLowerCase(),
+        data[plan].toLowerCase(),
         "n/a",
         "not available",
         ""
       )
     )
       continue;
-    let index = res.options.findIndex((v) => v.value == data[key]);
-    res.plans.push(key);
+    let index = res.options.findIndex((v) => v.value == data[plan]);
+    res.plans.push(plan);
     if (index != -1) {
-      res.options[index].plans.push(key);
+      res.options[index].plans.push(plan);
     } else {
-      if (data[key].includes("$")) {
-        let str = data[key].trim();
+      if (data[plan].includes("$")) {
+        let str = data[plan].trim();
         let Copays = benefits.find((b) => b.Benefit == variable.Copays);
+        let $: any = benefits.find((b) => b.Benefit == "$");
+        if (!$)
+          throw new Error(
+            "$ values not found, please fill it in the benefit sheet"
+          );
+        $ = $[plan];
         Copays &&
-          Copays[key]
+          Copays[plan]
             .toString()
             .split("/")
             .map((copay, i) => {
-              let $ = benefits
-                .find((b) => b.Benefit == "$")
-                ?.Benefit.split("-")
-                [i].split("/");
-
-              $?.forEach((v) => {
-                str = str.replace("$", v);
-              });
-              res.options.push({ value: str, plans: [key] });
+              $.split("-")
+                [i].split("/")
+                .forEach((v: string) => {
+                  str = str.replace("$", v);
+                });
+              res.options.push({ value: str, plans: [plan], copay });
             });
-      } else if (data[key].includes("$")) {
-        let str = data[key];
+      } else if (data[plan].includes("$copay")) {
         let $copay = benefits.find((b) => b.Benefit == variable.$_Copay);
+        if (!$copay)
+          throw new Error(
+            "$copay values not found, please fill it in the benefit sheet"
+          );
         let Copays = benefits.find((b) => b.Benefit == variable.Copays);
         Copays &&
-          Copays[key]
+          Copays[plan]
             .toString()
             .split("/")
             .map((copay, i) => {
-              if ($copay) {
+              if (!$copay) return;
+
+              // this conditions means that we will be using copays as values
+              if ($copay[plan] == "-Copays-")
+                res.options.push({ value: copay, plans: [plan] });
+              else {
+                let value = $copay[plan].split("-")[i];
+                res.options.push({
+                  value: value,
+                  plans: [plan],
+                  copay,
+                });
               }
             });
-      } else res.options.push({ value: data[key], plans: [key] });
+      } else res.options.push({ value: data[plan], plans: [plan] });
     }
   }
   return res;

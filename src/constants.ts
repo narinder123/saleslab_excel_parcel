@@ -1,4 +1,8 @@
-import { dependentType, premiumMod } from "./helper/interfaces";
+import {
+  EnumConditionsTypes,
+  dependentType,
+  premiumMod,
+} from "./helper/interfaces";
 
 export const fileTypes = {
   rateSheet: "rateSheet",
@@ -26,7 +30,7 @@ export const variable = {
   },
 };
 
-export const EnumConditions: { [key: string]: string } = {
+export const EnumConditions: EnumConditionsTypes = {
   plan: "-Enum.conditions.plans-",
   coverage: "-Enum.conditions.coverage-",
   network: "-Enum.conditions.modifier-",
