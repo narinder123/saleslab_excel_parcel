@@ -18,9 +18,10 @@ export const createModifiersData = (
   index: number
 ): { data: Modifiers[]; splitFile: string[] } => {
   const deductibles = createDeductibleModifiers(PlanData, Premiums, Info);
+  const benefits = createBenefitModifiers(Benefits, PlanData);
   return {
     data: [
-      ...createBenefitModifiers(Benefits, PlanData),
+      ...benefits,
       ...createNetworkModifiers(PlanData),
       ...deductibles.data,
       ...createPaymentFrequencyModifier(

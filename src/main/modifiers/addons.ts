@@ -14,9 +14,9 @@ export const createAddons = (
   addons: string[],
   InsurerInfo: InsurerInfo,
   index: number
-) => {
-  return data.map((mod) => {
-    if (!addons.includes(mod.label)) return data;
+): Modifiers[] => {
+  return data.map((mod: Modifiers) => {
+    if (!addons.includes(mod.label)) return mod;
     let addonInfo: Addons[] = DataConverters.fetchSheet(
       fileTypes.addons,
       `${mod.label.split(" ")[0]}-info`
@@ -116,6 +116,8 @@ export const createAddons = (
         });
       }
     }
+
+    return { ...mod };
   });
 };
 

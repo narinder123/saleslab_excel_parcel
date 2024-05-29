@@ -83,7 +83,7 @@ export const Helpers = new (class helperFunction {
       fs.mkdirSync(`Outputs/${provider}/${folder}`);
 
     fs.appendFileSync(`Outputs/${provider}/${folder}/${fileName}.js`, str);
-    Utils.log(`/${provider}${folder}/${fileName} Created!`);
+    Utils.log(`${provider}/${folder}/${fileName} Created!`);
   }
 
   getResidencyArr(residency: string): string[][] {
