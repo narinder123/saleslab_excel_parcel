@@ -48,6 +48,7 @@ export const createPaymentFrequencyModifier = (
   };
   if (InsurerInfo.frequencyFrom == variable.frequencyFrom[0]) {
     InsurerInfo.frequencies?.forEach((frequency) => {
+      if (frequency == "Annually") return;
       if (!paymentFrequencies[frequency])
         throw new Error(
           `${frequency} did not matched, please use any of these: ${Object.keys(paymentFrequencies).join(", ")}`
@@ -88,7 +89,7 @@ export const createPaymentFrequencyModifier = (
                 ],
               };
 
-              // if is applied here because typescript was giving error
+              // "if" is applied here because typescript was giving error
               if (option.premiumMod) {
                 let rateBase = premiums
                   .filter(
@@ -96,7 +97,8 @@ export const createPaymentFrequencyModifier = (
                       premium.planName == info.plan &&
                       premium.network == network &&
                       premium.coverage == coverage &&
-                      premium.copay == copay
+                      premium.copay == copay &&
+                      premium.frequency == frequency
                   )
                   .map((premium) => {
                     let rate = {
@@ -146,6 +148,8 @@ export const createPaymentFrequencyModifier = (
                       });
                     return rate;
                   });
+                if (rateBase.length == 0)
+                  throw `no record found for - {planName: "${info.plan}", network: "${network}" , coverage: "${coverage}" , copay: "${copay}", frequency: "${frequency}"}`;
                 option.premiumMod.conditionalPrices = rateBase;
               }
               modifier.options.push(option);

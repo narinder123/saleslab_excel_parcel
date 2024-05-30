@@ -34,6 +34,7 @@ export interface RawRates {
   relation?: string;
   category?: string;
   singleChild?: string;
+  frequency?: string;
   married?: "true" | "false";
 }
 

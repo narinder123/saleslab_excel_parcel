@@ -109,7 +109,7 @@ export const Helpers = new (class helperFunction {
     ];
     if (residency == "UAE") return UAE;
     else if (residency == "NE") return NE;
-    else if (residency == "NE/Dubai") return NE_Dubai;
+    else if (residency == "NE_Dubai") return NE_Dubai;
     else if (residency == "Dubai") return Dubai;
     else return AbuDhabi;
   }
@@ -121,6 +121,7 @@ export const Helpers = new (class helperFunction {
       if (!Utils.ShouldNotInclude(key, variable.UserType, variable.Benefit))
         continue;
       if (
+        typeof data[key] == "string" &&
         Utils.ShouldNotInclude(
           data[key].toLowerCase(),
           "n/a",

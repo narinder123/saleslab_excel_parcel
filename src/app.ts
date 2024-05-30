@@ -27,7 +27,9 @@ const datas = planDatas.map((planData) =>
 );
 
 const core = createCoreIndexData(datas);
-const coverages = datas.flatMap((data) => createCoverageData(data));
+const coverages = datas.flatMap((data, i) =>
+  createCoverageData(data, InfoData.residencies[i])
+);
 const plans = datas.flatMap((data) => createPlansData(data));
 const pricingTables = datas.flatMap(
   (data, i) =>

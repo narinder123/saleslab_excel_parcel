@@ -464,7 +464,7 @@ export const paymentFrequencies: {
       },
     },
   },
-  quater: {
+  quarter: {
     label: "Quarterly Surcharge",
     modOption: {
       id: "quarterly-payment-surcharge",

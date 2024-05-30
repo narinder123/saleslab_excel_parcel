@@ -136,15 +136,16 @@ export const DataConverters = new (class {
           }, []),
           benefit: data.reduce((acc, b) => {
             if (
-              Utils.ShouldNotInclude(
+              typeof b[plan] == "string" &&
+              (Utils.ShouldNotInclude(
                 b[variable.UserType],
                 BenefitTypes.Pro,
                 BenefitTypes.All,
                 BenefitTypes.Starter
               ) ||
-              b[plan] == "" ||
-              b[plan]?.toLowerCase() == "not available" ||
-              b[plan] == "N/A"
+                b[plan] == "" ||
+                b[plan]?.toLowerCase() == "not available" ||
+                b[plan] == "N/A")
             )
               return acc;
             return [...acc, b[variable.Benefit]];

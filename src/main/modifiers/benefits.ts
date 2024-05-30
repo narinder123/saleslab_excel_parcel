@@ -115,7 +115,6 @@ const buildBenefitOptions = (
       res.options[index].plans.push(plan);
     } else {
       if (data[plan].includes("$")) {
-        let str = data[plan].trim();
         let Copays = benefits.find((b) => b.Benefit == variable.Copays);
         let $: any = benefits.find((b) => b.Benefit == "$");
         if (!$)
@@ -128,6 +127,7 @@ const buildBenefitOptions = (
             .toString()
             .split("/")
             .map((copay, i) => {
+              let str = data[plan].trim();
               $.split("-")
                 [i].split("/")
                 .forEach((v: string) => {

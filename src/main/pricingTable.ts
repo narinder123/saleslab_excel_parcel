@@ -29,6 +29,7 @@ export const createPricingTableData = (
         planData.copay[0],
         info
       );
+
       let baseAnnualPremium =
         info.splitFile == "true"
           ? SplitFile(
@@ -78,11 +79,14 @@ const buildBasePremium = (
 ): BasePremium[] => {
   let rates = data.filter(
     (rate) =>
-      rate.planName == plan && rate.copay == copay && rate.coverage == coverage
+      rate.planName == plan &&
+      rate.copay == copay &&
+      rate.coverage == coverage &&
+      rate.frequency == "Annually"
   );
-  // if (rates.length == 0) {
-  //   throw Error(`No premium found for ${plan} - ${coverage} - ${copay}`);
-  // }
+  if (rates.length == 0) {
+    throw Error(`No premium found for "${plan}" - "${coverage}" - "${copay}"`);
+  }
   if (networks > 1) {
     let { min, max } = rates.reduce(
       (acc, v) => {

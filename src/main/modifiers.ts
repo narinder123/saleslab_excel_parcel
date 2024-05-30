@@ -5,6 +5,7 @@ import {
   RawBenefits,
   RawRates,
 } from "../helper/interfaces";
+import { createAddons } from "./modifiers/addons";
 import { createBenefitModifiers } from "./modifiers/benefits";
 import { createDeductibleModifiers } from "./modifiers/deductible";
 import { createNetworkModifiers } from "./modifiers/networks";
@@ -18,7 +19,9 @@ export const createModifiersData = (
   index: number
 ): { data: Modifiers[]; splitFile: string[] } => {
   const deductibles = createDeductibleModifiers(PlanData, Premiums, Info);
-  const benefits = createBenefitModifiers(Benefits, PlanData);
+  let benefits = createBenefitModifiers(Benefits, PlanData);
+  if (Info.addons) benefits = createAddons(benefits, Info.addons, Info, index);
+
   return {
     data: [
       ...benefits,

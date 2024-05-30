@@ -7,7 +7,7 @@ export const createPlansData = (data: PlansInfo): Plans[] => {
   data.distinctInfo.map((planData) => {
     arr.push({
       _id: `-${Utils.remove(data.provider)}.plans.${Utils.remove(planData.plan)}-`,
-      provider: `-${Utils.remove(data.provider)}.providers`,
+      provider: `-${Utils.remove(data.provider)}.providers-`,
       title: planData.plan,
       notes: "",
       benefitCategories,

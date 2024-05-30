@@ -7,6 +7,7 @@ export const Utils = new (class {
   }
 
   remove(str: string, n?: number) {
+    if (!str) return "";
     !str && console.log("n --> ", n, str);
     if (str.includes(" ")) {
       str = str
