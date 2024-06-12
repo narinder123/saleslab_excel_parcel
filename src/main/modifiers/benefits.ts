@@ -5,7 +5,12 @@ import {
   variable,
 } from "../../constants";
 import { Utils } from "../../helper/Utils";
-import { Modifiers, PlansInfo, RawBenefits } from "../../helper/interfaces";
+import {
+  Modifiers,
+  Option,
+  PlansInfo,
+  RawBenefits,
+} from "../../helper/interfaces";
 
 export const createBenefitModifiers = (
   data: RawBenefits[],
@@ -40,22 +45,23 @@ export const createBenefitModifiers = (
     if (benefitObj.options.length > 1) {
       obj.hasOptions = true;
       obj.options = benefitObj.options.map((option, i) => {
-        let opt = {
+        let opt: Option = {
           id: `option-${i + 1}`,
           label: option.value,
           description: option.value,
-          conditions: [
-            {
-              type: EnumConditions.plan,
-              value: option.plans.map(
-                (v) =>
-                  `-${Utils.remove(planData.provider)}.plans.${Utils.remove(v)}-`
-              ),
-            },
-          ],
+          conditions: [],
         };
+        if (option.plans.length > 0) {
+          opt.conditions?.push({
+            type: EnumConditions.plan,
+            value: option.plans.map(
+              (v) =>
+                `-${Utils.remove(planData.provider)}.plans.${Utils.remove(v)}-`
+            ),
+          });
+        }
         if (option.copay) {
-          opt.conditions.push({
+          opt.conditions?.push({
             type: EnumConditions.deductible,
             value: [option.copay],
           });
@@ -113,56 +119,57 @@ const buildBenefitOptions = (
     res.plans.push(plan);
     if (index != -1) {
       res.options[index].plans.push(plan);
-    } else {
-      if (data[plan].includes("$")) {
-        let Copays = benefits.find((b) => b.Benefit == variable.Copays);
-        let $: any = benefits.find((b) => b.Benefit == "$");
-        if (!$)
-          throw new Error(
-            "$ values not found, please fill it in the benefit sheet"
-          );
-        $ = $[plan];
-        Copays &&
-          Copays[plan]
-            .toString()
-            .split("/")
-            .map((copay, i) => {
-              let str = data[plan].trim();
-              $.split("-")
-                [i].split("/")
-                .forEach((v: string) => {
-                  str = str.replace("$", v);
-                });
-              res.options.push({ value: str, plans: [plan], copay });
-            });
-      } else if (data[plan].includes("$copay")) {
-        let $copay = benefits.find((b) => b.Benefit == variable.$_Copay);
-        if (!$copay)
-          throw new Error(
-            "$copay values not found, please fill it in the benefit sheet"
-          );
-        let Copays = benefits.find((b) => b.Benefit == variable.Copays);
-        Copays &&
-          Copays[plan]
-            .toString()
-            .split("/")
-            .map((copay, i) => {
-              if (!$copay) return;
-
-              // this conditions means that we will be using copays as values
-              if ($copay[plan] == "-Copays-")
-                res.options.push({ value: copay, plans: [plan] });
-              else {
-                let value = $copay[plan].split("-")[i];
-                res.options.push({
-                  value: value,
-                  plans: [plan],
-                  copay,
-                });
-              }
-            });
-      } else res.options.push({ value: data[plan], plans: [plan] });
+      continue;
     }
+    if (data[plan].includes(" $ ")) {
+      let Copays = benefits.find((b) => b.Benefit == variable.Copays);
+      let $: any = benefits.find((b) => b.Benefit == "$");
+      if (!$)
+        throw new Error(
+          "$ values not found, please fill it in the benefit sheet"
+        );
+      $ = $[plan];
+      Copays &&
+        Copays[plan]
+          .toString()
+          .split("/")
+          .map((copay, i) => {
+            let str = data[plan].trim();
+            $.split("-")
+              [i].split("/")
+              .forEach((v: string) => {
+                str = str.replace("$", v);
+              });
+            res.options.push({ value: str, plans: [plan], copay });
+          });
+    } else if (data[plan].includes("$copay")) {
+      let $copay = benefits.find((b) => b.Benefit == variable.$_Copay);
+      if (!$copay)
+        throw new Error(
+          "$copay values not found, please fill it in the benefit sheet"
+        );
+      let Copays = benefits.find((b) => b.Benefit == variable.Copays);
+      Copays &&
+        Copays[plan]
+          .toString()
+          .split("/")
+          .map((copay, i) => {
+            if (!$copay) return;
+
+            // this conditions means that we will be using copays as values
+            if ($copay[plan] == "-Copays-") {
+              res.options.push({ value: copay, plans: [], copay });
+            } else {
+              let value = $copay[plan].split("-")[i];
+              res.options.push({
+                value: value,
+                plans: [],
+                copay,
+              });
+            }
+          });
+      break;
+    } else res.options.push({ value: data[plan], plans: [plan] });
   }
   return res;
 };

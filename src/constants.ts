@@ -22,7 +22,7 @@ export const variable = {
   Copays: "Copays",
   GeographicalCoverage: "Geographical Coverage",
   AnnualLimit: "Annual Limit",
-  $_Copay: "$Copay",
+  $_Copay: "$copay",
   frequencyFrom: ["rates", "benefit"],
   addonsPlaceAt: {
     inside: "inside options arr",
@@ -40,7 +40,7 @@ export const EnumConditions: EnumConditionsTypes = {
   category: "-Enum.customer.category-",
   relation: "-Enum.customer.relation-",
   maritalStatus: "-Enum.customer.maritalStatus-",
-  deductible: "Enum.conditions.deductible",
+  deductible: "-Enum.conditions.deductible-",
 };
 
 export const BenefitTypes = {
