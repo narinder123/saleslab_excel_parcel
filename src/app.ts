@@ -6,9 +6,11 @@ import { createPlansData } from "./main/plans";
 import { createCoverageData } from "./main/coverages";
 import { createPricingTableData } from "./main/pricingTable";
 import { createModifiersData } from "./main/modifiers";
+import { Utils } from "./helper/Utils";
 
 Helpers.checkInputFolderExists();
 
+Utils.log(`Fetching Sheets started! \n`);
 const InfoData = DataConverters.fetchInsurerInfo(
   DataConverters.fetchSheet(fileTypes.info)
 );
@@ -17,14 +19,18 @@ const planDatas = new Array(InfoData.residencies.length)
   .map((v, i) =>
     DataConverters.fetchSheet(`${fileTypes.benefits}${i ? i : ""}`)
   );
+
 const rates = new Array(InfoData.residencies.length)
   .fill(0)
   .map((v, i) =>
     DataConverters.fetchSheet(`${fileTypes.rateSheet}${i ? i : ""}`)
   );
+  
 const datas = planDatas.map((planData) =>
   DataConverters.fetchPlansInfo(planData, InfoData.provider)
 );
+
+Utils.log(`Sheets Data are fetched! \n`);
 
 const core = createCoreIndexData(datas);
 const coverages = datas.flatMap((data, i) =>
