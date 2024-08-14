@@ -1,5 +1,6 @@
 import {
   EnumConditionsTypes,
+  Residencies,
   dependentType,
   premiumMod,
 } from "./helper/interfaces";
@@ -28,6 +29,19 @@ export const variable = {
     inside: "inside options arr",
     outside: "outside options arr",
   },
+};
+
+export const InfoResidencies = ["UAE", "NE", "Dubai", "AbuDhabi", "NE_Dubai"];
+
+export const V2Residencies: { [key: string]: string[][] } = {
+  UAE: [["AE-DU", "AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"], []],
+  NE: [
+    ["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
+    ["AE-DU", "AE-AZ"],
+  ],
+  Dubai: [["AE-DU"], ["AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
+  AbuDhabi: [["AE-AZ"], ["AE-DU", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
+  NE_Dubai: [["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"], ["AE-AZ"]],
 };
 
 export const EnumConditions: EnumConditionsTypes = {
@@ -496,3 +510,34 @@ export const dependentTypeArr: dependentType[] = [
   "dependsOn",
   "dependentModifiers",
 ];
+
+export const BenefitNamesV1 = {
+  annualLimit: "Annual Limit",
+  accommodationType: "Accommodation Type",
+  inPatientHospitalisation: "In-patient (Hospitalization & Surgery)",
+  outPatient: "Out-patient benefits",
+  physiotherapy: "Physiotherapy",
+  emergencyEvacuation: "Emergency Evacuation",
+  chronicConditions: "Chronic Condition Cover",
+  preExistingCover: "Pre-existing Condition Cover",
+  routineMaternity: "Maternity (Consultations, Scans and Delivery)",
+  maternityWaitingPeriod: "Maternity Waiting Period",
+  complicationsPregnancy: "Complications of Pregnancy",
+  newBornCoverage: "New Born Cover",
+  dental: "Dental",
+  dentalWaitingPeriod: "Dental Waiting Period",
+  opticalBenefits: "Optical Benefits",
+  wellness: "Wellness & Health Screening",
+  semiAnnualSurcharge: "Semi Annual Surcharge",
+  quarterlySurcharge: "Quarterly Surcharge",
+  monthlySurcharge: "Monthly Surcharge",
+  routineMaternityFilter: "Routine Maternity",
+  wellnessFilter: "Wellness",
+  opticalFilter: "Optical",
+  dentalFilter: "Dental",
+};
+
+export const DBpath = {
+  dev: "saleslabdev",
+  prod: "saleslabprod",
+};

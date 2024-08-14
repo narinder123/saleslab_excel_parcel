@@ -73,7 +73,7 @@ export const createBenefitModifiers = (
       obj.description = benefitObj.options[0].value;
     }
 
-    //  Adding dependsOn or dependentModifiers is exists
+    //  Adding dependsOn or dependentModifiers if exists
     const dependentType = benefitMod
       ? Object.keys(benefitMod).find(
           (b: string) => !Utils.ShouldNotInclude(b, ...dependentTypeArr)
@@ -126,7 +126,7 @@ const buildBenefitOptions = (
       let $: any = benefits.find((b) => b.Benefit == "$");
       if (!$)
         throw new Error(
-          "$ values not found, please fill it in the benefit sheet"
+          "$ column not found, please fill it in the benefit sheet"
         );
       $ = $[plan];
       Copays &&

@@ -1,27 +1,34 @@
-import { variable } from "../constants";
+import {
+  BenefitTypes,
+  InfoResidencies,
+  V2Residencies,
+  variable,
+} from "../constants";
 import { Utils } from "./Utils";
 import {
   InputArgumentType,
   OutputSheetFnArguments,
   RawBenefits,
+  Residencies,
 } from "./interfaces";
 import fs from "fs";
 import xlsx from "xlsx";
 
 export const Helpers = new (class helperFunction {
-  getInputArguments(): InputArgumentType[] {
-    return process.argv
+  getInputArguments(): InputArgumentType {
+    let args: any = {};
+    process.argv
       .filter((v) => v.includes(":"))
       .map((v) => {
         let [label, value] = v.split(":");
-        return { label, value };
+        args[label] = value;
       });
+    if (!args?.name) throw "Please provide a folder name!";
+    return args;
   }
 
   checkInputFolderExists(): boolean {
-    const enteredFolderName = this.getInputArguments().find(
-      (arg) => arg.label == "name"
-    )?.value;
+    const enteredFolderName = this.getInputArguments().name;
     if (!enteredFolderName) {
       Utils.log("No folder name provided!", "err");
       Utils.endProcess();
@@ -78,43 +85,23 @@ export const Helpers = new (class helperFunction {
     module.exports = ${folder} ;`;
     if (!fs.existsSync(`Outputs/${provider}`))
       fs.mkdirSync(`Outputs/${provider}`);
+    if (!fs.existsSync(`Outputs/${provider}/V2`))
+      fs.mkdirSync(`Outputs/${provider}/V2`);
 
-    if (!fs.existsSync(`Outputs/${provider}/${folder}`))
-      fs.mkdirSync(`Outputs/${provider}/${folder}`);
+    if (!fs.existsSync(`Outputs/${provider}/V2/${folder}`))
+      fs.mkdirSync(`Outputs/${provider}/V2/${folder}`);
 
-    fs.appendFileSync(`Outputs/${provider}/${folder}/${fileName}.js`, str);
+    fs.appendFileSync(`Outputs/${provider}/V2/${folder}/${fileName}.js`, str);
     Utils.log(`${provider}/${folder}/${fileName} Created!`);
   }
 
   getResidencyArr(residency: string): string[][] {
-    const UAE = [
-      ["AE-DU", "AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
-      [],
-    ];
-    const NE = [
-      ["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
-      ["AE-DU", "AE-AZ"],
-    ];
-    const Dubai = [
-      ["AE-DU"],
-      ["AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
-    ];
-    const AbuDhabi = [
-      ["AE-AZ"],
-      ["AE-DU", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
-    ];
-    const NE_Dubai = [
-      ["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"],
-      ["AE-AZ"],
-    ];
-    if (residency == "UAE") return UAE;
-    else if (residency == "NE") return NE;
-    else if (residency == "NE_Dubai") return NE_Dubai;
-    else if (residency == "Dubai") return Dubai;
-    else return AbuDhabi;
+    if (InfoResidencies.includes(residency)) return V2Residencies[residency];
+    else
+      throw `${residency} residency doesn't exist! please use these defined residencies: ${InfoResidencies.join(",")}`;
   }
 
-  BenefitNotIncluded(data: RawBenefits): boolean {
+  NotIncludedBenefit(data: RawBenefits): boolean {
     let bool = true;
 
     for (let key in data) {
@@ -134,9 +121,39 @@ export const Helpers = new (class helperFunction {
     return !bool;
   }
 
-  createNewProviderFolder(provider: string) {
-    // Deletes Output folder for every new sheet generated
-    fs.rmSync(`./Outputs/${provider}`, { recursive: true, force: true });
-    fs.mkdirSync(`Outputs/${provider}`);
+  createNewProviderFolder(provider: string, inputArgv: InputArgumentType) {
+    if (!fs.existsSync(`Outputs/${provider}`))
+      fs.mkdirSync(`Outputs/${provider}`);
+
+    if (fs.existsSync(`Outputs/${provider}/V1`) && inputArgv.V1)
+      fs.rmSync(`./Outputs/${provider}/V1`, { recursive: true, force: true });
+
+    if (fs.existsSync(`Outputs/${provider}/V2`) && inputArgv.V2)
+      fs.rmSync(`./Outputs/${provider}/V2`, { recursive: true, force: true });
+
+    if (fs.existsSync(`Outputs/${provider}/log`) && inputArgv.log)
+      fs.rmSync(`./Outputs/${provider}/log`, { recursive: true, force: true });
+  }
+
+  getBenefitsForV1(benefits: RawBenefits[]) {
+    let benefitsForV1: any[] = [];
+    let plans: string[] = [];
+    benefits.map((benefit, index) => {
+      if (benefit.Benefit == BenefitTypes.type) return;
+      if (index == 0) {
+        for (let key in benefit) {
+          if (key == "Benefit" || key == "User Type") continue;
+          benefitsForV1.push({ plan: key, benefits: {} });
+          plans.push(key);
+        }
+      }
+      for (let key in benefit) {
+        if (key == "Benefit" || key == "User Type") continue;
+        benefitsForV1[plans.indexOf(key)].benefits[benefit.Benefit.trim()] =
+          benefit[key];
+      }
+    });
+
+    return benefitsForV1;
   }
 })();

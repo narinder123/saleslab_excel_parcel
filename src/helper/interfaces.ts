@@ -1,8 +1,12 @@
 // Utils Interfaces -------------------------------
 
 export interface InputArgumentType {
-  label: string;
-  value: string;
+  name: string;
+  V1?: string;
+  V2?: string;
+  log?: string;
+  import?: string;
+  [key: string]: string | undefined;
 }
 
 export interface OutputSheetFnArguments {
@@ -36,8 +40,13 @@ export interface RawRates {
   singleChild?: string;
   frequency?: string;
   married?: "true" | "false";
+  platform: "V1" | "V2" | "both";
+  [key: string]: any;
 }
 
+export type Residencies = "UAE" | "NE" | "Dubai" | "AbuDhabi" | "NE_Dubai";
+
+export type V1DBMode = "dev" | "prod";
 export interface InsurerInfo {
   provider: string;
   startDate: Date;
@@ -49,6 +58,7 @@ export interface InsurerInfo {
   frequencies?: string[];
   frequencyFrom?: "benefit" | "rates";
   addons?: string[];
+  compantId?: string;
   [key: string]: any;
 }
 
