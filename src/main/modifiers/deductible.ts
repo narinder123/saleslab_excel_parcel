@@ -12,12 +12,14 @@ import { SplitFile } from "../../helper/splitFile";
 export const createDeductibleModifiers = (
   data: PlansInfo,
   premiums: RawRates[],
-  InsurerInfo: InsurerInfo
+  InsurerInfo: InsurerInfo,
+  index: number | string
 ): { data: Modifiers[]; splitFile: string[] } => {
   let deductible: Modifiers = {
-    _id: `-${Utils.remove(data.provider)}.modifiers.deductible-`,
+    _id: `-${Utils.remove(data.provider)}.modifiers${index}.deductible-`,
     plans: data.plans.map(
-      (plan) => `-${Utils.remove(data.provider)}.plans.${Utils.remove(plan)}-`
+      (plan) =>
+        `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(plan)}-`
     ),
     title: "Deductible modifier",
     label: "Deductibles",
@@ -46,7 +48,7 @@ export const createDeductibleModifiers = (
               {
                 type: EnumConditions.plan,
                 value: [
-                  `-${Utils.remove(data.provider)}.plans.${Utils.remove(info.plan)}-`,
+                  `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(info.plan)}-`,
                 ],
               },
               {
@@ -56,7 +58,7 @@ export const createDeductibleModifiers = (
               {
                 type: EnumConditions.coverage,
                 value: [
-                  `-${Utils.remove(data.provider)}.coverages.${Utils.remove(coverage)}-`,
+                  `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
                 ],
               },
             ],
@@ -64,62 +66,65 @@ export const createDeductibleModifiers = (
 
           // if is applied here because typescript was giving error
           if (option.premiumMod) {
-            let rateBase = premiums
-              .filter(
-                (premium) =>
-                  premium.planName == info.plan &&
-                  premium.network == network &&
-                  premium.coverage == coverage &&
-                  premium.copay == copay
-              )
-              .map((premium) => {
-                let rate = {
-                  price: [
-                    {
-                      currency: `-Enum.currency.${InsurerInfo.currency}-`,
-                      value: premium.rates / InsurerInfo.conversion,
-                    },
-                  ],
-                  conditions: [
-                    {
-                      type: EnumConditions.minAge,
-                      value: premium.ageStart,
-                    },
-                    {
-                      type: EnumConditions.maxAge,
-                      value: premium.ageEnd,
-                    },
-                    {
-                      type: EnumConditions.gender,
-                      value: `-Enum.gender.${premium.gender}-`,
-                    },
-                  ],
-                };
+            let filteredRates = premiums.filter(
+              (premium) =>
+                premium.planName == info.plan &&
+                premium.network == network &&
+                premium.coverage == coverage &&
+                premium.copay == copay
+            );
+            if (filteredRates.length == 0)
+              throw new Error(
+                `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
+              );
+            let rateBase = filteredRates.map((premium) => {
+              let rate = {
+                price: [
+                  {
+                    currency: `-Enum.currency.${InsurerInfo.currency}-`,
+                    value: premium.rates / InsurerInfo.conversion,
+                  },
+                ],
+                conditions: [
+                  {
+                    type: EnumConditions.minAge,
+                    value: premium.ageStart,
+                  },
+                  {
+                    type: EnumConditions.maxAge,
+                    value: premium.ageEnd,
+                  },
+                  {
+                    type: EnumConditions.gender,
+                    value: `-Enum.gender.${premium.gender}-`,
+                  },
+                ],
+              };
 
-                if (premium.married === "true") {
-                  rate.conditions.push({
-                    type: EnumConditions.maritalStatus,
-                    value: "-Enum.maritalStatus.married-",
-                  });
-                }
-                if (premium.married === "false") {
-                  rate.conditions.push({
-                    type: EnumConditions.maritalStatus,
-                    value: "-Enum.maritalStatus.single-",
-                  });
-                }
-                if (premium.category)
-                  rate.conditions.push({
-                    type: EnumConditions.category,
-                    value: `-Enum.category.${premium.category}-`,
-                  });
-                if (premium.relation)
-                  rate.conditions.push({
-                    type: EnumConditions.relation,
-                    value: `-Enum.relation.${premium.relation}-`,
-                  });
-                return rate;
-              });
+              if (premium.married === "true") {
+                rate.conditions.push({
+                  type: EnumConditions.maritalStatus,
+                  value: "-Enum.maritalStatus.married-",
+                });
+              }
+              if (premium.married === "false") {
+                rate.conditions.push({
+                  type: EnumConditions.maritalStatus,
+                  value: "-Enum.maritalStatus.single-",
+                });
+              }
+              if (premium.category)
+                rate.conditions.push({
+                  type: EnumConditions.category,
+                  value: `-Enum.category.${premium.category}-`,
+                });
+              if (premium.relation)
+                rate.conditions.push({
+                  type: EnumConditions.relation,
+                  value: `-Enum.relation.${premium.relation}-`,
+                });
+              return rate;
+            });
 
             let baseAnnualPremium =
               InsurerInfo.splitFile == "true"
@@ -133,6 +138,7 @@ export const createDeductibleModifiers = (
               splitArr.push(
                 Utils.remove(`${info.plan}_${coverage}_${network}_${copay}`)
               );
+
             option.premiumMod.conditionalPrices = baseAnnualPremium;
           }
           deductible.options.push(option);

@@ -1,12 +1,15 @@
 import { Utils } from "../../helper/Utils";
 import { Modifiers, PlansInfo } from "../../helper/interfaces";
 
-export const createNetworkModifiers = (data: PlansInfo): Modifiers[] => {
+export const createNetworkModifiers = (
+  data: PlansInfo,
+  index: string | number
+): Modifiers[] => {
   let networkModifiers: Modifiers[] = [];
 
   if (data.info.planNetworksAreSame) {
     let network: Modifiers = {
-      _id: `-${Utils.remove(data.provider)}.modifiers.network-`,
+      _id: `-${Utils.remove(data.provider)}.modifiers${index}.network-`,
       plans: data.plans.map(
         (plan) => `-${Utils.remove(data.provider)}.plans.${Utils.remove(plan)}-`
       ),
@@ -33,9 +36,9 @@ export const createNetworkModifiers = (data: PlansInfo): Modifiers[] => {
   } else {
     data.distinctInfo.forEach((info) => {
       let network: Modifiers = {
-        _id: `-${Utils.remove(data.provider)}.modifiers.network.${Utils.remove(info.plan)}-`,
+        _id: `-${Utils.remove(data.provider)}.modifiers${index}.networks.${Utils.remove(info.plan)}-`,
         plans: [
-          `-${Utils.remove(data.provider)}.plans.${Utils.remove(info.plan)}-`,
+          `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(info.plan)}-`,
         ],
         title: "Network modifier",
         label: "Network",

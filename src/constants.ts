@@ -24,7 +24,7 @@ export const variable = {
   GeographicalCoverage: "Geographical Coverage",
   AnnualLimit: "Annual Limit",
   $_Copay: "$copay",
-  frequencyFrom: ["rates", "benefit"],
+  frequencyFrom: { rates: "rates", benefit: "benefit" },
   addonsPlaceAt: {
     inside: "inside options arr",
     outside: "outside options arr",

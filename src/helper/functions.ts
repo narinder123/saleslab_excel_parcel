@@ -53,11 +53,26 @@ export const Helpers = new (class helperFunction {
     return true;
   }
 
-  convertXlsxToArr(path: string, innerFileName: any): any[] {
+  convertXlsxToArr(path: string, innerFileName: number | string): any[] {
     const Sheet = xlsx.readFile(path);
 
+    let sheetName = innerFileName;
+    if (
+      typeof innerFileName == "string" &&
+      !Sheet.SheetNames.includes(innerFileName)
+    ) {
+      let value;
+      if (typeof innerFileName == "string")
+        value = Sheet.SheetNames.find((name) => innerFileName.includes(name));
+      if (value) sheetName = value;
+    }
+
     let data = xlsx.utils.sheet_to_json(
-      Sheet.Sheets[Sheet.SheetNames[innerFileName]]
+      Sheet.Sheets[
+        typeof innerFileName == "string"
+          ? sheetName
+          : Sheet.SheetNames[innerFileName]
+      ]
     );
     return data;
   }
@@ -92,7 +107,7 @@ export const Helpers = new (class helperFunction {
       fs.mkdirSync(`Outputs/${provider}/V2/${folder}`);
 
     fs.appendFileSync(`Outputs/${provider}/V2/${folder}/${fileName}.js`, str);
-    Utils.log(`${provider}/${folder}/${fileName} Created!`);
+    console.log(`|- ${provider}/${folder}/${fileName} Created!`);
   }
 
   getResidencyArr(residency: string): string[][] {
@@ -155,5 +170,63 @@ export const Helpers = new (class helperFunction {
     });
 
     return benefitsForV1;
+  }
+
+  createV2IndexJS(provider: string) {
+    let str = `const Provider = require('./provider/index');
+        const Plans = require('./plans/index');
+        const PricingTables = require('./PricingTable/index');
+        const Coverages = require('./coverage/index');
+        const Modifiers = require('./modifiers/index');
+        let data = [
+          // Provider data
+          {
+            model: "Provider",
+            modelPath: "models/provider-model.js",
+            documents: Provider,
+          },
+
+          // Plans
+          {
+            model: "Plan",
+            modelPath: "models/plan-model.js",
+            documents: Plans,
+          },
+
+          // Pricing Tables
+          {
+            model: "PricingTable",
+            modelPath: "models/pricing-table-model.js",
+            documents: PricingTables,
+          },
+
+          // Coverage information
+          {
+            model: "Coverage",
+            modelPath: "models/coverage-model.js",
+            documents: Coverages,
+          },
+
+          {
+            // Plan modifiers
+            model: "Modifier",
+            modelPath: "models/modifier-model.js",
+            documents: Modifiers,
+          },
+        ];
+
+        module.exports = data`;
+    fs.appendFileSync(`Outputs/${provider}/V2/index.js`, str);
+  }
+  createV2CoreIndexJS(provider: string, data: any) {
+    data = JSON.stringify(data);
+    data = data.replace(/"-/g, "");
+    data = data.replace(/-"/g, "");
+    let str = `
+    const Utils = require("../../services/utils/utils");
+    const utils = new Utils({ config: { logging: false } });
+    const { generateMongoIdFromString } = utils;
+    module.exports = ${data};`;
+    fs.appendFileSync(`Outputs/${provider}/V2/core-index.js`, str);
   }
 })();

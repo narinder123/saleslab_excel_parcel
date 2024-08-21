@@ -13,14 +13,21 @@ export const createAddons = (
   data: Modifiers[],
   addons: string[],
   InsurerInfo: InsurerInfo,
-  index: number
+  index: number | string
 ): Modifiers[] => {
   return data.map((mod: Modifiers) => {
     if (!addons.includes(mod.label)) return mod;
     let addonInfo: Addons[] = DataConverters.fetchSheet(
-      fileTypes.addons,
-      `${mod.label.split(" ")[0]}-info`
+      `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
+      `${mod.label}`
     );
+    addonInfo.length == 0 &&
+      console.log(
+        "addonInfo >>",
+        addonInfo,
+        `${fileTypes.addons}${index}`,
+        `${mod.label}`
+      );
 
     if (addonInfo[0].placeAt == variable.addonsPlaceAt.outside) {
       if (addonInfo[0].type == "fixed")
@@ -28,7 +35,7 @@ export const createAddons = (
           type: addonInfo[0].type,
           price: [
             {
-              value: +parseInt(`${addonInfo[0].value}`),
+              value: parseFloat(`${addonInfo[0].value}`),
               currency: InsurerInfo.currency,
             },
           ],
@@ -44,7 +51,7 @@ export const createAddons = (
               type: addon.type,
               price: [
                 {
-                  value: +parseInt(`${addon.value}`),
+                  value: +parseFloat(`${addon.value}`),
                   currency: InsurerInfo.currency,
                 },
               ],
@@ -57,12 +64,50 @@ export const createAddons = (
 
             opt.conditions?.push({
               type: EnumConditions[condition],
-              value: getConditionValue(condition, addon, InsurerInfo),
+              value: getConditionValue(condition, addon, InsurerInfo, index),
             });
           });
 
           return opt;
         });
+        mod.isOptional =
+          addonInfo[0].isOptional?.toString().toLowerCase() == "true"
+            ? true
+            : false;
+        mod.hasOptions = true;
+      } else if (addonInfo[0].type == "percentage") {
+        mod.options = addonInfo.map((addon, i) => {
+          let opt: Option = {
+            id: `option-${i + 1}`,
+            label: addon.label,
+            description: addon.description,
+            premiumMod: {
+              type: addon.type,
+              price: [
+                {
+                  value: parseFloat(`${addon.value}`),
+                },
+              ],
+            },
+            conditions: [],
+          };
+
+          Object.keys(EnumConditions).forEach((condition) => {
+            if (!addon[condition]) return;
+
+            opt.conditions?.push({
+              type: EnumConditions[condition],
+              value: getConditionValue(condition, addon, InsurerInfo, index),
+            });
+          });
+
+          return opt;
+        });
+        mod.isOptional =
+          addonInfo[0].isOptional?.toString().toLowerCase() == "true"
+            ? true
+            : false;
+        mod.hasOptions = true;
       } else {
         let addonRates = DataConverters.fetchSheet(
           fileTypes.addons,
@@ -83,7 +128,7 @@ export const createAddons = (
                     conditions: [],
                     price: [
                       {
-                        value: parseInt(rate.value) / InsurerInfo.conversion,
+                        value: parseFloat(rate.value) / InsurerInfo.conversion,
                         currency: InsurerInfo.currency,
                       },
                     ],
@@ -93,7 +138,12 @@ export const createAddons = (
 
                     obj.conditions?.push({
                       type: EnumConditions[condition],
-                      value: getConditionValue(condition, addon, InsurerInfo),
+                      value: getConditionValue(
+                        condition,
+                        addon,
+                        InsurerInfo,
+                        index
+                      ),
                     });
                   });
 
@@ -108,7 +158,7 @@ export const createAddons = (
 
             opt.conditions?.push({
               type: EnumConditions[condition],
-              value: getConditionValue(condition, addon, InsurerInfo),
+              value: getConditionValue(condition, addon, InsurerInfo, index),
             });
           });
 
@@ -124,7 +174,8 @@ export const createAddons = (
 const getConditionValue = (
   type: string,
   data: any,
-  InsurerInfo: InsurerInfo
+  InsurerInfo: InsurerInfo,
+  index: number | string
 ) => {
   const checks = {
     plan: "plan",
@@ -141,7 +192,7 @@ const getConditionValue = (
   switch (type) {
     case checks.plan:
       return [
-        `-${Utils.remove(InsurerInfo.provider)}.plans.${Utils.remove(data[type])}-`,
+        `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(data[type])}-`,
       ];
     case checks.minAge:
       return data[type];

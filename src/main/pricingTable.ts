@@ -15,8 +15,11 @@ export const createPricingTableData = (
   PlansInfo: PlansInfo,
   data: any[],
   info: InsurerInfo,
-  rates: RawRates[]
+  rates: RawRates[],
+  index: number | string
 ): { data: PricingTable[]; splitFile: string[] } => {
+  if (rates.length == 0)
+    throw new Error(`rates not found for V2 index:${index}`);
   let res: PricingTable[] = [];
   let splitArr: string[] = [];
   PlansInfo.distinctInfo.map((planData) => {
@@ -27,7 +30,8 @@ export const createPricingTableData = (
         coverage,
         planData.network.length,
         planData.copay[0],
-        info
+        info,
+        index
       );
 
       let baseAnnualPremium =
@@ -41,8 +45,8 @@ export const createPricingTableData = (
       if (info.splitFile == "true")
         splitArr.push(Utils.remove(`${planData.plan}_${coverage}`));
       let table: PricingTable = {
-        _id: `-${Utils.remove(PlansInfo.provider)}.pricingTables.${Utils.remove(planData.plan)}.${Utils.remove(coverage)}-`,
-        plan: `-${Utils.remove(PlansInfo.provider)}.plans.${Utils.remove(planData.plan)}-`,
+        _id: `-${Utils.remove(PlansInfo.provider)}.pricingTables${index}.${Utils.remove(planData.plan)}.${Utils.remove(coverage)}-`,
+        plan: `-${Utils.remove(PlansInfo.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
         annualLimit: getAnnualLimit(
           data.find((v) => v.Benefit == variable.AnnualLimit)[planData.plan]
         ),
@@ -51,7 +55,7 @@ export const createPricingTableData = (
         includedResidence: Helpers.getResidencyArr(info.residencies[0])[0],
         excludedResidence: Helpers.getResidencyArr(info.residencies[0])[1],
         coverage: [
-          `-${Utils.remove(PlansInfo.provider)}.coverages.${Utils.remove(coverage)}-`,
+          `-${Utils.remove(PlansInfo.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
         ],
         baseAnnualPremium,
       };
@@ -75,7 +79,8 @@ const buildBasePremium = (
   coverage: string,
   networks: number,
   copay: string,
-  info: InsurerInfo
+  info: InsurerInfo,
+  index: number | string
 ): BasePremium[] => {
   let rates = data.filter(
     (rate) =>
@@ -85,7 +90,9 @@ const buildBasePremium = (
       rate.frequency == "Annually"
   );
   if (rates.length == 0) {
-    throw Error(`No premium found for "${plan}" - "${coverage}" - "${copay}"`);
+    throw Error(
+      `No premium found for "${plan}" - "${coverage}" - "${copay}" - index:${index}`
+    );
   }
   if (networks > 1) {
     let { min, max } = rates.reduce(

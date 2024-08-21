@@ -25,6 +25,8 @@ export const DataConverters = new (class {
       frequencies: [],
       frequencyFrom: "benefit",
       addons: [],
+      insurerName: "",
+      ageCalculationMethod: "",
     };
 
     for (let key in info) {

@@ -59,6 +59,8 @@ export interface InsurerInfo {
   frequencyFrom?: "benefit" | "rates";
   addons?: string[];
   compantId?: string;
+  ageCalculationMethod?: string;
+  insurerName: string;
   [key: string]: any;
 }
 
@@ -108,7 +110,7 @@ export interface Coverages {
 // PricingTable Interfaces ----------------------------
 
 export interface PriceObj {
-  currency: string;
+  currency?: string;
   value: number;
 }
 
@@ -183,7 +185,7 @@ export interface Addons {
   sheetName: string;
   isOptional: "true" | "false";
   label: string;
-  type: "conditional-fixed" | "fixed" | "conditional-override";
+  type: "conditional-fixed" | "fixed" | "conditional-override" | "percentage";
   description?: string;
   placeAt: "inside options arr" | "outside options arr";
   flag?: string;

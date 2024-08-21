@@ -14,12 +14,13 @@ import {
 
 export const createBenefitModifiers = (
   data: RawBenefits[],
-  planData: PlansInfo
+  planData: PlansInfo,
+  index: number | string
 ): Modifiers[] => {
   let benefits: Modifiers[] = [];
   planData.benefits.map((benefit: string) => {
     let obj: Modifiers = {
-      _id: `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(benefit)}-`,
+      _id: `-${Utils.remove(planData.provider)}.modifiers${index}.benefits.${Utils.remove(benefit)}-`,
       plans: [],
       title: benefit,
       label: benefit,
@@ -39,7 +40,7 @@ export const createBenefitModifiers = (
     let benefitObj = buildBenefitOptions(benefitMod, data);
     benefitObj.plans.map((plan) =>
       obj.plans.push(
-        `-${Utils.remove(planData.provider)}.plans.${Utils.remove(plan)}-`
+        `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(plan)}-`
       )
     );
     if (benefitObj.options.length > 1) {
@@ -56,7 +57,7 @@ export const createBenefitModifiers = (
             type: EnumConditions.plan,
             value: option.plans.map(
               (v) =>
-                `-${Utils.remove(planData.provider)}.plans.${Utils.remove(v)}-`
+                `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(v)}-`
             ),
           });
         }
@@ -85,9 +86,9 @@ export const createBenefitModifiers = (
             .split("/")
             .map(
               (b) =>
-                `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(b)}-`
+                `-${Utils.remove(planData.provider)}.modifiers${index}.benefits.${Utils.remove(b)}-`
             )
-        : `-${Utils.remove(planData.provider)}.modifiers.benefits.${Utils.remove(benefitMod[dependentType])}-`;
+        : `-${Utils.remove(planData.provider)}.modifiers${index}.benefits.${Utils.remove(benefitMod[dependentType])}-`;
     }
 
     benefits.push(obj);
@@ -171,5 +172,6 @@ const buildBenefitOptions = (
       break;
     } else res.options.push({ value: data[plan], plans: [plan] });
   }
+  if (res.options.length == 0) console.log(`benefit options empty`, data);
   return res;
 };

@@ -5,11 +5,12 @@ import { Coverages, PlansInfo } from "../helper/interfaces";
 
 export const createCoverageData = (
   data: PlansInfo,
-  residency: string
+  residency: string,
+  index: number | string
 ): Coverages[] => {
   return data.coverages.map((cov) => {
     return {
-      _id: `-${Utils.remove(data.provider)}.coverages.${Utils.remove(cov)}-`,
+      _id: `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(cov)}-`,
       title: cov,
       internalTitle: cov,
       includedResidence: Helpers.getResidencyArr(residency)[0],

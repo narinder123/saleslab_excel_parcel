@@ -10,6 +10,7 @@ import { Utils } from "./helper/Utils";
 import fs from "fs";
 import { Import_V1_Data, create_V1_Data } from "./main/generateV1";
 import { V1DBMode } from "./helper/interfaces";
+import { createProvider } from "./main/provider";
 
 const InputArguments = Helpers.getInputArguments();
 Helpers.checkInputFolderExists();
@@ -64,11 +65,15 @@ if (InputArguments.import && !InputArguments.V1) {
   // Generating V2 output files with json files
   if (InputArguments.V2) {
     Utils.log("Generating V2 Data");
+    const getIndex = (i: number): number | string =>
+      InfoData.residencies.length > 1 ? i + 1 : "";
     const core = createCoreIndexData(datas);
     const coverages = datas.flatMap((data, i) =>
-      createCoverageData(data, InfoData.residencies[i])
+      createCoverageData(data, InfoData.residencies[i], getIndex(i))
     );
-    const plans = datas.flatMap((data) => createPlansData(data));
+    const plans = datas.flatMap((data, i) =>
+      createPlansData(data, getIndex(i))
+    );
     const pricingTables = datas.flatMap(
       (data, i) =>
         createPricingTableData(
@@ -77,27 +82,30 @@ if (InputArguments.import && !InputArguments.V1) {
           InfoData,
           rates[i].filter(
             (rate) => rate.platform == "both" || rate.platform == "V2"
-          )
+          ),
+          getIndex(i)
         ).data
     );
-    const modifiers = datas.flatMap((data, i) =>
-      createModifiersData(
-        data,
-        rates[i].filter(
-          (rate) => rate.platform == "both" || rate.platform == "V2"
-        ),
-        planDatas[i],
-        InfoData,
-        i
-      )
+    const modifiers = datas.flatMap(
+      (data, i) =>
+        createModifiersData(
+          data,
+          rates[i].filter(
+            (rate) => rate.platform == "both" || rate.platform == "V2"
+          ),
+          planDatas[i],
+          InfoData,
+          getIndex(i)
+        ).data
     );
+    const provider = createProvider(InfoData);
 
     let Output: any = {
-      core: { data: core, Enum: false, core: false },
-      coverages: { data: coverages, Enum: false, core: true },
-      plans: { data: plans, Enum: false, core: true },
-      pricingTables: { data: pricingTables, Enum: false, core: true },
-      modifiers: { data: modifiers, Enum: false, core: true },
+      provider: { data: provider, Enum: true, core: false },
+      coverage: { data: coverages, Enum: true, core: true },
+      plans: { data: plans, Enum: true, core: true },
+      PricingTable: { data: pricingTables, Enum: true, core: true },
+      modifiers: { data: modifiers, Enum: true, core: true },
     };
 
     // Generating V2 output files
@@ -112,6 +120,8 @@ if (InputArguments.import && !InputArguments.V1) {
         Enum,
       });
     }
+    Helpers.createV2IndexJS(InfoData.provider);
+    Helpers.createV2CoreIndexJS(InfoData.provider, core);
     Utils.log("V2 Data are generated");
   }
 }

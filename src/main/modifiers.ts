@@ -16,16 +16,21 @@ export const createModifiersData = (
   Premiums: RawRates[],
   Benefits: RawBenefits[],
   Info: InsurerInfo,
-  index: number
+  index: number | string
 ): { data: Modifiers[]; splitFile: string[] } => {
-  const deductibles = createDeductibleModifiers(PlanData, Premiums, Info);
-  let benefits = createBenefitModifiers(Benefits, PlanData);
+  const deductibles = createDeductibleModifiers(
+    PlanData,
+    Premiums,
+    Info,
+    index
+  );
+  let benefits = createBenefitModifiers(Benefits, PlanData, index);
   if (Info.addons) benefits = createAddons(benefits, Info.addons, Info, index);
 
   return {
     data: [
       ...benefits,
-      ...createNetworkModifiers(PlanData),
+      ...createNetworkModifiers(PlanData, index),
       ...deductibles.data,
       ...createPaymentFrequencyModifier(
         Info,

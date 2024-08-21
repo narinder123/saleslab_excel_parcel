@@ -14,7 +14,7 @@ export const createPaymentFrequencyModifier = (
   premiums: RawRates[],
   benefits: RawBenefits[],
   data: PlansInfo,
-  index: number
+  index: number | string
 ) => {
   let modifier: Modifiers = {
     _id: `-${InsurerInfo.provider}.modifiers${index}.paymentFrequency-`,
@@ -46,7 +46,7 @@ export const createPaymentFrequencyModifier = (
       },
     ],
   };
-  if (InsurerInfo.frequencyFrom == variable.frequencyFrom[0]) {
+  if (InsurerInfo.frequencyFrom == variable.frequencyFrom.rates) {
     InsurerInfo.frequencies?.forEach((frequency) => {
       if (frequency == "Annually") return;
       if (!paymentFrequencies[frequency])
@@ -69,7 +69,7 @@ export const createPaymentFrequencyModifier = (
                   {
                     type: EnumConditions.plan,
                     value: [
-                      `-${Utils.remove(data.provider)}.plans.${Utils.remove(info.plan)}-`,
+                      `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(info.plan)}-`,
                     ],
                   },
                   {
@@ -79,7 +79,7 @@ export const createPaymentFrequencyModifier = (
                   {
                     type: EnumConditions.coverage,
                     value: [
-                      `-${Utils.remove(data.provider)}.coverages.${Utils.remove(coverage)}-`,
+                      `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
                     ],
                   },
                   {
