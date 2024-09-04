@@ -78,6 +78,7 @@ export const DataConverters = new (class {
     const copays = Object.values(data.find((v) => v.Benefit == variable.Copays))
       .map((v) => v + "")
       .reduce((acc: string[], v: string) => {
+        console.log("v ", v)
         if (v.includes("/")) return [...acc, ...v.split("/")];
         return [...acc, v];
       }, [])

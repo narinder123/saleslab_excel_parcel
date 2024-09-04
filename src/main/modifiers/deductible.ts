@@ -78,11 +78,11 @@ export const createDeductibleModifiers = (
               throw new Error(
                 `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
               );
-            console.log("filteredRates.length 1 >>", filteredRates.length);
+            // console.log("filteredRates.length 1 >>", filteredRates.length);
             if (filteredRates.length > 500) {
               filteredRates = filteredRates.slice(0, 100);
             }
-            console.log("filteredRates.length 2 >>", filteredRates.length);
+            // console.log("filteredRates.length 2 >>", filteredRates.length);
 
             if (filteredRates[0].custom) {
               if (!customConditions[filteredRates[0].custom])

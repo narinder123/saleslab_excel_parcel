@@ -20,7 +20,8 @@ export const createBenefitModifiers = (
   let benefits: Modifiers[] = [];
 
   planData.benefits.map((benefit: string) => {
-    if (!coreBenefitsTypes[benefit])
+    // console.log("benefit", benefit);
+    if (!coreBenefitsTypes[benefit.trim()])
       throw new Error(
         `${benefit} - coreBenefitsTypes not found index:${index}`
       );

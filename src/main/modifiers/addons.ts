@@ -35,8 +35,8 @@ export const createAddons = (
         `${mod.label}`
       );
 
-    if (addonInfo[0].placeAt == variable.addonsPlaceAt.outside) {
-      if (addonInfo[0].type == "fixed")
+    if (addonInfo[0]?.placeAt == variable.addonsPlaceAt.outside) {
+      if (addonInfo[0]?.type == "fixed")
         mod.addonCost = {
           type: addonInfo[0].type,
           price: [
@@ -54,7 +54,7 @@ export const createAddons = (
         };
     } else {
       mod.description = "";
-      if (addonInfo[0].type == "fixed" && !addonInfo[0].sheetName) {
+      if (addonInfo[0]?.type == "fixed" && !addonInfo[0].sheetName) {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
             id: `option-${i + 1}`,
@@ -94,7 +94,7 @@ export const createAddons = (
             ? true
             : false;
         mod.hasOptions = true;
-      } else if (addonInfo[0].type == "percentage") {
+      } else if (addonInfo[0]?.type == "percentage") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
             id: `option-${i + 1}`,
@@ -145,14 +145,19 @@ export const createAddons = (
         mod.isOptional = true;
         mod.assignmentType = "PER_CUSTOMER";
         mod.options = addonInfo.map((addon, i) => {
-          let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
-          if (filteredRates.length == 0)
-            throw `No record found for ${mod.label} index:${i} flag:${addon.flag}`;
+          
           let opt: Option = {
             id: `option-${i + 1}`,
             label: addon.label,
             description: addon.description,
-            addonCost: {
+            conditions: [],
+          };
+
+          if(addon.flag && addon.flag != "no flag") {
+            let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
+          if (filteredRates.length == 0)
+            throw `No record found for ${mod.label} index:${i} flag:${addon.flag}`;
+            opt.addonCost = {
               type: addon.type,
               conditionalPrices: filteredRates.map((rate) => {
                 let obj: premiumCondition = {
@@ -188,9 +193,8 @@ export const createAddons = (
 
                 return obj;
               }),
-            },
-            conditions: [],
-          };
+            }
+          }
 
           Object.keys(EnumConditions).forEach((condition) => {
             if (!addon[condition]) return;
