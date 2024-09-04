@@ -41,6 +41,8 @@ export interface RawRates {
   frequency?: string;
   married?: "true" | "false";
   platform: "V1" | "V2" | "both";
+  currency?: string;
+  custom?: string;
   [key: string]: any;
 }
 
@@ -61,6 +63,7 @@ export interface InsurerInfo {
   compantId?: string;
   ageCalculationMethod?: string;
   insurerName: string;
+  multiCurrency?: ("rates" | "benefits")[];
   [key: string]: any;
 }
 
@@ -117,7 +120,7 @@ export interface PriceObj {
 export interface BasePremium {
   fromAge: number;
   toAge: number;
-  gender: string;
+  gender?: string;
   price: PriceObj[];
   maritalStatus?: string;
   category?: string;
@@ -191,6 +194,7 @@ export interface Addons {
   flag?: string;
   plan?: string;
   value?: string | number;
+  currency?: string;
   [key: string]: any;
 }
 
@@ -205,5 +209,6 @@ export interface EnumConditionsTypes {
   relation: string;
   maritalStatus: string;
   deductible: string;
+  frequency: string;
   [key: string]: string;
 }

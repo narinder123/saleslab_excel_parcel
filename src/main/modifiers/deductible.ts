@@ -1,4 +1,4 @@
-import { EnumConditions } from "../../constants";
+import { EnumConditions, customConditions } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
   InsurerInfo,
@@ -15,6 +15,7 @@ export const createDeductibleModifiers = (
   InsurerInfo: InsurerInfo,
   index: number | string
 ): { data: Modifiers[]; splitFile: string[] } => {
+  const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
   let deductible: Modifiers = {
     _id: `-${Utils.remove(data.provider)}.modifiers${index}.deductible-`,
     plans: data.plans.map(
@@ -77,12 +78,32 @@ export const createDeductibleModifiers = (
               throw new Error(
                 `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
               );
+            console.log("filteredRates.length 1 >>", filteredRates.length);
+            if (filteredRates.length > 500) {
+              filteredRates = filteredRates.slice(0, 100);
+            }
+            console.log("filteredRates.length 2 >>", filteredRates.length);
+
+            if (filteredRates[0].custom) {
+              if (!customConditions[filteredRates[0].custom])
+                throw new Error(
+                  `${filteredRates[0].custom} condition doesn't exist in customConditions array`
+                );
+              option.conditions?.push(
+                customConditions[filteredRates[0].custom]
+              );
+            }
             let rateBase = filteredRates.map((premium) => {
-              let rate = {
+              let rate: {
+                price: { currency: string; value: number }[];
+                conditions: { type: string; value: string | number }[];
+              } = {
                 price: [
                   {
-                    currency: `-Enum.currency.${InsurerInfo.currency}-`,
-                    value: premium.rates / InsurerInfo.conversion,
+                    currency: `-Enum.currency.${multiCurrency ? premium.currency : InsurerInfo.currency}-`,
+                    value: multiCurrency
+                      ? premium.rates
+                      : premium.rates / InsurerInfo.conversion,
                   },
                 ],
                 conditions: [
@@ -94,12 +115,14 @@ export const createDeductibleModifiers = (
                     type: EnumConditions.maxAge,
                     value: premium.ageEnd,
                   },
-                  {
-                    type: EnumConditions.gender,
-                    value: `-Enum.gender.${premium.gender}-`,
-                  },
                 ],
               };
+              if (premium.gender) {
+                rate.conditions.push({
+                  type: EnumConditions.gender,
+                  value: `-Enum.gender.${premium.gender}-`,
+                });
+              }
 
               if (premium.married === "true") {
                 rate.conditions.push({
@@ -123,6 +146,13 @@ export const createDeductibleModifiers = (
                   type: EnumConditions.relation,
                   value: `-Enum.relation.${premium.relation}-`,
                 });
+              if (premium.custom) {
+                if (!customConditions[premium.custom])
+                  throw new Error(
+                    `${premium.custom} condition doesn't exist in customConditions array`
+                  );
+                rate.conditions.push(customConditions[premium.custom]);
+              }
               return rate;
             });
 

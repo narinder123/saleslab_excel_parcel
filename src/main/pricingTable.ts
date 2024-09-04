@@ -16,7 +16,8 @@ export const createPricingTableData = (
   data: any[],
   info: InsurerInfo,
   rates: RawRates[],
-  index: number | string
+  index: number | string,
+  res_index: number
 ): { data: PricingTable[]; splitFile: string[] } => {
   if (rates.length == 0)
     throw new Error(`rates not found for V2 index:${index}`);
@@ -52,8 +53,12 @@ export const createPricingTableData = (
         ),
         startDate: new Date(info.startDate),
         endDate: info.endDate ? new Date(info.endDate) : "",
-        includedResidence: Helpers.getResidencyArr(info.residencies[0])[0],
-        excludedResidence: Helpers.getResidencyArr(info.residencies[0])[1],
+        includedResidence: Helpers.getResidencyArr(
+          info.residencies[res_index]
+        )[0],
+        excludedResidence: Helpers.getResidencyArr(
+          info.residencies[res_index]
+        )[1],
         coverage: [
           `-${Utils.remove(PlansInfo.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
         ],
@@ -82,6 +87,7 @@ const buildBasePremium = (
   info: InsurerInfo,
   index: number | string
 ): BasePremium[] => {
+  const multiCurrency = info.multiCurrency?.includes("rates");
   let rates = data.filter(
     (rate) =>
       rate.planName == plan &&
@@ -123,14 +129,16 @@ const buildBasePremium = (
     let res: BasePremium = {
       fromAge: rate.ageStart,
       toAge: rate.ageEnd,
-      gender: `-Enum.gender.${rate.gender}-`,
       price: [
         {
-          value: rate.rates / info.conversion,
-          currency: `-Enum.currency.${info.currency}-`,
+          value: multiCurrency ? rate.rates / info.conversion : rate.rates,
+          currency: `-Enum.currency.${multiCurrency ? rate.currency : info.currency}-`,
         },
       ],
     };
+    if(rate.gender){
+      res.gender = `-Enum.gender.${rate.gender}-`;
+    }
     if (rate.married === "true") {
       res.maritalStatus = "-Enum.maritalStatus.married-";
     }

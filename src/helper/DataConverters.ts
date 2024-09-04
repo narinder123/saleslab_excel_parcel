@@ -27,6 +27,7 @@ export const DataConverters = new (class {
       addons: [],
       insurerName: "",
       ageCalculationMethod: "",
+      multiCurrency: [],
     };
 
     for (let key in info) {
@@ -137,18 +138,17 @@ export const DataConverters = new (class {
           benefit: data.reduce((acc, b) => {
             if (
               typeof b[plan] == "string" &&
-              (Utils.ShouldNotInclude(
+              Utils.ShouldNotInclude(
                 b[variable.UserType],
-                BenefitTypes.Pro,
-                BenefitTypes.All,
-                BenefitTypes.Starter
-              ) ||
-                b[plan] == "" ||
-                b[plan]?.toLowerCase() == "not available" ||
-                b[plan] == "N/A")
+                BenefitTypes.type,
+                BenefitTypes.none
+              ) &&
+              b[plan] !== "" &&
+              b[plan]?.toLowerCase() !== "not available" &&
+              b[plan] !== "N/A"
             )
-              return acc;
-            return [...acc, b[variable.Benefit]];
+              return [...acc, b[variable.Benefit]];
+            return acc;
           }, []),
         };
       }),

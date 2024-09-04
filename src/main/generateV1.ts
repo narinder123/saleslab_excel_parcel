@@ -31,7 +31,7 @@ export const create_V1_Data = (
       else if (residency == "AbuDhabi") residency = "UAE - Abu dhabi";
       else if (residency == "NE_Dubai") residency = "UAE";
     }
-    const rateSheet = rateSheets[res_index];
+        const rateSheet = rateSheets[res_index];
     let result = rateSheet
       .filter(
         (rate) =>
@@ -92,6 +92,9 @@ export const create_V1_Data = (
             rate.rateMonth = rateMonth.rates;
           }
         }
+        const Copays = benefits[res_index].find(
+          (b) => b.Benefit == variable.Copays
+        );
 
         let struc: any = {};
         struc.planName1 = rate.planName ? rate.planName : "";
@@ -126,13 +129,27 @@ export const create_V1_Data = (
         struc.coPay = rate.copay;
         struc.coPayOn = "";
         struc.deductible = "";
-        struc.terms1 = rate.terms1 ? rate.terms1 : "";
-        struc.terms2 = rate.terms2 ? rate.terms2 : "";
-        struc.terms3 = rate.terms3 ? rate.terms3 : "";
-        struc.terms4 = rate.terms4 ? rate.terms4 : "";
-        struc.terms5 = rate.terms5 ? rate.terms5 : "";
-        struc.terms6 = rate.terms6 ? rate.terms6 : "";
-        struc.terms7 = rate.terms7 ? rate.terms7 : "";
+        struc.terms1 = rate.terms1
+          ? Number(rate.terms1) / Number(info.conversion)
+          : "";
+        struc.terms2 = rate.terms2
+          ? Number(rate.terms2) / Number(info.conversion)
+          : "";
+        struc.terms3 = rate.terms3
+          ? Number(rate.terms3) / Number(info.conversion)
+          : "";
+        struc.terms4 = rate.terms4
+          ? Number(rate.terms4) / Number(info.conversion)
+          : "";
+        struc.terms5 = rate.terms5
+          ? Number(rate.terms5) / Number(info.conversion)
+          : "";
+        struc.terms6 = rate.terms6
+          ? Number(rate.terms6) / Number(info.conversion)
+          : "";
+        struc.terms7 = rate.terms7
+          ? Number(rate.terms7) / Number(info.conversion)
+          : "";
         struc.annualDentalPrimary = rate.annualDentalPrimary
           ? rate.annualDentalPrimary
           : "";
@@ -217,9 +234,11 @@ export const create_V1_Data = (
         struc.quarterlySurcharge = benefit[BenefitNamesV1.quarterlySurcharge];
         struc.monthlySurcharge = benefit[BenefitNamesV1.monthlySurcharge];
         struc.routineMaternityFilter =
-          benefit[BenefitNamesV1.routineMaternityFilter];
-        struc.wellnessFilter = benefit[BenefitNamesV1.wellnessFilter];
-        struc.opticalFilter = benefit[BenefitNamesV1.opticalFilter];
+          benefit[BenefitNamesV1.routineMaternityFilter].toLowerCase();
+        struc.wellnessFilter =
+          benefit[BenefitNamesV1.wellnessFilter].toLowerCase();
+        struc.opticalFilter =
+          benefit[BenefitNamesV1.opticalFilter].toLowerCase();
         struc.companyName = info.provider;
         struc.company = info.compantId;
         struc.startDate = info.startDate;
@@ -250,9 +269,6 @@ export const create_V1_Data = (
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
         if (struc.outPatient.includes("$")) {
-          let Copays = benefits[res_index].find(
-            (b) => b.Benefit == variable.Copays
-          );
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");
           if (!$)
             throw new Error(
@@ -273,11 +289,15 @@ export const create_V1_Data = (
                   });
                 struc.outPatient = str;
               });
+
+          if (struc.outPatient.includes("$"))
+            throw new Error(
+              `copay not found for $ - ${rate.copay}, copays: ${
+                Copays && Copays[rate.planName].toString()
+              }`
+            );
         }
         if (struc.physiotherapy.includes("$")) {
-          let Copays = benefits[res_index].find(
-            (b) => b.Benefit == variable.Copays
-          );
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");
           if (!$)
             throw new Error(

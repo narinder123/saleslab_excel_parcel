@@ -18,7 +18,12 @@ export const createBenefitModifiers = (
   index: number | string
 ): Modifiers[] => {
   let benefits: Modifiers[] = [];
+
   planData.benefits.map((benefit: string) => {
+    if (!coreBenefitsTypes[benefit])
+      throw new Error(
+        `${benefit} - coreBenefitsTypes not found index:${index}`
+      );
     let obj: Modifiers = {
       _id: `-${Utils.remove(planData.provider)}.modifiers${index}.benefits.${Utils.remove(benefit)}-`,
       plans: [],

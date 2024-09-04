@@ -8,9 +8,14 @@ export const createPlansData = (
 ): Plans[] => {
   let arr: Plans[] = [];
   data.distinctInfo.map((planData) => {
+    const networks = [
+      `-${Utils.remove(data.provider)}.modifiers${index}.networks${
+        data.info.planNetworksAreSame ? "" : `.${Utils.remove(planData.plan)}`
+      }-`,
+    ];
     arr.push({
       _id: `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
-      provider: `-${Utils.remove(data.provider)}.providers-`,
+      provider: `-${Utils.remove(data.provider)}.provider-`,
       title: planData.plan,
       notes: "",
       benefitCategories,
@@ -18,10 +23,15 @@ export const createPlansData = (
         (v) =>
           `-${Utils.remove(data.provider)}.pricingTables${index}.${Utils.remove(planData.plan)}.${Utils.remove(v)}-`
       ),
-      modifiers: planData.benefit.map(
-        (b) =>
-          `-${Utils.remove(data.provider)}.modifiers${index}.benefits.${Utils.remove(b)}-`
-      ),
+      modifiers: [
+        ...planData.benefit.map(
+          (b) =>
+            `-${Utils.remove(data.provider)}.modifiers${index}.benefits.${Utils.remove(b)}-`
+        ),
+        ...networks,
+        `-${Utils.remove(data.provider)}.modifiers${index}.deductible-`,
+        `-${Utils.remove(data.provider)}.modifiers${index}.paymentFrequency-`,
+      ],
     });
   });
   return arr;

@@ -9,7 +9,7 @@ export const createNetworkModifiers = (
 
   if (data.info.planNetworksAreSame) {
     let network: Modifiers = {
-      _id: `-${Utils.remove(data.provider)}.modifiers${index}.network-`,
+      _id: `-${Utils.remove(data.provider)}.modifiers${index}.networks-`,
       plans: data.plans.map(
         (plan) => `-${Utils.remove(data.provider)}.plans.${Utils.remove(plan)}-`
       ),
@@ -26,7 +26,7 @@ export const createNetworkModifiers = (
       hasOptions: true,
       options: data.networks.map((net, i) => {
         return {
-          id: `option-${i + 1}`,
+          id: net,
           label: net,
           description: net,
         };
@@ -53,7 +53,7 @@ export const createNetworkModifiers = (
         hasOptions: true,
         options: info.network.map((net, i) => {
           return {
-            id: `option-${i + 1}`,
+            id: net,
             label: net,
             description: net,
           };

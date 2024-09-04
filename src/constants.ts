@@ -31,7 +31,22 @@ export const variable = {
   },
 };
 
-export const InfoResidencies = ["UAE", "NE", "Dubai", "AbuDhabi", "NE_Dubai"];
+export const InfoResidencies = [
+  "UAE",
+  "NE",
+  "Dubai",
+  "AbuDhabi",
+  "NE_Dubai",
+  "Latin",
+  "Argentina",
+  "Bolivia",
+  "Guatemala & Martinique",
+  "Honduras",
+  "Belize, Nicaragua & El Salvador",
+  "Panama & Puerto Rico",
+  "Costa Rica",
+  "Mexico",
+];
 
 export const V2Residencies: { [key: string]: string[][] } = {
   UAE: [["AE-DU", "AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"], []],
@@ -42,6 +57,36 @@ export const V2Residencies: { [key: string]: string[][] } = {
   Dubai: [["AE-DU"], ["AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
   AbuDhabi: [["AE-AZ"], ["AE-DU", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
   NE_Dubai: [["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"], ["AE-AZ"]],
+  Latin: [
+    [
+      "BR", // Brazil
+      "CO", // Colombia
+      "HN", // Honduras
+      "PE", // Peru
+      "VE", // Venezuela
+      "UY", // Uruguay
+      "GF", // French Guiana (Note: GF is for French Guiana, which is an overseas department of France)
+      "EC", // Ecuador
+      "PY", // Paraguay
+      "DO", // Dominican Republic
+      "CU", // Cuba
+      "BZ", // Belize
+      "SR", // Suriname
+      "CL", // Chile
+      "NI", // Nicaragua
+      "HT", // Haiti
+      "GY", // Guyana
+    ],
+    [],
+  ],
+  Argentina: [["AR"], []],
+  Bolivia: [["BO"], []],
+  "Guatemala & Martinique": [["GT", "MQ"], []],
+  Honduras: [["HN"], []],
+  "Belize, Nicaragua & El Salvador": [["BZ", "NI", "SV"], []],
+  "Panama & Puerto Rico": [["PA", "PR"], []],
+  "Costa Rica": [["CR"], []],
+  Mexico: [["MX"], []],
 };
 
 export const EnumConditions: EnumConditionsTypes = {
@@ -55,6 +100,7 @@ export const EnumConditions: EnumConditionsTypes = {
   relation: "-Enum.customer.relation-",
   maritalStatus: "-Enum.customer.maritalStatus-",
   deductible: "-Enum.conditions.deductible-",
+  frequency: "-Enum.conditions.modifier-",
 };
 
 export const BenefitTypes = {
@@ -416,6 +462,7 @@ export const coreBenefitsTypes: { [key: string]: string } = {
   "Chronic Condition Cover": "-core.benefitTypes.chronicConditions-",
   "Pre-existing Condition Cover":
     "-core.benefitTypes.preExistingCoverCondition-",
+  "Annual Limit": "-core.benefitTypes.annualLimit-",
   "Accommodation Type": "-core.benefitTypes.accomodation-",
   "Diagnostics & Test": "-core.benefitTypes.diagnosticsAndTest-",
   "Organ Transplant": "-core.benefitTypes.organTransplant-",
@@ -534,10 +581,93 @@ export const BenefitNamesV1 = {
   routineMaternityFilter: "Routine Maternity",
   wellnessFilter: "Wellness",
   opticalFilter: "Optical",
-  dentalFilter: "Dental",
+  dentalFilter: "Dental Filter",
 };
 
 export const DBpath = {
   dev: "saleslabdev",
   prod: "saleslabprod",
+};
+
+export const customConditions: any = {
+  single: {
+    type: "-Enum.customer.config-",
+    value: [
+      {
+        type: "-Enum.customer.category-",
+        value: "-Enum.category.primary-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Spouse-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Child-",
+        count: "==0",
+      },
+    ],
+  },
+  single2: {
+    type: "-Enum.customer.config-",
+    value: [
+      {
+        type: "-Enum.customer.category-",
+        value: "-Enum.category.primary-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Spouse-",
+        count: "==0",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Child-",
+        count: ">=0",
+      },
+    ],
+  },
+  family: {
+    type: "-Enum.customer.config-",
+    value: [
+      {
+        type: "-Enum.customer.category-",
+        value: "-Enum.category.primary-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Spouse-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Child-",
+        count: ">=1",
+      },
+    ],
+  },
+  family2: {
+    type: "-Enum.customer.config-",
+    value: [
+      {
+        type: "-Enum.customer.category-",
+        value: "-Enum.category.primary-",
+        count: "==1",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Spouse-",
+        count: "==0",
+      },
+      {
+        type: "-Enum.customer.relation-",
+        value: "-Enum.relation.Child-",
+        count: ">=2",
+      },
+    ],
+  },
 };

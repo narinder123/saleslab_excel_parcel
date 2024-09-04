@@ -1,4 +1,4 @@
-import { EnumConditions, paymentFrequencies, variable } from "../../constants";
+import { customConditions, EnumConditions, paymentFrequencies, variable } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
   InsurerInfo,
@@ -16,6 +16,7 @@ export const createPaymentFrequencyModifier = (
   data: PlansInfo,
   index: number | string
 ) => {
+  const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
   let modifier: Modifiers = {
     _id: `-${InsurerInfo.provider}.modifiers${index}.paymentFrequency-`,
     plans: [],
@@ -54,6 +55,7 @@ export const createPaymentFrequencyModifier = (
           `${frequency} did not matched, please use any of these: ${Object.keys(paymentFrequencies).join(", ")}`
         );
       let frequencyMod = { ...paymentFrequencies[frequency] };
+      let multiplier = frequency == "semiAnnual"? 2 : frequency == "quarter"? 4:12;
       data.distinctInfo.forEach((info) => {
         info.network.forEach((network) => {
           info.coverage.forEach((coverage) => {
@@ -101,11 +103,16 @@ export const createPaymentFrequencyModifier = (
                       premium.frequency == frequency
                   )
                   .map((premium) => {
-                    let rate = {
+                    let rate: {
+                      price: { currency: string; value: number }[];
+                      conditions: { type: string; value: string | number }[];
+                    } = {
                       price: [
                         {
-                          currency: `-Enum.currency.${InsurerInfo.currency}-`,
-                          value: premium.rates / InsurerInfo.conversion,
+                          currency: `-Enum.currency.${multiCurrency ? premium.currency : InsurerInfo.currency}-`,
+                          value: (multiCurrency
+                            ? premium.rates
+                            : premium.rates / InsurerInfo.conversion)*multiplier,
                         },
                       ],
                       conditions: [
@@ -117,12 +124,14 @@ export const createPaymentFrequencyModifier = (
                           type: EnumConditions.maxAge,
                           value: premium.ageEnd,
                         },
-                        {
-                          type: EnumConditions.gender,
-                          value: `-Enum.gender.${premium.gender}-`,
-                        },
                       ],
                     };
+                    if (premium.gender) {
+                      rate.conditions.push({
+                        type: EnumConditions.gender,
+                        value: `-Enum.gender.${premium.gender}-`,
+                      });
+                    }
 
                     if (premium.married === "true") {
                       rate.conditions.push({
@@ -146,6 +155,13 @@ export const createPaymentFrequencyModifier = (
                         type: EnumConditions.relation,
                         value: `-Enum.relation.${premium.relation}-`,
                       });
+                      if (premium.custom) {
+                        if (!customConditions[premium.custom])
+                          throw new Error(
+                            `${premium.custom} condition doesn't exist in customConditions array`
+                          );
+                        rate.conditions.push(customConditions[premium.custom]);
+                      }
                     return rate;
                   });
                 if (rateBase.length == 0)

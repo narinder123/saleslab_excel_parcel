@@ -71,6 +71,13 @@ if (InputArguments.import && !InputArguments.V1) {
     const coverages = datas.flatMap((data, i) =>
       createCoverageData(data, InfoData.residencies[i], getIndex(i))
     );
+    const V2Rates = (i: number) => {
+      let filteredRates = rates[i].filter(
+        (rate) => rate.platform == "both" || rate.platform == "V2"
+      );
+      if (filteredRates.length == 0) throw new Error("No rates found for V2");
+      return filteredRates;
+    };
     const plans = datas.flatMap((data, i) =>
       createPlansData(data, getIndex(i))
     );
@@ -80,19 +87,16 @@ if (InputArguments.import && !InputArguments.V1) {
           data,
           planDatas[i],
           InfoData,
-          rates[i].filter(
-            (rate) => rate.platform == "both" || rate.platform == "V2"
-          ),
-          getIndex(i)
+          V2Rates(i),
+          getIndex(i),
+          i
         ).data
     );
     const modifiers = datas.flatMap(
       (data, i) =>
         createModifiersData(
           data,
-          rates[i].filter(
-            (rate) => rate.platform == "both" || rate.platform == "V2"
-          ),
+          V2Rates(i),
           planDatas[i],
           InfoData,
           getIndex(i)
