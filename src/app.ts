@@ -33,6 +33,8 @@ if (InputArguments.import && !InputArguments.V1) {
       DataConverters.fetchSheet(`${fileTypes.benefits}${i ? i : ""}`)
     );
 
+    // console.log("planDatas ", planDatas)
+
   const rates = new Array(InfoData.residencies.length)
     .fill(0)
     .map((v, i) =>
