@@ -33,7 +33,15 @@ if (InputArguments.import && !InputArguments.V1) {
       DataConverters.fetchSheet(`${fileTypes.benefits}${i ? i : ""}`)
     );
 
-    // console.log("planDatas ", planDatas)
+    if(true) {
+      const planDatas = new Array(InfoData.residencies.length)
+    .fill(0)
+    .map((v, i) =>
+      DataConverters.fetchMultiCurrenyBenefitsSheet(`${fileTypes.benefits}${i ? i : ""}`,0 , 2)
+    );
+
+    console.log("planDatas ",planDatas);
+    }
 
   const rates = new Array(InfoData.residencies.length)
     .fill(0)

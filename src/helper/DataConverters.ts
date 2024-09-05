@@ -15,6 +15,18 @@ export const DataConverters = new (class {
     );
   }
 
+  fetchMultiCurrenyBenefitsSheet(filename: string, index: number | string = 0, num: number) {
+    // console.log("filename ", filename)
+    // console.log("index ", index)  
+    let folderName = Helpers.getInputArguments().name;
+
+    // let createdResult = [];
+    
+    
+
+    // return createdResult;
+  }
+
   fetchInsurerInfo(data: any[]): InsurerInfo {
     let info: InsurerInfo = {
       provider: "",
