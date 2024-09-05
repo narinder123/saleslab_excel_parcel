@@ -329,7 +329,7 @@ export const create_V1_Data = (
     fs.mkdirSync(`Outputs/${info.provider}/V1`);
 
   jsonData.map((data, res_index) => {
-    let arr = [];
+    let arr: any[] = [];
     if (data.length > 40000) {
       let divide = Math.ceil(data.length / 40000);
       for (let i = 0; i < divide; i++) {

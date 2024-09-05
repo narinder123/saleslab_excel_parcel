@@ -33,14 +33,16 @@ if (InputArguments.import && !InputArguments.V1) {
       DataConverters.fetchSheet(`${fileTypes.benefits}${i ? i : ""}`)
     );
 
-    if(true) {
-      const planDatas = new Array(InfoData.residencies.length)
+
+    let MultiCurrenyBenefits: any[] = []
+    if(InfoData.multiCurrency?.length) {
+      MultiCurrenyBenefits = new Array(InfoData.residencies.length)
     .fill(0)
     .map((v, i) =>
       DataConverters.fetchMultiCurrenyBenefitsSheet(`${fileTypes.benefits}${i ? i : ""}`,0 , 2)
     );
 
-    console.log("planDatas ",planDatas);
+    // console.log("planDatas ", JSON.stringify(planDatas));
     }
 
   const rates = new Array(InfoData.residencies.length)
@@ -102,6 +104,8 @@ if (InputArguments.import && !InputArguments.V1) {
           i
         ).data
     );
+    console.log("InfoData ", InfoData);
+    
     const modifiers = datas.flatMap(
       (data, i) =>
         createModifiersData(
@@ -109,7 +113,8 @@ if (InputArguments.import && !InputArguments.V1) {
           V2Rates(i),
           planDatas[i],
           InfoData,
-          getIndex(i)
+          getIndex(i),
+          MultiCurrenyBenefits[i],
         ).data
     );
     const provider = createProvider(InfoData);

@@ -20,11 +20,20 @@ export const DataConverters = new (class {
     // console.log("index ", index)  
     let folderName = Helpers.getInputArguments().name;
 
-    // let createdResult = [];
+    let createdResult: any[] = [];
     
-    
+    new Array(num-1)
+    .fill(0)
+    .map((v, i) => {
+      createdResult.push(
+        Helpers.convertXlsxToArr(
+          `./Inputs/${folderName}/${filename}.xlsx`,
+          i+1
+        )
+      )
+    })
 
-    // return createdResult;
+    return createdResult;
   }
 
   fetchInsurerInfo(data: any[]): InsurerInfo {
@@ -45,6 +54,8 @@ export const DataConverters = new (class {
     };
 
     for (let key in info) {
+      console.log("data[0][key] ", data[0][key]);
+      
       if (data[0][key])
         info[key] = data[0][key].toString().includes("/")
           ? data[0][key].split("/").filter((v: string) => v)

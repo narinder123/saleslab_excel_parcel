@@ -6,6 +6,7 @@ import {
 } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
+  InsurerInfo,
   Modifiers,
   Option,
   PlansInfo,
@@ -15,11 +16,17 @@ import {
 export const createBenefitModifiers = (
   data: RawBenefits[],
   planData: PlansInfo,
-  index: number | string
+  index: number | string,
+  Info: InsurerInfo,
+  MultiCurrenyBenefits: any[]
 ): Modifiers[] => {
   let benefits: Modifiers[] = [];
 
-  planData.benefits.map((benefit: string) => {
+  // console.log("data ", data.length);
+  
+  // console.log("MultiCurrenyBenefits ", MultiCurrenyBenefits[0].length);
+
+  planData.benefits.map((benefit: string, i) => {
     // console.log("benefit", benefit);
     if (!coreBenefitsTypes[benefit.trim()])
       throw new Error(
@@ -44,11 +51,33 @@ export const createBenefitModifiers = (
 
     let benefitMod = data.find((v) => v.Benefit == benefit);
     let benefitObj = buildBenefitOptions(benefitMod, data);
+
+    let multiCurrencyBenefitObj: any = []
+    MultiCurrenyBenefits.map((benefits, i) => {
+      // console.log("MultiCurrenyBenefits[i] ", MultiCurrenyBenefits[i]);
+      // console.log("benefit -- ", benefits);
+      
+      
+      let multiCurrencyBenefitMod = MultiCurrenyBenefits[i].find((v) => v.Benefit == benefit);
+      
+    multiCurrencyBenefitObj.push(buildBenefitOptions(
+      multiCurrencyBenefitMod,
+      MultiCurrenyBenefits[i]
+    ))
+    })
+
+    // console.log("multiCurrencyBenefitObj >> ", multiCurrencyBenefitObj[0]);
+    // console.log("benefitObj ",benefitObj);
+    
+    
+    
     benefitObj.plans.map((plan) =>
       obj.plans.push(
         `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(plan)}-`
       )
     );
+    // console.log("benefitObj.options ", benefitObj.options);
+
     if (benefitObj.options.length > 1) {
       obj.hasOptions = true;
       obj.options = benefitObj.options.map((option, i) => {
@@ -77,7 +106,35 @@ export const createBenefitModifiers = (
       });
     } else {
       !benefitObj.options[0] && console.log("obj", benefitObj.options, benefit);
-      obj.description = benefitObj.options[0].value;
+      if (
+        Info.multiCurrency?.some((element) =>
+          benefitObj.options[0].value.includes(element)
+        ) &&
+        Info?.multiCurrency?.length
+      ) {
+        const currencies = Info?.multiCurrency;
+        const multiCurrencyBenefitObjData = multiCurrencyBenefitObj
+        new Array(currencies.length).fill(0).map((v, i) => {
+          let t = multiCurrencyBenefitObjData[i-1];          
+          let opt: Option = {
+            id: `option-${i + 1}`,
+            label:
+              i == 0
+                ? benefitObj.options[0].value
+                : t?.options[0].value,
+            description:
+              i == 0
+                ? benefitObj.options[0].value
+                : t?.options[0].value,
+            conditions: [
+              { type: EnumConditions.currency, value: currencies[i] },
+            ],
+          };
+          obj.options.push(opt);
+        });
+      } else {
+        obj.description = benefitObj.options[0].value;
+      }
     }
 
     //  Adding dependsOn or dependentModifiers if exists
@@ -106,12 +163,15 @@ const buildBenefitOptions = (
   data: RawBenefits | undefined,
   benefits: RawBenefits[]
 ) => {
+  // console.log("benefits ", benefits[0]);
+  
   let res: {
     options: { value: string; plans: string[]; copay?: string }[];
     plans: string[];
   } = { options: [], plans: [] };
 
-  for (let plan in data) {
+  for (let plan in data) {   
+
     if (
       !Utils.ShouldNotInclude(plan, variable.UserType, variable.Benefit) ||
       !Utils.ShouldNotInclude(
@@ -122,7 +182,7 @@ const buildBenefitOptions = (
       )
     )
       continue;
-    let index = res.options.findIndex((v) => v.value == data[plan]);
+    let index = res.options.findIndex((v) => v.value == data[plan]);    
     res.plans.push(plan);
     if (index != -1) {
       res.options[index].plans.push(plan);
@@ -178,6 +238,7 @@ const buildBenefitOptions = (
       break;
     } else res.options.push({ value: data[plan], plans: [plan] });
   }
+  
   if (res.options.length == 0) console.log(`benefit options empty`, data);
   return res;
 };
