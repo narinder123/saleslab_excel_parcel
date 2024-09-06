@@ -79,31 +79,84 @@ export const createBenefitModifiers = (
     // console.log("benefitObj.options ", benefitObj.options);
 
     if (benefitObj.options.length > 1) {
-      obj.hasOptions = true;
-      obj.options = benefitObj.options.map((option, i) => {
-        let opt: Option = {
-          id: `option-${i + 1}`,
-          label: option.value,
-          description: option.value,
-          conditions: [],
-        };
-        if (option.plans.length > 0) {
-          opt.conditions?.push({
-            type: EnumConditions.plan,
-            value: option.plans.map(
-              (v) =>
-                `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(v)}-`
-            ),
+      obj.title == "Out-patient Medicines" && console.log("multiCurrencyBenefitObj >> ", multiCurrencyBenefitObj[0])
+        obj.title == "Out-patient Medicines" &&  console.log("benefitObj ",benefitObj);
+        obj.hasOptions = true;
+        if(Info?.multiCurrency?.length && Info?.multiCurrency?.some((element) => {
+          return benefitObj.options?.some((obj)=> {
+              return obj.value?.includes(element)
+          })
+        }) && obj.title == "Out-patient Medicines") {
+          const currencies = Info?.multiCurrency;
+        const multiCurrencyBenefitObjData = multiCurrencyBenefitObj
+        console.log("multiCurrencyBenefitObjData ",  multiCurrencyBenefitObjData)
+        let benefitOptions: any[] = []
+        new Array(currencies.length).fill(0).map((v, currencyIndex) => {
+          const processedOpt = benefitObj.options.map((option, i) => {
+            //NOTE: Start here
+            let t = multiCurrencyBenefitObjData[currencyIndex].options[i];  
+            console.log("loggg ",  currencyIndex == 0 ? option.value : t?.option.value);
+            
+                      
+            let opt: Option = {
+              id: `option-${i + 1}`,
+              label: currencyIndex == 0 ? option.value : t?.option.value,
+              description: currencyIndex == 0 ? option.value : t?.option.value,
+              conditions: [],
+            };
+            if (option.plans.length > 0) {
+              opt.conditions?.push({
+                type: EnumConditions.plan,
+                value: option.plans.map(
+                  (v) =>
+                    `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(v)}-`
+                ),
+              });
+            }
+            if (option.copay) {
+              opt.conditions?.push({
+                type: EnumConditions.deductible,
+                value: [option.copay],
+              });
+            }
+            console.log("opt ", opt);
+            
+            opt.conditions?.push({ type: EnumConditions.currency, value: currencies[currencyIndex] })
+            return opt;
+          })
+          console.log("processedOpt ", processedOpt)
+          benefitOptions.push(processedOpt) 
+        })
+        obj.options = benefitOptions;
+        } else {
+          obj.options = benefitObj.options.map((option, i) => {
+            let opt: Option = {
+              id: `option-${i + 1}`,
+              label: option.value,
+              description: option.value,
+              conditions: [],
+            };
+            if (option.plans.length > 0) {
+              opt.conditions?.push({
+                type: EnumConditions.plan,
+                value: option.plans.map(
+                  (v) =>
+                    `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(v)}-`
+                ),
+              });
+            }
+            if (option.copay) {
+              opt.conditions?.push({
+                type: EnumConditions.deductible,
+                value: [option.copay],
+              });
+            }
+            return opt;
           });
         }
-        if (option.copay) {
-          opt.conditions?.push({
-            type: EnumConditions.deductible,
-            value: [option.copay],
-          });
-        }
-        return opt;
-      });
+
+
+      
     } else {
       !benefitObj.options[0] && console.log("obj", benefitObj.options, benefit);
       if (
