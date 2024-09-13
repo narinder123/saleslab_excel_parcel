@@ -64,6 +64,7 @@ export interface InsurerInfo {
   ageCalculationMethod?: string;
   insurerName: string;
   multiCurrency?: ("rates" | "benefits")[];
+  rateTable?: string[];
   [key: string]: any;
 }
 
@@ -88,6 +89,12 @@ export interface DistinctPlanInfo {
   benefit: string[];
 }
 
+export enum CustomerMaritalStatus {
+  Single = "single",
+  Married = "married",
+  Widow = "widow",
+}
+
 // Plan Interfaces ----------------------------
 
 export interface Plans {
@@ -95,6 +102,7 @@ export interface Plans {
   provider: string;
   title: string;
   notes: string;
+  hasRateTable: boolean;
   benefitCategories: string[];
   pricingTables: string[];
   modifiers: string[];
@@ -139,7 +147,43 @@ export interface PricingTable {
   baseAnnualPremium: BasePremium[] | string;
 }
 
+export enum PremiumModType {
+  Percentage = "percentage",
+  Fixed = "fixed",
+  ConditionalFixed = "conditional-fixed",
+  Override = "override",
+  ConditionalOverride = "conditional-override",
+}
+
+export enum CustomerCategory {
+  PRIMARY = "Primary",
+  PRIMARY_DEPENDENT = "Primary - Dependent",
+  DEPENDENT = "Dependent",
+  DEPENDENT_DEPENDENT = "Dependent - Dependent",
+  PRIMARY_INVESTOR = "Primary - Investor",
+  PRIMARY_INVESTOR_DEPENDENT = "Primary - Investor - Dependent",
+  DEPENDENT_PARENT = "Dependent - Parent",
+  DEPENDENT_PARENT_DEPENDENT = "Dependent - Parent - Dependent",
+  PRIMARY_LOW_SALARY_BAND = "Primary (Low Salary Band)",
+  PRIMARY_LOW_SALARY_BAND_DEPENDENT = "Primary (Low Salary Band) - Dependent",
+  DEPENDENT_LOW_SALARY_BAND = "Dependent (Low Salary Band)",
+  DEPENDENT_LOW_SALARY_BAND_DEPENDENT = "Dependent (Low Salary Band) - Dependent",
+}
+
 //  Modifiers Interfaces ----------------------------
+
+export enum ModifiersType {
+  PROVIDER = "PROVIDER",
+  PLAN = "PLAN",
+  NETWORK = "NETWORK",
+  COVERAGE = "COVERAGE",
+  PAYMENT_FREQ = "PAYMENT_FREQ",
+  DEDUCTIBLE = "DEDUCTIBLE",
+  DISCOUNT = "DISCOUNT",
+  BENEFIT = "BENEFIT",
+  PRICING_TABLE = "PRICING_TABLE",
+  ANNUAL_LIMIT = "ANNUAL_LIMIT",
+}
 
 export interface Modifiers {
   _id: string;
@@ -159,6 +203,7 @@ export interface Modifiers {
   defaultOption?: any[];
   dependentModifiers?: string[];
   dependsOn?: string;
+  hasRateTable?: boolean;
   [key: string]: any;
 }
 
@@ -172,7 +217,7 @@ export interface Option {
 }
 
 export interface premiumMod {
-  type: "conditional-override" | "conditional-fixed" | "fixed" | "percentage";
+  type: PremiumModType;
   conditionalPrices?: premiumCondition[] | string;
   price?: PriceObj[];
 }
@@ -188,7 +233,7 @@ export interface Addons {
   sheetName: string;
   isOptional: "true" | "false";
   label: string;
-  type: "conditional-fixed" | "fixed" | "conditional-override" | "percentage";
+  type: PremiumModType;
   description?: string;
   placeAt: "inside options arr" | "outside options arr";
   flag?: string;
@@ -211,4 +256,29 @@ export interface EnumConditionsTypes {
   deductible: string;
   frequency: string;
   [key: string]: string;
+}
+
+export interface RateTableCustomerPrice {
+  type: PremiumModType;
+  customer: {
+    from: number; // from Age
+    to: number; // to Age
+    gender?: "male" | "female" | "";
+    category?: CustomerCategory;
+    maritalStatus?: CustomerMaritalStatus;
+  };
+  price: {
+    currency: string;
+    price: number;
+  };
+}
+
+export interface rateTable {
+  plans: string[];
+  type: ModifiersType;
+  modType: PremiumModType;
+  value: string;
+  rates: RateTableCustomerPrice[];
+  values?: string[];
+  multiplier?: number;
 }

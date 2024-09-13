@@ -172,12 +172,13 @@ export const Helpers = new (class helperFunction {
     return benefitsForV1;
   }
 
-  createV2IndexJS(provider: string) {
+  createV2IndexJS(provider: string, rateTable:boolean) {
     let str = `const Provider = require('./provider/index');
         const Plans = require('./plans/index');
         const PricingTables = require('./PricingTable/index');
         const Coverages = require('./coverage/index');
         const Modifiers = require('./modifiers/index');
+        ${rateTable ? `const RateTable = require("./RateTable");` :""}
         let data = [
           // Provider data
           {
@@ -213,6 +214,16 @@ export const Helpers = new (class helperFunction {
             modelPath: "models/modifier-model.js",
             documents: Modifiers,
           },
+          ${
+            rateTable
+              ? ` {
+            // Plan modifiers
+            model: "RateTable",
+            modelPath: "models/rate-table-model.js",
+            documents: RateTable,
+          },`
+              : ""
+          }
         ];
 
         module.exports = data`;

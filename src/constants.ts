@@ -1,5 +1,6 @@
 import {
   EnumConditionsTypes,
+  PremiumModType,
   Residencies,
   dependentType,
   premiumMod,
@@ -520,7 +521,7 @@ export const paymentFrequencies: {
       title: "Semi-annual payment",
       label: "Semi-annual",
       premiumMod: {
-        type: "percentage",
+        type: PremiumModType.Percentage,
         price: [],
       },
     },
@@ -533,7 +534,7 @@ export const paymentFrequencies: {
       label: "Quarterly Surcharge",
       description: "Quarterly Surcharge payment frequency",
       premiumMod: {
-        type: "percentage",
+        type: PremiumModType.Percentage,
         price: [],
       },
     },
@@ -546,7 +547,7 @@ export const paymentFrequencies: {
       label: "Monthly Surcharge",
       description: "Monthly Surcharge payment frequency",
       premiumMod: {
-        type: "percentage",
+        type: PremiumModType.Percentage,
         price: [],
       },
     },
@@ -555,7 +556,7 @@ export const paymentFrequencies: {
 
 export const dependentTypeArr: dependentType[] = [
   "dependsOn",
-  "dependentModifiers",
+  "dependentModifiers", 
 ];
 
 export const BenefitNamesV1 = {
@@ -601,12 +602,12 @@ export const customConditions: any = {
       {
         type: "-Enum.customer.relation-",
         value: "-Enum.relation.Spouse-",
-        count: "==1",
+        count: "==0",
       },
       {
         type: "-Enum.customer.relation-",
         value: "-Enum.relation.Child-",
-        count: "==0",
+        count: ">=0",
       },
     ],
   },
@@ -621,12 +622,12 @@ export const customConditions: any = {
       {
         type: "-Enum.customer.relation-",
         value: "-Enum.relation.Spouse-",
-        count: "==0",
+        count: "==1",
       },
       {
         type: "-Enum.customer.relation-",
         value: "-Enum.relation.Child-",
-        count: ">=0",
+        count: "==0",
       },
     ],
   },

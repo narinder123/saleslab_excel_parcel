@@ -2,6 +2,7 @@ import {
   InsurerInfo,
   Modifiers,
   PlansInfo,
+  rateTable,
   RawBenefits,
   RawRates,
 } from "../helper/interfaces";
@@ -17,7 +18,8 @@ export const createModifiersData = (
   Benefits: RawBenefits[],
   Info: InsurerInfo,
   index: number | string
-): { data: Modifiers[]; splitFile: string[] } => {
+): { data: Modifiers[]; splitFile: string[]; rateTableData: rateTable[] } => {
+  const rateTableData: rateTable[] = [];
   const deductibles = createDeductibleModifiers(
     PlanData,
     Premiums,
@@ -25,21 +27,32 @@ export const createModifiersData = (
     index
   );
   let benefits = createBenefitModifiers(Benefits, PlanData, index);
-  if (Info.addons) benefits = createAddons(benefits, Info.addons, Info, index);
+  if (Info.addons) {
+    let addons = createAddons(benefits, Info.addons, Info, index);
+    if (addons.rateTableData.length > 0)
+      rateTableData.push(...addons.rateTableData);
+    benefits = addons.modifiers;
+  }
+  const paymentFrequency = createPaymentFrequencyModifier(
+    Info,
+    Premiums,
+    Benefits,
+    PlanData,
+    index
+  );
+  if (paymentFrequency.rateTableData.length > 0)
+    rateTableData.push(...paymentFrequency.rateTableData);
+  if (deductibles.rateTableData.length > 0)
+    rateTableData.push(...deductibles.rateTableData);
 
   return {
     data: [
       ...benefits,
       ...createNetworkModifiers(PlanData, index),
       ...deductibles.data,
-      ...createPaymentFrequencyModifier(
-        Info,
-        Premiums,
-        Benefits,
-        PlanData,
-        index
-      ),
+      paymentFrequency.modifier,
     ],
     splitFile: deductibles.splitFile,
+    rateTableData,
   };
 };

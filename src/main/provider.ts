@@ -9,6 +9,7 @@ export const createProvider = (insurer: InsurerInfo) => {
       colors: {},
       ageCalculationMethod: `-Enum.ageCalculationMethod.${insurer.ageCalculationMethod ? insurer.ageCalculationMethod : "standard"}-`,
       exchangeRates: [],
+      hasRateTable: insurer.rateTable && insurer.rateTable?.length > 0,
       currentRates: {
         startDate: new Date(insurer.startDate), // Start date of the current rates
         endDate: insurer.endDate ? new Date(insurer.endDate) : "", // End date of the current rates

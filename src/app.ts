@@ -9,8 +9,9 @@ import { createModifiersData } from "./main/modifiers";
 import { Utils } from "./helper/Utils";
 import fs from "fs";
 import { Import_V1_Data, create_V1_Data } from "./main/generateV1";
-import { V1DBMode } from "./helper/interfaces";
+import { rateTable, V1DBMode } from "./helper/interfaces";
 import { createProvider } from "./main/provider";
+import { createRateTableData } from "./main/modifiers/rateTable";
 
 const InputArguments = Helpers.getInputArguments();
 Helpers.checkInputFolderExists();
@@ -79,7 +80,7 @@ if (InputArguments.import && !InputArguments.V1) {
       return filteredRates;
     };
     const plans = datas.flatMap((data, i) =>
-      createPlansData(data, getIndex(i))
+      createPlansData(data, getIndex(i), InfoData)
     );
     const pricingTables = datas.flatMap(
       (data, i) =>
@@ -92,16 +93,21 @@ if (InputArguments.import && !InputArguments.V1) {
           i
         ).data
     );
-    const modifiers = datas.flatMap(
-      (data, i) =>
-        createModifiersData(
-          data,
-          V2Rates(i),
-          planDatas[i],
-          InfoData,
-          getIndex(i)
-        ).data
-    );
+    const rateTableData: rateTable[] = [];
+
+    const modifiers = datas.flatMap((data, i) => {
+      let mods = createModifiersData(
+        data,
+        V2Rates(i),
+        planDatas[i],
+        InfoData,
+        getIndex(i)
+      );
+      if (mods.rateTableData.length > 0)
+        rateTableData.push(...mods.rateTableData);
+      return mods.data;
+    });
+
     const provider = createProvider(InfoData);
 
     let Output: any = {
@@ -112,9 +118,22 @@ if (InputArguments.import && !InputArguments.V1) {
       modifiers: { data: modifiers, Enum: true, core: true },
     };
 
+    if (rateTableData.length > 0) {
+      console.log("rateTableData >>", rateTableData.length);
+      let tempData = createRateTableData(rateTableData, InfoData);
+      Output.RateTable = {
+        data: tempData,
+        Enum: true,
+        core: true,
+        addUp: `const Utils = require("../../../services/utils/utils");
+                const utils = new Utils({ config: { logging: false } });
+                const { generateMongoIdFromString } = utils;`,
+      };
+    }
+
     // Generating V2 output files
     for (let folder in Output) {
-      let { data, Enum, core } = Output[folder];
+      let { data, Enum, core, addUp } = Output[folder];
       Helpers.convertArrToOutputSheet({
         folder,
         fileName: "index",
@@ -122,9 +141,10 @@ if (InputArguments.import && !InputArguments.V1) {
         provider: InfoData.provider,
         core,
         Enum,
+        addUp,
       });
     }
-    Helpers.createV2IndexJS(InfoData.provider);
+    Helpers.createV2IndexJS(InfoData.provider, rateTableData.length > 0);
     Helpers.createV2CoreIndexJS(InfoData.provider, core);
     Utils.log("V2 Data are generated");
   }

@@ -28,6 +28,7 @@ export const DataConverters = new (class {
       insurerName: "",
       ageCalculationMethod: "",
       multiCurrency: [],
+      rateTable: [],
     };
 
     for (let key in info) {
