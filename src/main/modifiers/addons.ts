@@ -67,7 +67,7 @@ export const createAddons = (
       if (addonInfo[0].type == "fixed") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option-${i + 1}`,
+            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             addonCost: {
@@ -107,7 +107,7 @@ export const createAddons = (
       } else if (addonInfo[0].type == "percentage") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option-${i + 1}`,
+            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             premiumMod: {
@@ -159,7 +159,7 @@ export const createAddons = (
         mod.hasOptions = true;
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option-${i + 1}`,
+            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             conditions: [],
@@ -172,13 +172,25 @@ export const createAddons = (
               opt.addonCost = {
                 type: addon.type,
                 conditionalPrices: filteredRates.map((rate) => {
+                  let multiplier = 1;
+                  if (rate.frequency)
+                    multiplier =
+                      rate.frequency == "semiAnnual"
+                        ? 2
+                        : rate.frequency == "quarter"
+                          ? 4
+                          : rate.frequency == "month"
+                            ? 12
+                            : 1;
                   let obj: premiumCondition = {
                     conditions: [],
                     price: [
                       {
-                        value: multiCurrency
-                          ? rate.value
-                          : parseFloat(rate.value) / InsurerInfo.conversion,
+                        value:
+                          (multiCurrency
+                            ? rate.value
+                            : parseFloat(rate.value) / InsurerInfo.conversion) *
+                          multiplier,
                         currency: multiCurrency
                           ? rate.currency
                           : InsurerInfo.currency,

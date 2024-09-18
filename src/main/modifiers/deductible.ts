@@ -57,7 +57,7 @@ export const createDeductibleModifiers = (
           copayList.map((copay) => {
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
-              id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option-${deductible.options.length + 1}`,
+              id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus ? `-${index}` : ""}-${deductible.options.length + 1}`,
               label: copay,
               premiumMod: {
                 type: PremiumModType.ConditionalOverride,
@@ -228,13 +228,14 @@ export const createDeductibleModifiers = (
                     ),
                   });
                 }
+                deductible.options.push(option);
               }
 
               if (customConditionsArr.length > 1) {
                 customConditionsArr.map((condition: string, i: number) => {
                   if (i == 0) return;
                   let tempOption: Option = {
-                    id: `option-${deductible.options.length + 1 + i}`,
+                    id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus ? `-${index}` : ""}-${deductible.options.length + 1}`,
                     label: copay,
                     premiumMod: {
                       type: PremiumModType.ConditionalOverride,
@@ -398,10 +399,10 @@ export const createDeductibleModifiers = (
                   }
                   tempOptions.push(tempOption);
                 });
+                if (tempOptions.length > 0)
+                  deductible.options.push(...tempOptions);
               }
             }
-            deductible.options.push(option);
-            if (tempOptions.length > 0) deductible.options.push(...tempOptions);
           });
         });
       });
