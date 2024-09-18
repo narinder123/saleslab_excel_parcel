@@ -148,6 +148,34 @@ const buildBenefitOptions = (
               });
             res.options.push({ value: str, plans: [plan], copay });
           });
+    }
+    if (data[plan].includes("$-")) {
+      const type = data[plan]
+        .split(" ")
+        .find((str) => str.includes("$-"))
+        ?.replace("$-", "");
+      let Copays = benefits.find((b) => b.Benefit == variable.Copays);
+      let $: any = benefits.find((b) => b.Benefit == `$-${type}`);
+      if (!$)
+        throw new Error(
+          "$ column not found, please fill it in the benefit sheet"
+        );
+      $ = $[plan];
+      Copays &&
+        Copays[plan]
+          .toString()
+          .split("/")
+          .map((copay, i) => {
+            if (!copay.includes(`${type}-`)) return;
+            copay = copay.replace(`${type}-`, "");
+            let str = data[plan].trim();
+            $.split("-")
+              [i].split("/")
+              .forEach((v: string) => {
+                str = str.replace("$", v);
+              });
+            res.options.push({ value: str, plans: [plan], copay });
+          });
     } else if (data[plan].includes("$copay")) {
       let $copay = benefits.find((b) => b.Benefit == variable.$_Copay);
       if (!$copay)
