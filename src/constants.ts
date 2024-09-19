@@ -31,6 +31,7 @@ export const variable = {
     outside: "outside options arr",
   },
   none: "none",
+  Annually: "Annually",
 };
 
 export const InfoResidencies = [

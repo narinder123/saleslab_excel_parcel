@@ -67,7 +67,7 @@ export const createAddons = (
       if (addonInfo[0].type == "fixed") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
+            id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             addonCost: {
@@ -107,7 +107,7 @@ export const createAddons = (
       } else if (addonInfo[0].type == "percentage") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
+            id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             premiumMod: {
@@ -159,12 +159,12 @@ export const createAddons = (
         mod.hasOptions = true;
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option${rateTableStatus ? `-${index}` : ""}-${i + 1}`,
+            id: `option-${i + 1}`,
             label: addon.label,
             description: addon.description,
             conditions: [],
           };
-          if (addonInfo[0].sheetName) {
+          if (addonInfo[0].sheetName && addon.flag !== variable.none) {
             let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
             if (filteredRates.length == 0)
               throw `No record found for ${mod.label} index:${index} flag:${addon.flag}`;

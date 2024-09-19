@@ -43,10 +43,12 @@ export const createBenefitModifiers = (
 
     let benefitMod = data.find((v) => v.Benefit == benefit);
     let benefitObj = buildBenefitOptions(benefitMod, data);
-    benefitObj.plans.map((plan) =>
-      obj.plans.push(
-        `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(plan)}-`
-      )
+    benefitObj.plans.map(
+      (plan) =>
+        planData.plans.includes(plan) &&
+        obj.plans.push(
+          `-${Utils.remove(planData.provider)}.plans${index}.${Utils.remove(plan)}-`
+        )
     );
     if (benefitObj.options.length > 1) {
       obj.hasOptions = true;
@@ -95,7 +97,6 @@ export const createBenefitModifiers = (
             )
         : `-${Utils.remove(planData.provider)}.modifiers${index}.benefits.${Utils.remove(benefitMod[dependentType])}-`;
     }
-
     benefits.push(obj);
   });
   return benefits;
@@ -141,15 +142,16 @@ const buildBenefitOptions = (
           .split("/")
           .map((copay, i) => {
             let str = data[plan].trim();
-            $.split("-")
-              [i].split("/")
-              .forEach((v: string) => {
-                str = str.replace("$", v);
-              });
+            let $_copay = $.split("-")[i];
+            $_copay = $_copay.includes("/") ? $_copay.split("/") : [$_copay];
+            $_copay.forEach((v: string) => {
+              str = str.replace("$", v);
+            });
+            if (str.includes(" $ "))
+              throw `$ found in ${str} | copay:${copay} | $:${$}`;
             res.options.push({ value: str, plans: [plan], copay });
           });
-    }
-    if (data[plan].includes("$-")) {
+    } else if (data[plan].includes("$-")) {
       const type = data[plan]
         .split(" ")
         .find((str) => str.includes("$-"))

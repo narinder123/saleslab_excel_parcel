@@ -27,6 +27,7 @@ export const createDeductibleModifiers = (
     InsurerInfo.rateTable.includes("deductible");
   const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
   InsurerInfo.copayTypes.map((type) => {
+    let count = 1;
     let typeNone = type == variable.none;
     let deductible: Modifiers = {
       _id: `-${Utils.remove(data.provider)}.modifiers${index}.deductible${type == variable.none ? "" : `.${type}`}-`,
@@ -57,7 +58,7 @@ export const createDeductibleModifiers = (
           copayList.map((copay) => {
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
-              id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus ? `-${index}` : ""}-${deductible.options.length + 1}`,
+              id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
               label: copay,
               premiumMod: {
                 type: PremiumModType.ConditionalOverride,
@@ -99,6 +100,7 @@ export const createDeductibleModifiers = (
                   premium.network == network &&
                   premium.coverage == coverage &&
                   premium.copay == copay &&
+                  premium.frequency == variable.Annually &&
                   (typeNone || premium.copayType == type) &&
                   (!customCheck || premium.custom == customConditionsArr[0])
               );
@@ -229,13 +231,14 @@ export const createDeductibleModifiers = (
                   });
                 }
                 deductible.options.push(option);
+                count++;
               }
 
               if (customConditionsArr.length > 1) {
                 customConditionsArr.map((condition: string, i: number) => {
                   if (i == 0) return;
                   let tempOption: Option = {
-                    id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus ? `-${index}` : ""}-${deductible.options.length + 1}`,
+                    id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
                     label: copay,
                     premiumMod: {
                       type: PremiumModType.ConditionalOverride,
@@ -266,7 +269,9 @@ export const createDeductibleModifiers = (
                       premium.network == network &&
                       premium.coverage == coverage &&
                       premium.copay == copay &&
-                      premium.custom == condition
+                      premium.frequency == variable.Annually &&
+                      premium.custom == condition &&
+                      (typeNone || premium.copayType == type)
                   );
                   if (filteredRates.length == 0) return;
                   if (customCheck) {
@@ -380,7 +385,6 @@ export const createDeductibleModifiers = (
                               customer: {
                                 from: premium.ageStart,
                                 to: premium.ageEnd,
-                                gender: premium.gender,
                               },
                               price: {
                                 currency: `-Enum.currency.${multiCurrency ? premium.currency : InsurerInfo.currency}-`,
@@ -391,13 +395,14 @@ export const createDeductibleModifiers = (
                             };
                             if (premium.gender)
                               value.customer.gender = premium.gender;
-                            return value;
+                            return { ...value };
                           }
                         ),
                       });
                     }
                   }
                   tempOptions.push(tempOption);
+                  count++;
                 });
                 if (tempOptions.length > 0)
                   deductible.options.push(...tempOptions);

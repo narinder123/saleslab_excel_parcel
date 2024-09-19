@@ -137,7 +137,7 @@ export const createPaymentFrequencyModifier = (
                 );
                 if (filteredPremiums.length == 0 && !customCheck)
                   throw `no record found for - {planName: "${info.plan}", network: "${network}" , coverage: "${coverage}" , copay: "${copay}", frequency: "${frequency}"}`;
-                if (filteredPremiums.length == 0 && customCheck) {
+                if (filteredPremiums.length !== 0 && customCheck) {
                   if (customCheck) {
                     if (!customConditions[customConditionsArr[0]])
                       throw new Error(
@@ -255,7 +255,7 @@ export const createPaymentFrequencyModifier = (
                   customConditionsArr.map((condition, i) => {
                     if (i == 0) return;
                     let tempOption: Option = {
-                      id: `${frequencyMod.modOption.id}-${modifier.options.length + 1}`,
+                      id: `${frequencyMod.modOption.id}-${modifier.options.length + i + 1}`,
                       label: frequencyMod.label,
                       premiumMod: {
                         type: PremiumModType.ConditionalOverride,
