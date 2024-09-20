@@ -290,12 +290,13 @@ export const create_V1_Data = (
                 struc.outPatient = str;
               });
 
-          if (struc.outPatient.includes("$"))
+          if (struc.outPatient.includes("$")){
+            console.log("out >> ", struc.outPatient)
             throw new Error(
               `copay not found for $ - ${rate.copay}, copays: ${
                 Copays && Copays[rate.planName].toString()
               }`
-            );
+            );}
         }
         if (struc.physiotherapy.includes("$")) {
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");

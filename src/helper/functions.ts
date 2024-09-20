@@ -162,6 +162,8 @@ export const Helpers = new (class helperFunction {
           plans.push(key);
         }
       }
+
+      if(!benefit.Benefit) console.log(benefit)
       for (let key in benefit) {
         if (key == "Benefit" || key == "User Type") continue;
         benefitsForV1[plans.indexOf(key)].benefits[benefit.Benefit.trim()] =
