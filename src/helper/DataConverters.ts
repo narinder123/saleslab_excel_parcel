@@ -17,7 +17,7 @@ export const DataConverters = new (class {
     let info: InsurerInfo = {
       provider: "",
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: undefined,
       residencies: [""],
       conversion: 1,
       currency: "",
@@ -29,6 +29,7 @@ export const DataConverters = new (class {
       ageCalculationMethod: "",
       multiCurrency: [],
       rateTable: [],
+      copayTypes: [],
     };
 
     for (let key in info) {
@@ -37,6 +38,8 @@ export const DataConverters = new (class {
           ? data[0][key].split("/").filter((v: string) => v)
           : data[0][key];
     }
+
+    if (info.copayTypes?.length == 0) info.copayTypes.push(variable.none);
     return info;
   }
 

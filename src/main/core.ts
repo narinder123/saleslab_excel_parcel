@@ -1,7 +1,11 @@
+import { variable } from "../constants";
 import { Utils } from "../helper/Utils";
-import { PlansInfo } from "../helper/interfaces";
+import { InsurerInfo, PlansInfo } from "../helper/interfaces";
 
-export const createCoreIndexData = (data: PlansInfo[]) => {
+export const createCoreIndexData = (
+  data: PlansInfo[],
+  InsurerInfo: InsurerInfo
+) => {
   const mongoId = (str: string) => `-generateMongoIdFromString('${str}')-`;
   const provider = data[0].provider;
   let Ids: any = {
@@ -67,9 +71,19 @@ export const createCoreIndexData = (data: PlansInfo[]) => {
       `${provider} paymentFrequency ${n}`
     );
 
-    Ids[`modifiers${multiResidence ? n : ""}`].deductible = mongoId(
-      `${provider} deductible ${n}`
-    );
+    InsurerInfo.copayTypes.map((type) => {
+      if (type == variable.none)
+        Ids[`modifiers${multiResidence ? n : ""}`].deductible = mongoId(
+          `${provider} deductible ${n}`
+        );
+      else {
+        if (!Ids[`modifiers${multiResidence ? n : ""}`].deductible)
+          Ids[`modifiers${multiResidence ? n : ""}`].deductible = {};
+        Ids[`modifiers${multiResidence ? n : ""}`].deductible[type] = mongoId(
+          `${provider} deductible ${type} ${n}`
+        );
+      }
+    });
 
     Ids[`modifiers${multiResidence ? n : ""}`].discount = mongoId(
       `${provider} discount ${n}`

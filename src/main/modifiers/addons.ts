@@ -64,10 +64,10 @@ export const createAddons = (
         };
     } else {
       mod.description = "";
-      if (addonInfo[0].type == "fixed" && !addonInfo[0].sheetName) {
+      if (addonInfo[0].type == "fixed") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option-${i + 1}`,
+            id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             addonCost: {
@@ -107,7 +107,7 @@ export const createAddons = (
       } else if (addonInfo[0].type == "percentage") {
         mod.options = addonInfo.map((addon, i) => {
           let opt: Option = {
-            id: `option-${i + 1}`,
+            id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
             premiumMod: {
@@ -150,7 +150,7 @@ export const createAddons = (
         let addonRates = [];
         if (addonInfo[0].sheetName) {
           addonRates = DataConverters.fetchSheet(
-            fileTypes.addons,
+            `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
             addonInfo[0].sheetName
           );
           mod.isOptional = true;
@@ -164,21 +164,33 @@ export const createAddons = (
             description: addon.description,
             conditions: [],
           };
-          if (addonInfo[0].sheetName) {
+          if (addonInfo[0].sheetName && addon.flag !== variable.none) {
             let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
             if (filteredRates.length == 0)
-              throw `No record found for ${mod.label} index:${i} flag:${addon.flag}`;
+              throw `No record found for ${mod.label} index:${index} flag:${addon.flag}`;
             if (!rateTableStatus) {
               opt.addonCost = {
                 type: addon.type,
                 conditionalPrices: filteredRates.map((rate) => {
+                  let multiplier = 1;
+                  if (rate.frequency)
+                    multiplier =
+                      rate.frequency == "semiAnnual"
+                        ? 2
+                        : rate.frequency == "quarter"
+                          ? 4
+                          : rate.frequency == "month"
+                            ? 12
+                            : 1;
                   let obj: premiumCondition = {
                     conditions: [],
                     price: [
                       {
-                        value: multiCurrency
-                          ? rate.value
-                          : parseFloat(rate.value) / InsurerInfo.conversion,
+                        value:
+                          (multiCurrency
+                            ? rate.value
+                            : parseFloat(rate.value) / InsurerInfo.conversion) *
+                          multiplier,
                         currency: multiCurrency
                           ? rate.currency
                           : InsurerInfo.currency,
@@ -267,13 +279,14 @@ export const createAddons = (
 
             opt.conditions?.push(customConditions[addon.custom]);
           }
+          if (opt.conditions?.length == 0) delete opt.conditions;
 
           return opt;
         });
       }
     }
     if (rateTableStatus && rateTableData.length > 0) mod.hasRateTable = true;
-
+    // mod.assignmentType = "PER_CUSTOMER";
     return { ...mod };
   });
   return { modifiers: mods, rateTableData };
@@ -301,9 +314,16 @@ const getConditionValue = (
 
   switch (type) {
     case checks.plan:
-      return [
-        `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(data[type])}-`,
-      ];
+      return data[type].includes("/")
+        ? data[type]
+            .split("/")
+            .map(
+              (v: string) =>
+                `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(v)}-`
+            )
+        : [
+            `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(data[type])}-`,
+          ];
     case checks.minAge:
       return data[type];
     case checks.maxAge:

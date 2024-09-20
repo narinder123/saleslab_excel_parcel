@@ -68,7 +68,7 @@ if (InputArguments.import && !InputArguments.V1) {
     Utils.log("Generating V2 Data");
     const getIndex = (i: number): number | string =>
       InfoData.residencies.length > 1 ? i + 1 : "";
-    const core = createCoreIndexData(datas);
+    const core = createCoreIndexData(datas, InfoData);
     const coverages = datas.flatMap((data, i) =>
       createCoverageData(data, InfoData.residencies[i], getIndex(i))
     );

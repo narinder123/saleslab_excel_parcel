@@ -30,6 +30,8 @@ export const variable = {
     inside: "inside options arr",
     outside: "outside options arr",
   },
+  none: "none",
+  Annually: "Annually",
 };
 
 export const InfoResidencies = [
@@ -370,10 +372,6 @@ export const benefitCategories: any[] = [
       "Out-patient (Consultations, Lab & Diagnostics, Pharmacy, Physiotherapy)",
     includedBenefits: [
       {
-        userType: "-Enum.userType.All-",
-        benefitTypes: ["-core.benefitTypes.physiotherapy-"],
-      },
-      {
         userType: "-Enum.userType.Pro-",
         benefitTypes: [
           "-core.benefitTypes.outPatientConsultation-",
@@ -386,6 +384,10 @@ export const benefitCategories: any[] = [
       {
         userType: "-Enum.userType.Starter-",
         benefitTypes: ["-core.benefitTypes.outPatientBenefit-"],
+      },
+      {
+        userType: "-Enum.userType.All-",
+        benefitTypes: ["-core.benefitTypes.physiotherapy-"],
       },
     ],
   },
@@ -556,7 +558,7 @@ export const paymentFrequencies: {
 
 export const dependentTypeArr: dependentType[] = [
   "dependsOn",
-  "dependentModifiers", 
+  "dependentModifiers",
 ];
 
 export const BenefitNamesV1 = {
@@ -607,7 +609,7 @@ export const customConditions: any = {
       {
         type: "-Enum.customer.relation-",
         value: "-Enum.relation.Child-",
-        count: ">=0",
+        count: "<=1",
       },
     ],
   },

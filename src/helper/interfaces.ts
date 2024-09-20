@@ -43,6 +43,7 @@ export interface RawRates {
   platform: "V1" | "V2" | "both";
   currency?: string;
   custom?: string;
+  copayType?: string;
   [key: string]: any;
 }
 
@@ -52,7 +53,7 @@ export type V1DBMode = "dev" | "prod";
 export interface InsurerInfo {
   provider: string;
   startDate: Date;
-  endDate: Date;
+  endDate?: Date;
   residencies: string[];
   conversion: number;
   currency: string;
@@ -65,6 +66,7 @@ export interface InsurerInfo {
   insurerName: string;
   multiCurrency?: ("rates" | "benefits")[];
   rateTable?: string[];
+  copayTypes: string[];
   [key: string]: any;
 }
 
@@ -195,6 +197,7 @@ export interface Modifiers {
   includedBenefits: string[];
   isOptional: boolean;
   description: string;
+  inputLabel?: string;
   addonCost: premiumMod | {};
   premiumMod: any;
   conditions: any[];
