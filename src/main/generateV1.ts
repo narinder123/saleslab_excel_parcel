@@ -268,6 +268,7 @@ export const create_V1_Data = (
         struc.singleFemale = rate.married ? rate.married : "0";
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
+        struc.status = "true";
         if (struc.outPatient.includes("$")) {
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");
           if (!$)
