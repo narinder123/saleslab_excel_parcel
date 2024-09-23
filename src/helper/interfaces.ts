@@ -221,7 +221,7 @@ export interface Option {
 
 export interface premiumMod {
   type: PremiumModType;
-  conditionalPrices?: premiumCondition[] | string;
+  conditionalPrices?: premiumCondition[] | any;
   price?: PriceObj[];
 }
 

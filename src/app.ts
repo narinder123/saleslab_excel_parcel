@@ -12,6 +12,7 @@ import { Import_V1_Data, create_V1_Data } from "./main/generateV1";
 import { rateTable, V1DBMode } from "./helper/interfaces";
 import { createProvider } from "./main/provider";
 import { createRateTableData } from "./main/modifiers/rateTable";
+import { SplitFile } from "./helper/splitFile";
 
 const InputArguments = Helpers.getInputArguments();
 Helpers.checkInputFolderExists();
@@ -77,7 +78,6 @@ if (InputArguments.import && !InputArguments.V1) {
         (rate) => rate.platform == "both" || rate.platform == "V2"
       );
 
-      console.log("filteredRates >>", filteredRates);
       if (filteredRates.length == 0) throw new Error("No rates found for V2");
       return filteredRates;
     };
@@ -95,7 +95,11 @@ if (InputArguments.import && !InputArguments.V1) {
           i
         ).data
     );
+
     const rateTableData: rateTable[] = [];
+    let splitFilePath: string = ``;
+    let splitFilePremiums:any = [];
+    let splitFileArr: string[] = [];
 
     const modifiers = datas.flatMap((data, i) => {
       let mods = createModifiersData(
@@ -107,6 +111,19 @@ if (InputArguments.import && !InputArguments.V1) {
       );
       if (mods.rateTableData.length > 0)
         rateTableData.push(...mods.rateTableData);
+  
+      if(mods.splitFilePremiums.length > 0) {
+        splitFilePremiums.push(mods.splitFilePremiums)
+        splitFileArr.push(...mods.splitFile)
+      }
+
+      if(InfoData.splitFile)
+        mods.splitFile?.length > 0 && mods.splitFile.map((split: string) => {
+          splitFilePath += `
+          const ${split} = require("./${split.split("_")[0]}/${split}.js")`
+
+        })
+
       return mods.data;
     });
 
@@ -117,11 +134,10 @@ if (InputArguments.import && !InputArguments.V1) {
       coverage: { data: coverages, Enum: true, core: true },
       plans: { data: plans, Enum: true, core: true },
       PricingTable: { data: pricingTables, Enum: true, core: true },
-      modifiers: { data: modifiers, Enum: true, core: true },
+      modifiers: { data: modifiers, Enum: true, core: true, addUp: splitFilePath },
     };
 
     if (rateTableData.length > 0) {
-      console.log("rateTableData >>", rateTableData.length);
       let tempData = createRateTableData(rateTableData, InfoData);
       Output.RateTable = {
         data: tempData,
@@ -145,7 +161,20 @@ if (InputArguments.import && !InputArguments.V1) {
         Enum,
         addUp,
       });
+
+      if (folder == "modifiers") {
+        console.log('splitFileArr >>>---', InfoData.splitFile)
+        if(InfoData.splitFile) {
+          splitFilePremiums?.length > 0 && splitFilePremiums?.map((planData: any) => {
+            console.log('planData >>>---', planData)
+            planData.map((rate: any) => {
+              SplitFile(rate.rates?.data, `Outputs/${InfoData.provider}/V2/modifiers`, `${rate?.rates?.key}`);
+            })
+          })
+        };
+      }
     }
+
     Helpers.createV2IndexJS(InfoData.provider, rateTableData.length > 0);
     Helpers.createV2CoreIndexJS(InfoData.provider, core);
     Utils.log("V2 Data are generated");
