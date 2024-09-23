@@ -76,6 +76,8 @@ if (InputArguments.import && !InputArguments.V1) {
       let filteredRates = rates[i].filter(
         (rate) => rate.platform == "both" || rate.platform == "V2"
       );
+
+      console.log("filteredRates >>", filteredRates);
       if (filteredRates.length == 0) throw new Error("No rates found for V2");
       return filteredRates;
     };
