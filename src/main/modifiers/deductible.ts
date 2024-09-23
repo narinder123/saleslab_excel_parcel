@@ -108,7 +108,7 @@ export const createDeductibleModifiers = (
                 throw new Error(
                   `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
                 );
-              if (filteredRates.length !== 0 && customCheck) {
+              if (filteredRates.length !== 0 && !customCheck) {
                 if (customCheck) {
                   if (!customConditions[customConditionsArr[0]])
                     throw new Error(
