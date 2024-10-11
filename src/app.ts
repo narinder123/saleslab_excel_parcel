@@ -51,9 +51,12 @@ if (InputArguments.import && !InputArguments.V1) {
 
   if (InputArguments.log) {
     fs.mkdirSync(`Outputs/${InfoData.provider}/log`);
-    [planDatas, rates, datas].map((data, i) => {
+    const LogFilesName = ["planDatas", "rates", "datas", "InsurerInfo"];
+    [
+      planDatas, rates, datas, [InfoData]
+    ].map((data:any[], i:number) => {
       fs.writeFileSync(
-        `Outputs/${InfoData.provider}/log/${i == 0 ? "planDatas" : i == 1 ? "rates" : "datas"}.json`,
+        `Outputs/${InfoData.provider}/log/${LogFilesName[i]}.json`,
         JSON.stringify(data)
       );
     });
@@ -82,6 +85,7 @@ if (InputArguments.import && !InputArguments.V1) {
     const plans = datas.flatMap((data, i) =>
       createPlansData(data, getIndex(i), InfoData)
     );
+
     const pricingTables = datas.flatMap(
       (data, i) =>
         createPricingTableData(
@@ -93,6 +97,7 @@ if (InputArguments.import && !InputArguments.V1) {
           i
         ).data
     );
+
     const rateTableData: rateTable[] = [];
 
     const modifiers = datas.flatMap((data, i) => {
@@ -130,6 +135,7 @@ if (InputArguments.import && !InputArguments.V1) {
                 const { generateMongoIdFromString } = utils;`,
       };
     }
+    Utils.log("Generating V2 Output folders/files");
 
     // Generating V2 output files
     for (let folder in Output) {

@@ -28,10 +28,10 @@ export const create_V1_Data = (
     else {
       if (residency == "Dubai") residency = "UAE - Dubai";
       else if (residency == "NE") residency = "Northern Emirates";
-      else if (residency == "AbuDhabi") residency = "UAE - Abu dhabi";
+      else if (residency == "AbuDhabi") residency = "UAE - Abu Dhabi";
       else if (residency == "NE_Dubai") residency = "UAE";
     }
-        const rateSheet = rateSheets[res_index];
+    const rateSheet = rateSheets[res_index];
     let result = rateSheet
       .filter(
         (rate) =>
@@ -95,6 +95,13 @@ export const create_V1_Data = (
         const Copays = benefits[res_index].find(
           (b) => b.Benefit == variable.Copays
         );
+
+        let benefitKeys = Object.keys(benefit);
+        for (let key in rate) {
+          let benefitIncluded = benefitKeys.includes(key);
+          if (!benefitIncluded) continue;
+          benefit[key] = rate[key];
+        }
 
         let struc: any = {};
         struc.planName1 = rate.planName ? rate.planName : "";
@@ -244,9 +251,8 @@ export const create_V1_Data = (
         struc.startDate = info.startDate;
         struc.repat = rate.repat ? rate.repat : "";
         struc.geoCoverage = "";
-        struc.dentalPremiumType = rate.dentalPremiumType
-          ? rate.dentalPremiumType
-          : "";
+        struc.dentalPremiumType =
+          rate.dentalPremiumType !== undefined ? rate.dentalPremiumType : "";
         struc.dentalFilter = rate.dentalFilter
           ? rate.dentalFilter
           : benefit[BenefitNamesV1.dentalFilter]?.toLowerCase() == "yes"
@@ -265,7 +271,7 @@ export const create_V1_Data = (
         struc.expiryDate = info.endDate;
         struc.residency = residency;
         struc.relation = rate.relation ? rate.relation : "primary";
-        struc.singleFemale = rate.married ? rate.married : "0";
+        struc.singleFemale = rate.married == "true" ? "0" : "1";
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
         if (struc.outPatient.includes("$")) {

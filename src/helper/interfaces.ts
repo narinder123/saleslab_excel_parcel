@@ -67,6 +67,7 @@ export interface InsurerInfo {
   multiCurrency?: ("rates" | "benefits")[];
   rateTable?: string[];
   copayTypes: string[];
+  showAddons?: string[];
   [key: string]: any;
 }
 
@@ -207,6 +208,7 @@ export interface Modifiers {
   dependentModifiers?: string[];
   dependsOn?: string;
   hasRateTable?: boolean;
+  showAddon?: boolean;
   [key: string]: any;
 }
 

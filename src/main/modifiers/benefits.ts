@@ -6,6 +6,7 @@ import {
 } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
+  InsurerInfo,
   Modifiers,
   Option,
   PlansInfo,
@@ -15,7 +16,8 @@ import {
 export const createBenefitModifiers = (
   data: RawBenefits[],
   planData: PlansInfo,
-  index: number | string
+  index: number | string,
+  InsurerInfo: InsurerInfo
 ): Modifiers[] => {
   let benefits: Modifiers[] = [];
 
@@ -29,9 +31,10 @@ export const createBenefitModifiers = (
       plans: [],
       title: benefit,
       label: benefit,
-      type: "-core.modifierTypes.benefit-",
+      type: `-core.modifierTypes.${benefit == "Annual Limit" ? "annualLimit" : "benefit"}-`,
       assignmentType: "PER_PLAN",
-      includedBenefits: [coreBenefitsTypes[benefit]],
+      includedBenefits:
+        benefit == "Annual Limit" ? [] : [coreBenefitsTypes[benefit]],
       isOptional: false,
       description: "",
       addonCost: {},
@@ -40,6 +43,7 @@ export const createBenefitModifiers = (
       hasOptions: false,
       options: [],
     };
+    if (InsurerInfo.showAddons?.includes(benefit)) obj.showAddon = false;
 
     let benefitMod = data.find((v) => v.Benefit == benefit);
     let benefitObj = buildBenefitOptions(benefitMod, data);

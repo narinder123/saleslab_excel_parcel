@@ -62,9 +62,7 @@ export const V2Residencies: { [key: string]: string[][] } = {
   NE_Dubai: [["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"], ["AE-AZ"]],
   Latin: [
     [
-      "BR", // Brazil
       "CO", // Colombia
-      "HN", // Honduras
       "PE", // Peru
       "VE", // Venezuela
       "UY", // Uruguay
@@ -516,7 +514,7 @@ export const paymentFrequencies: {
   };
 } = {
   semiAnnual: {
-    label: "Semi Annual Surcharge",
+    label: "Semi Annual",
     modOption: {
       id: "semi-annual-payment-surcharge",
       description: "Semmi-annual payment",
@@ -529,12 +527,12 @@ export const paymentFrequencies: {
     },
   },
   quarter: {
-    label: "Quarterly Surcharge",
+    label: "Quarterly",
     modOption: {
       id: "quarterly-payment-surcharge",
-      title: "Quarterly Surcharge payment",
-      label: "Quarterly Surcharge",
-      description: "Quarterly Surcharge payment frequency",
+      title: "Quarterly payment",
+      label: "Quarterly",
+      description: "Quarterly payment frequency",
       premiumMod: {
         type: PremiumModType.Percentage,
         price: [],
@@ -542,12 +540,12 @@ export const paymentFrequencies: {
     },
   },
   month: {
-    label: "Monthly Surcharge",
+    label: "Monthly",
     modOption: {
       id: "monthly-payment-surcharge",
-      title: "Monthly Surcharge payment",
-      label: "Monthly Surcharge",
-      description: "Monthly Surcharge payment frequency",
+      title: "Monthly payment",
+      label: "Monthly",
+      description: "Monthly payment frequency",
       premiumMod: {
         type: PremiumModType.Percentage,
         price: [],
@@ -593,84 +591,236 @@ export const DBpath = {
 };
 
 export const customConditions: any = {
-  single: {
-    type: "-Enum.customer.config-",
-    value: [
-      {
-        type: "-Enum.customer.category-",
-        value: "-Enum.category.primary-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Spouse-",
-        count: "==0",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Child-",
-        count: "<=1",
-      },
-    ],
-  },
-  single2: {
-    type: "-Enum.customer.config-",
-    value: [
-      {
-        type: "-Enum.customer.category-",
-        value: "-Enum.category.primary-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Spouse-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Child-",
-        count: "==0",
-      },
-    ],
-  },
-  family: {
-    type: "-Enum.customer.config-",
-    value: [
-      {
-        type: "-Enum.customer.category-",
-        value: "-Enum.category.primary-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Spouse-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Child-",
-        count: ">=1",
-      },
-    ],
-  },
-  family2: {
-    type: "-Enum.customer.config-",
-    value: [
-      {
-        type: "-Enum.customer.category-",
-        value: "-Enum.category.primary-",
-        count: "==1",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Spouse-",
-        count: "==0",
-      },
-      {
-        type: "-Enum.customer.relation-",
-        value: "-Enum.relation.Child-",
-        count: ">=2",
-      },
-    ],
-  },
+  single: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==0",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: "<=1",
+        },
+      ],
+    },
+  ],
+  single2: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: "==0",
+        },
+      ],
+    },
+  ],
+  family: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=1",
+        },
+      ],
+    },
+  ],
+  family2: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==0",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=2",
+        },
+      ],
+    },
+  ],
+  oneAdult: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==0",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: "==0",
+        },
+      ],
+    },
+    {
+      type: "-Enum.customer.gender-",
+      value: "-Enum.gender.female-",
+    },
+  ],
+  twoAdult: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=0",
+        },
+      ],
+    },
+    {
+      type: "-Enum.customer.maritalStatus-",
+      value: "-Enum.maritalStatus.married-",
+    },
+    {
+      type: "-Enum.customer.gender-",
+      value: "-Enum.gender.female-",
+    },
+  ],
+  singleChild_1: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==0",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=0",
+        },
+      ],
+    },
+  ],
+  singleChild_2: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: "==1",
+        },
+      ],
+    },
+  ],
+  singleChild_3A: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=2",
+        },
+      ],
+    },
+  ],
+  singleChild_3B: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: "==0",
+        },
+      ],
+    },
+  ],
 };

@@ -63,31 +63,37 @@ export const createAddons = (
           ],
         };
     } else {
+      let addonRates = [];
+      if (addonInfo[0].sheetName) {
+        addonRates = DataConverters.fetchSheet(
+          `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
+          addonInfo[0].sheetName
+        );
+        mod.isOptional = true;
+        mod.assignmentType = "PER_CUSTOMER";
+      }
       mod.description = "";
-      if (addonInfo[0].type == "fixed") {
-        mod.options = addonInfo.map((addon, i) => {
-          let opt: Option = {
-            id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
-            label: addon.label,
-            description: addon.description,
-            addonCost: {
-              type: addon.type,
-              price: [
-                {
-                  value: multiCurrency
-                    ? Number(addon.value)
-                    : +parseFloat(
-                        `${Number(addon.value) / InsurerInfo.conversion}`
-                      ),
-                  currency: multiCurrency
-                    ? addon.currency
-                    : InsurerInfo.currency,
-                },
-              ],
-            },
-            conditions: [],
-          };
-
+      mod.options = addonInfo.map((addon, i) => {
+        let opt: Option = {
+          id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
+          label: addon.label,
+          description: addon.description,
+          addonCost: {
+            type: addon.type,
+            price: [
+              {
+                value: multiCurrency
+                  ? Number(addon.value)
+                  : +parseFloat(
+                      `${Number(addon.value) / InsurerInfo.conversion}`
+                    ),
+                currency: multiCurrency ? addon.currency : InsurerInfo.currency,
+              },
+            ],
+          },
+          conditions: [],
+        };
+        if (addonInfo[i].type == "fixed") {
           Object.keys(EnumConditions).forEach((condition) => {
             if (!addon[condition]) return;
 
@@ -96,17 +102,8 @@ export const createAddons = (
               value: getConditionValue(condition, addon, InsurerInfo, index),
             });
           });
-
-          return opt;
-        });
-        mod.isOptional =
-          addonInfo[0].isOptional?.toString().toLowerCase() == "true"
-            ? true
-            : false;
-        mod.hasOptions = true;
-      } else if (addonInfo[0].type == "percentage") {
-        mod.options = addonInfo.map((addon, i) => {
-          let opt: Option = {
+        } else if (addonInfo[i].type == "percentage") {
+          opt = {
             id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
             label: addon.label,
             description: addon.description,
@@ -120,45 +117,26 @@ export const createAddons = (
             },
             conditions: [],
           };
-
           Object.keys(EnumConditions).forEach((condition) => {
             if (!addon[condition]) return;
-
-            opt.conditions?.push(
+            let conditions =
               condition == "custom"
                 ? customConditions[condition]
-                : {
-                    type: EnumConditions[condition],
-                    value: getConditionValue(
-                      condition,
-                      addon,
-                      InsurerInfo,
-                      index
-                    ),
-                  }
-            );
+                : [
+                    {
+                      type: EnumConditions[condition],
+                      value: getConditionValue(
+                        condition,
+                        addon,
+                        InsurerInfo,
+                        index
+                      ),
+                    },
+                  ];
+            opt.conditions?.push(...conditions);
           });
-
-          return opt;
-        });
-        mod.isOptional =
-          addonInfo[0].isOptional?.toString().toLowerCase() == "true"
-            ? true
-            : false;
-        mod.hasOptions = true;
-      } else {
-        let addonRates = [];
-        if (addonInfo[0].sheetName) {
-          addonRates = DataConverters.fetchSheet(
-            `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
-            addonInfo[0].sheetName
-          );
-          mod.isOptional = true;
-          mod.assignmentType = "PER_CUSTOMER";
-        }
-        mod.hasOptions = true;
-        mod.options = addonInfo.map((addon, i) => {
-          let opt: Option = {
+        } else {
+          opt = {
             id: `option-${i + 1}`,
             label: addon.label,
             description: addon.description,
@@ -199,20 +177,21 @@ export const createAddons = (
                   };
                   Object.keys(EnumConditions).forEach((condition) => {
                     if (!rate[condition]) return;
-
-                    obj.conditions?.push(
+                    const conditions =
                       condition == "custom"
                         ? customConditions[condition]
-                        : {
-                            type: EnumConditions[condition],
-                            value: getConditionValue(
-                              condition,
-                              rate,
-                              InsurerInfo,
-                              index
-                            ),
-                          }
-                    );
+                        : [
+                            {
+                              type: EnumConditions[condition],
+                              value: getConditionValue(
+                                condition,
+                                rate,
+                                InsurerInfo,
+                                index
+                              ),
+                            },
+                          ];
+                    obj.conditions?.push(...conditions);
                   });
 
                   return obj;
@@ -234,6 +213,7 @@ export const createAddons = (
                 value: mod._id,
                 values: [opt.id],
                 rates: filteredRates.map((premium): RateTableCustomerPrice => {
+                  if (!premium.frequency) throw `frequency not found`;
                   let multiplier =
                     premium.frequency == "semiAnnual"
                       ? 2
@@ -277,13 +257,18 @@ export const createAddons = (
                 `${addon.custom} condition doesn't exist in customConditions array`
               );
 
-            opt.conditions?.push(customConditions[addon.custom]);
+            opt.conditions?.push(...customConditions[addon.custom]);
           }
           if (opt.conditions?.length == 0) delete opt.conditions;
-
-          return opt;
-        });
-      }
+        }
+        return opt;
+      });
+      mod.isOptional =
+        addonInfo[0].isOptional?.toString().toLowerCase() == "true"
+          ? true
+          : false;
+      mod.hasOptions = true;
+      mod.assignmentType = "PER_CUSTOMER";
     }
     if (rateTableStatus && rateTableData.length > 0) mod.hasRateTable = true;
     // mod.assignmentType = "PER_CUSTOMER";

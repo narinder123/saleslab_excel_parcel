@@ -30,6 +30,7 @@ export const DataConverters = new (class {
       multiCurrency: [],
       rateTable: [],
       copayTypes: [],
+      showAddons: [],
     };
 
     for (let key in info) {

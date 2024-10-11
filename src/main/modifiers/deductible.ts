@@ -108,14 +108,15 @@ export const createDeductibleModifiers = (
                 throw new Error(
                   `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
                 );
-              if (filteredRates.length !== 0 && customCheck) {
+
+              if (filteredRates.length !== 0) {
                 if (customCheck) {
                   if (!customConditions[customConditionsArr[0]])
                     throw new Error(
                       `${customConditionsArr[0]} condition doesn't exist in customConditions array`
                     );
                   option.conditions?.push(
-                    customConditions[customConditionsArr[0]]
+                    ...customConditions[customConditionsArr[0]]
                   );
                 }
                 if (!rateTableStatus) {
@@ -177,7 +178,7 @@ export const createDeductibleModifiers = (
                         throw new Error(
                           `${premium.custom} condition doesn't exist in customConditions array`
                         );
-                      rate.conditions.push(customConditions[premium.custom]);
+                      rate.conditions.push(...customConditions[premium.custom]);
                     }
                     return rate;
                   });
@@ -279,7 +280,7 @@ export const createDeductibleModifiers = (
                       throw new Error(
                         `${condition} condition doesn't exist in customConditions array`
                       );
-                    tempOption.conditions?.push(customConditions[condition]);
+                    tempOption.conditions?.push(...customConditions[condition]);
                   }
                   if (tempOption.premiumMod) {
                     if (!rateTableStatus) {
@@ -345,7 +346,7 @@ export const createDeductibleModifiers = (
                               `${premium.custom} condition doesn't exist in customConditions array`
                             );
                           rate.conditions.push(
-                            customConditions[premium.custom]
+                            ...customConditions[premium.custom]
                           );
                         }
                         return rate;
