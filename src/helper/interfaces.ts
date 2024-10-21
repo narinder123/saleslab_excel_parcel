@@ -69,6 +69,7 @@ export interface InsurerInfo {
   copayTypes: string[];
   showAddons?: string[];
   [key: string]: any;
+  futureRates?: boolean;
 }
 
 export interface PlansInfo {

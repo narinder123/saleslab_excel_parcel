@@ -8,6 +8,9 @@ export const createCoreIndexData = (
 ) => {
   const mongoId = (str: string) => `-generateMongoIdFromString('${str}')-`;
   const provider = data[0].provider;
+  const futureRates = InsurerInfo.futureRates;
+  const insurerStartDate = futureRates ? ` ${InsurerInfo?.startDate}` : "";
+
   let Ids: any = {
     provider: mongoId(provider),
   };
@@ -15,22 +18,25 @@ export const createCoreIndexData = (
   data.map((infoData, i) => {
     let n = data.length > 1 ? i + 1 : "";
 
+    //creating plans ids
     Ids[`plans${multiResidence ? n : ""}`] = {};
     infoData.plans.map((plan) => {
       plan = Utils.remove(plan);
       Ids[`plans${multiResidence ? n : ""}`][plan] = mongoId(
-        `${provider} ${plan} ${n}`
+        `${provider} ${plan} ${n}${insurerStartDate}`
       );
     });
 
+    //creating coverages ids
     Ids[`coverages${multiResidence ? n : ""}`] = {};
     infoData.coverages.map((cov) => {
       cov = Utils.remove(cov);
       Ids[`coverages${multiResidence ? n : ""}`][cov] = mongoId(
-        `${provider} ${cov} ${n}`
+        `${provider} ${cov} ${n}${insurerStartDate}`
       );
     });
 
+    //creating pricingTables ids
     Ids[`pricingTables${multiResidence ? n : ""}`] = {};
     infoData.distinctInfo.map((p) => {
       Ids[`pricingTables${multiResidence ? n : ""}`][Utils.remove(p.plan)] = {};
@@ -38,10 +44,11 @@ export const createCoreIndexData = (
         (c) =>
           (Ids[`pricingTables${multiResidence ? n : ""}`][Utils.remove(p.plan)][
             Utils.remove(c)
-          ] = mongoId(`${provider} ${p.plan} ${c} ${n}`))
+          ] = mongoId(`${provider} ${p.plan} ${c} ${n}${insurerStartDate}`))
       );
     });
 
+    //creating modifiers ids
     Ids[`modifiers${multiResidence ? n : ""}`] = {};
 
     Ids[`modifiers${multiResidence ? n : ""}`].benefits = {};
@@ -49,7 +56,7 @@ export const createCoreIndexData = (
     infoData.benefits.map((benefit) => {
       benefit = Utils.remove(benefit);
       Ids[`modifiers${multiResidence ? n : ""}`].benefits[benefit] = mongoId(
-        `${provider} ${benefit} ${n}`
+        `${provider} ${benefit} ${n}${insurerStartDate}`
       );
     });
 
@@ -59,34 +66,34 @@ export const createCoreIndexData = (
       infoData.plans.map((network) => {
         network = Utils.remove(network);
         Ids[`modifiers${multiResidence ? n : ""}`].networks[network] = mongoId(
-          `${provider} ${network} ${n}`
+          `${provider} ${network} ${n}${insurerStartDate}`
         );
       });
     } else
       Ids[`modifiers${multiResidence ? n : ""}`].networks = mongoId(
-        `${provider} netowrk ${n}`
+        `${provider} netowrk ${n}${insurerStartDate}`
       );
 
     Ids[`modifiers${multiResidence ? n : ""}`].paymentFrequency = mongoId(
-      `${provider} paymentFrequency ${n}`
+      `${provider} paymentFrequency ${n}${insurerStartDate}`
     );
 
     InsurerInfo.copayTypes.map((type) => {
       if (type == variable.none)
         Ids[`modifiers${multiResidence ? n : ""}`].deductible = mongoId(
-          `${provider} deductible ${n}`
+          `${provider} deductible ${n}${insurerStartDate}`
         );
       else {
         if (!Ids[`modifiers${multiResidence ? n : ""}`].deductible)
           Ids[`modifiers${multiResidence ? n : ""}`].deductible = {};
         Ids[`modifiers${multiResidence ? n : ""}`].deductible[type] = mongoId(
-          `${provider} deductible ${type} ${n}`
+          `${provider} deductible ${type} ${n}${insurerStartDate}`
         );
       }
     });
 
     Ids[`modifiers${multiResidence ? n : ""}`].discount = mongoId(
-      `${provider} discount ${n}`
+      `${provider} discount ${n}${insurerStartDate}`
     );
   });
 

@@ -31,6 +31,7 @@ export const DataConverters = new (class {
       rateTable: [],
       copayTypes: [],
       showAddons: [],
+      futureRates: false
     };
 
     for (let key in info) {
