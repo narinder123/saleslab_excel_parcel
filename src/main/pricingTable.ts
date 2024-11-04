@@ -88,12 +88,15 @@ const buildBasePremium = (
   index: number | string
 ): BasePremium[] => {
   const multiCurrency = info.multiCurrency?.includes("rates");
+  
+
   let rates = data.filter(
-    (rate) =>
-      rate.planName == plan &&
+    (rate) => {
+      return rate.planName == plan &&
       rate.copay == copay &&
       rate.coverage == coverage &&
       rate.frequency == "Annually"
+    }
   );
   if (rates.length == 0) {
     throw Error(

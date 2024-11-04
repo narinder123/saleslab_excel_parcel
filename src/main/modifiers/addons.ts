@@ -64,6 +64,7 @@ export const createAddons = (
         };
     } else {
       let addonRates = [];
+
       if (addonInfo[0].sheetName) {
         addonRates = DataConverters.fetchSheet(
           `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
@@ -72,8 +73,10 @@ export const createAddons = (
         mod.isOptional = true;
         mod.assignmentType = "PER_CUSTOMER";
       }
+
       mod.description = "";
       mod.options = addonInfo.map((addon, i) => {
+        // console.log("addon.value ", addon)
         let opt: Option = {
           id: `option${rateTableStatus && index ? `-${index}` : ""}-${i + 1}`,
           label: addon.label,
@@ -175,6 +178,7 @@ export const createAddons = (
                       },
                     ],
                   };
+
                   Object.keys(EnumConditions).forEach((condition) => {
                     if (!rate[condition]) return;
                     const conditions =
@@ -315,6 +319,10 @@ const getConditionValue = (
       return data[type];
     case checks.gender:
       return `-Enum.gender.${data[type].toLowerCase()}-`;
+      case checks.category:
+      return `-Enum.category.${data[type]}-`;
+      case checks.relation:
+      return `-Enum.relation.${data[type]}-`;
     case checks.network:
       return [data[type]];
     case checks.deductible:

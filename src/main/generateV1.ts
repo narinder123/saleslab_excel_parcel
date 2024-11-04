@@ -274,7 +274,7 @@ export const create_V1_Data = (
         struc.singleFemale = rate.married == "true" ? "0" : "1";
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
-        if (struc.outPatient.includes("$")) {
+        if (struc.outPatient?.includes("$")) {
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");
           if (!$)
             throw new Error(

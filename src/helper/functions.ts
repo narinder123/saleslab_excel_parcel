@@ -35,7 +35,6 @@ export const Helpers = new (class helperFunction {
       return false;
     }
     let AllFolders = fs.readdirSync("./Inputs");
-    console.log("AllFolders ", AllFolders)
     if (!AllFolders.includes(enteredFolderName)) {
       Utils.log("Provided folder name not found!", "err");
       Utils.endProcess();
