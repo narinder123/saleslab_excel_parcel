@@ -233,9 +233,9 @@ export const create_V1_Data = (
         struc.complicationsPregnancy =
           benefit[BenefitNamesV1.complicationsPregnancy];
         struc.newBornCoverage = benefit[BenefitNamesV1.newBornCoverage];
-        struc.dental = benefit[BenefitNamesV1.dental];
-        struc.dentalWaitingPeriod = benefit[BenefitNamesV1.dentalWaitingPeriod];
-        struc.opticalBenefits = benefit[BenefitNamesV1.opticalBenefits];
+        struc.dental = rate.dental ? rate.dental : benefit[BenefitNamesV1.dental];
+        struc.dentalWaitingPeriod = rate.dentalWaitingPeriod ? rate.dentalWaitingPeriod : benefit[BenefitNamesV1.dentalWaitingPeriod];
+        struc.opticalBenefits = rate.opticalBenefits ? rate.opticalBenefits : benefit[BenefitNamesV1.opticalBenefits];
         struc.wellness = benefit[BenefitNamesV1.wellness];
         struc.semiAnnualSurcharge = benefit[BenefitNamesV1.semiAnnualSurcharge];
         struc.quarterlySurcharge = benefit[BenefitNamesV1.quarterlySurcharge];

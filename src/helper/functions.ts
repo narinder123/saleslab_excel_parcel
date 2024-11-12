@@ -163,9 +163,10 @@ export const Helpers = new (class helperFunction {
         }
       }
 
-      if(!benefit.Benefit) console.log(benefit)
+      if (!benefit.Benefit) console.log(benefit);
       for (let key in benefit) {
-        if (key == "Benefit" || key == "User Type") continue;
+        if (key == "Benefit" || key == "User Type" || key == "dependsOn")
+          continue;
         benefitsForV1[plans.indexOf(key)].benefits[benefit.Benefit.trim()] =
           benefit[key];
       }
@@ -174,13 +175,13 @@ export const Helpers = new (class helperFunction {
     return benefitsForV1;
   }
 
-  createV2IndexJS(provider: string, rateTable:boolean) {
+  createV2IndexJS(provider: string, rateTable: boolean) {
     let str = `const Provider = require('./provider/index');
         const Plans = require('./plans/index');
         const PricingTables = require('./PricingTable/index');
         const Coverages = require('./coverage/index');
         const Modifiers = require('./modifiers/index');
-        ${rateTable ? `const RateTable = require("./RateTable");` :""}
+        ${rateTable ? `const RateTable = require("./RateTable");` : ""}
         let data = [
           // Provider data
           {
