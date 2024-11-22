@@ -53,9 +53,12 @@ export const createDeductibleModifiers = (
       info.network.map((network) => {
         info.coverage.map((coverage) => {
           let copayList = info.copay;
+          // console.log("info ", info)
           if (!typeNone)
             copayList = copayList.filter((copay) => copay.includes(`${type}-`));
+
           copayList.map((copay) => {
+            
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
               id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
@@ -94,6 +97,7 @@ export const createDeductibleModifiers = (
                 },
                 []
               );
+
               let filteredRates = premiums.filter(
                 (premium) =>
                   premium.planName == info.plan &&

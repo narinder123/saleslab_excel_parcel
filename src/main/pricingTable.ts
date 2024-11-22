@@ -25,12 +25,13 @@ export const createPricingTableData = (
   let splitArr: string[] = [];
   PlansInfo.distinctInfo.map((planData) => {
     planData.coverage.map((coverage) => {
+      const planCopay = info.copayTypes?.length ? info.copayTypes.map(type => planData.copay[0].replace(`${type}-`, ''))[0] : planData.copay[0]
       let rateBase = buildBasePremium(
         rates,
         planData.plan,
         coverage,
         planData.network.length,
-        planData.copay[0],
+        planCopay,
         info,
         index
       );
@@ -89,7 +90,7 @@ const buildBasePremium = (
 ): BasePremium[] => {
   const multiCurrency = info.multiCurrency?.includes("rates");
   
-
+  console.log("info ",copay)
   let rates = data.filter(
     (rate) => {
       return rate.planName == plan &&
