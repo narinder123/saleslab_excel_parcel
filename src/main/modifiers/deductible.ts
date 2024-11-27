@@ -18,7 +18,161 @@ export const createDeductibleModifiers = (
   InsurerInfo: InsurerInfo,
   index: number | string
 ): { data: Modifiers[]; splitFile: string[]; rateTableData: any[] } => {
-  let deductibleArr: Modifiers[] = [];
+  const countriesByArea = [
+    ["A", [
+      "AD",
+      "AI",
+      "AG",
+      "AM",
+      "AW",
+      "AU",
+      "AT",
+      "AZ",
+      "BB",
+      "BN",
+      "BQ",
+      "BS",
+      "CY",
+      "CW",
+      "CX",
+      "CC",
+      "CK",
+      "CR",
+      "DM",
+      "DO",
+      "FK",
+      "FM",
+      "FJ",
+      "FR",
+      "GF",
+      "GP",
+      "PF",
+      "GG",
+      "GD",
+      "GU",
+      "HN",
+      "HK",
+      "IE",
+      "IM",
+      "IL",
+      "IT",
+      "JE",
+      "KI",
+      "XK",
+      "KW",
+      "MY",
+      "LA",
+      "LU",
+      "LI",
+      "MC",
+      "MH",
+      "MQ",
+      "MR",
+      "MU",
+      "YT",
+      "NC",
+      "NL",
+      "NZ",
+      "NF",
+      "MP",
+      "OM",
+      "PA",
+      "PG",
+      "PH",
+      "PT",
+      "PW",
+      "QA",
+      "RE",
+      "SH",
+      "SX",
+      "SM",
+      "ST",
+      "SV",
+      "SC",
+      "SG",
+      "SB",
+      "SO",
+      "SZ",
+      "TH",
+      "TL",
+      "TO",
+      "TT",
+      "TK",
+      "TV",
+      "TC",
+      "VA",
+      "VN",
+      "WF",
+      "WS",
+      "ZA",
+      "ZW",
+    ]],
+    ["B", [
+      "AL",
+      "DZ",
+      "AO",
+      "BJ",
+      "BA",
+      "BW",
+      "BG",
+      "BF",
+      "BI",
+      "CM",
+      "CV",
+      "CF",
+      "TD",
+      "KM",
+      "CD",
+      "CG",
+      "CI",
+      "HR",
+      "DJ",
+      "ER",
+      "ET",
+      "GA",
+      "GM",
+      "GE",
+      "GH",
+      "GN",
+      "GW",
+      "GY",
+      "HT",
+      "KE",
+      "LS",
+      "LR",
+      "MG",
+      "MW",
+      "MV",
+      "ML",
+      "MT",
+      "MD",
+      "ME",
+      "MA",
+      "MZ",
+      "NA",
+      "NE",
+      "NG",
+      "RW",
+      "RS",
+      "SN",
+      "SC",
+      "SL",
+      "SO",
+      "SS",
+      "SD",
+      "SZ",
+      "TZ",
+      "TG",
+      "UG",
+      "ZM",
+      "ZW",
+    ]],
+    ["C", ["CA", "JP", "MX", "MO", "ES", "TW"]],
+    ["D", ["AE", "AR", "BO", "BR", "CL", "CO", "EC", "PY", "PE", "UY", "VE"]],
+    ["E", ["SG"]],
+    ["F", ["HK"]],
+  ];
+   let deductibleArr: Modifiers[] = [];
   let splitArr: string[] = [];
   const rateTableData: any[] = [];
   const rateTableStatus =
@@ -58,7 +212,7 @@ export const createDeductibleModifiers = (
             copayList = copayList.filter((copay) => copay.includes(`${type}-`));
 
           copayList.map((copay) => {
-            
+            countriesByArea.forEach((country, ind) => {
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
               id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
@@ -84,6 +238,10 @@ export const createDeductibleModifiers = (
                     `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
                   ],
                 },
+                {
+                  type: "RESIDENCY_EQUALS_TO",
+                  value: [...country[1]],
+                },
               ],
             };
             const tempOptions: any[] = [];
@@ -104,6 +262,7 @@ export const createDeductibleModifiers = (
                   premium.network == network &&
                   premium.coverage == coverage &&
                   premium.copay == copay &&
+                  premium.area == country[0] &&
                   premium.frequency == variable.Annually &&
                   (typeNone || premium.copayType == type) &&
                   (!customCheck || premium.custom == customConditionsArr[0])
@@ -413,6 +572,7 @@ export const createDeductibleModifiers = (
                   deductible.options.push(...tempOptions);
               }
             }
+          })
           });
         });
       });
