@@ -102,6 +102,7 @@ export const EnumConditions: EnumConditionsTypes = {
   maritalStatus: "-Enum.customer.maritalStatus-",
   deductible: "-Enum.conditions.deductible-",
   frequency: "-Enum.conditions.modifier-",
+  residency: "-Enum.conditions.residency-",
 };
 
 export const BenefitTypes = {
