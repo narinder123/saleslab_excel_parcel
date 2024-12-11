@@ -67,9 +67,12 @@ export const createDeductibleModifiers = (
       info.network.map((network) => {
         info.coverage.map((coverage) => {
           let copayList = info.copay;
+          // console.log("info ", info)
           if (!typeNone)
             copayList = copayList.filter((copay) => copay.includes(`${type}-`));
+
           copayList.map((copay) => {
+            
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
               id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
@@ -108,6 +111,7 @@ export const createDeductibleModifiers = (
                 },
                 []
               );
+
               let filteredRates = premiums.filter(
                 (premium) =>
                   premium.planName == info.plan &&
@@ -122,14 +126,15 @@ export const createDeductibleModifiers = (
                 throw new Error(
                   `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
                 );
-              if (filteredRates.length !== 0 && !customCheck) {
+
+              if (filteredRates.length !== 0) {
                 if (customCheck) {
                   if (!customConditions[customConditionsArr[0]])
                     throw new Error(
                       `${customConditionsArr[0]} condition doesn't exist in customConditions array`
                     );
                   option.conditions?.push(
-                    customConditions[customConditionsArr[0]]
+                    ...customConditions[customConditionsArr[0]]
                   );
                 }
                 if (!rateTableStatus) {
@@ -196,7 +201,7 @@ export const createDeductibleModifiers = (
                         throw new Error(
                           `${premium.custom} condition doesn't exist in customConditions array`
                         );
-                      rate.conditions.push(customConditions[premium.custom]);
+                      rate.conditions.push(...customConditions[premium.custom]);
                     }
                     return rate;
                   });
@@ -314,7 +319,7 @@ export const createDeductibleModifiers = (
                       throw new Error(
                         `${condition} condition doesn't exist in customConditions array`
                       );
-                    tempOption.conditions?.push(customConditions[condition]);
+                    tempOption.conditions?.push(...customConditions[condition]);
                   }
                   if (tempOption.premiumMod) {
                     if (!rateTableStatus) {
@@ -380,7 +385,7 @@ export const createDeductibleModifiers = (
                               `${premium.custom} condition doesn't exist in customConditions array`
                             );
                           rate.conditions.push(
-                            customConditions[premium.custom]
+                            ...customConditions[premium.custom]
                           );
                         }
                         return rate;

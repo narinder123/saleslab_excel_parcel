@@ -71,6 +71,7 @@ export const createPaymentFrequencyModifier = (
         throw new Error(
           `${frequency} did not matched, please use any of these: ${Object.keys(paymentFrequencies).join(", ")}`
         );
+      let count = 1;
       let frequencyMod = { ...paymentFrequencies[frequency] };
       let multiplier =
         frequency == "semiAnnual" ? 2 : frequency == "quarter" ? 4 : 12;
@@ -95,7 +96,7 @@ export const createPaymentFrequencyModifier = (
                   []
                 );
                 let option: Option = {
-                  id: `${frequencyMod.modOption.id}-${modifier.options.length}`,
+                  id: `${frequencyMod.modOption.id}-${count}`,
                   label: frequencyMod.label,
                   premiumMod: {
                     type: PremiumModType.ConditionalOverride,
@@ -144,7 +145,7 @@ export const createPaymentFrequencyModifier = (
                         `${customConditionsArr[0]} condition doesn't exist in customConditions array`
                       );
                     option.conditions?.push(
-                      customConditions[customConditionsArr[0]]
+                      ...customConditions[customConditionsArr[0]]
                     );
                   }
                   // "if" is applied here because typescript was giving error
@@ -209,7 +210,9 @@ export const createPaymentFrequencyModifier = (
                           throw new Error(
                             `${premium.custom} condition doesn't exist in customConditions array`
                           );
-                        rate.conditions.push(customConditions[premium.custom]);
+                        rate.conditions.push(
+                          ...customConditions[premium.custom]
+                        );
                       }
                       return rate;
                     });
@@ -249,13 +252,14 @@ export const createPaymentFrequencyModifier = (
                     });
                   }
                   modifier.options.push(option);
+                  count++;
                 }
 
                 if (customConditionsArr.length > 0) {
                   customConditionsArr.map((condition, i) => {
                     if (i == 0) return;
                     let tempOption: Option = {
-                      id: `${frequencyMod.modOption.id}-${modifier.options.length + i + 1}`,
+                      id: `${frequencyMod.modOption.id}-${count}`,
                       label: frequencyMod.label,
                       premiumMod: {
                         type: PremiumModType.ConditionalOverride,
@@ -300,7 +304,9 @@ export const createPaymentFrequencyModifier = (
                         throw new Error(
                           `${condition} condition doesn't exist in customConditions array`
                         );
-                      tempOption.conditions?.push(customConditions[condition]);
+                      tempOption.conditions?.push(
+                        ...customConditions[condition]
+                      );
                     }
                     // "if" is applied here because typescript was giving error
                     if (tempOption.premiumMod && !rateTableStatus) {
@@ -368,7 +374,7 @@ export const createPaymentFrequencyModifier = (
                               `${premium.custom} condition doesn't exist in customConditions array`
                             );
                           rate.conditions.push(
-                            customConditions[premium.custom]
+                            ...customConditions[premium.custom]
                           );
                         }
                         return rate;
@@ -408,6 +414,7 @@ export const createPaymentFrequencyModifier = (
                         ),
                       });
                     }
+                    count++;
 
                     tempOptions.push(tempOption);
                   });

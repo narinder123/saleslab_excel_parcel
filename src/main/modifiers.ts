@@ -6,6 +6,7 @@ import {
   RawBenefits,
   RawRates,
 } from "../helper/interfaces";
+import { Utils } from "../helper/Utils";
 import { createAddons } from "./modifiers/addons";
 import { createBenefitModifiers } from "./modifiers/benefits";
 import { createDeductibleModifiers } from "./modifiers/deductible";
@@ -26,7 +27,9 @@ export const createModifiersData = (
     Info,
     index
   );
-  let benefits = createBenefitModifiers(Benefits, PlanData, index);
+
+  let benefits = createBenefitModifiers(Benefits, PlanData, index, Info);
+
   if (Info.addons) {
     let addons = createAddons(benefits, Info.addons, Info, index);
     if (addons.rateTableData.length > 0)
@@ -40,6 +43,7 @@ export const createModifiersData = (
     PlanData,
     index
   );
+
   if (paymentFrequency.rateTableData.length > 0)
     rateTableData.push(...paymentFrequency.rateTableData);
   if (deductibles.rateTableData.length > 0)
