@@ -447,8 +447,6 @@ export const createDeductibleModifiers = (
         });
       });
 
-      console.log('splitPlanData >>>---', splitPlanData)  
-
       splitFilePremiums.push(splitPlanData)
 
     });

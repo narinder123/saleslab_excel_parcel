@@ -163,10 +163,8 @@ if (InputArguments.import && !InputArguments.V1) {
       });
 
       if (folder == "modifiers") {
-        console.log('splitFileArr >>>---', InfoData.splitFile)
         if(InfoData.splitFile) {
           splitFilePremiums?.length > 0 && splitFilePremiums?.map((planData: any) => {
-            console.log('planData >>>---', planData)
             planData.map((rate: any) => {
               SplitFile(rate.rates?.data, `Outputs/${InfoData.provider}/V2/modifiers`, `${rate?.rates?.key}`);
             })

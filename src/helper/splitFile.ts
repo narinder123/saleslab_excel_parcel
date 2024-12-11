@@ -8,7 +8,6 @@ export const SplitFile = (
   if (!fs.existsSync(`${outputDir}`)) fs.mkdirSync(`${outputDir}`);
   if (!fs.existsSync(`${outputDir}/${fileName.split("_")[0]}`))
     fs.mkdirSync(`${outputDir}/${fileName.split("_")[0]}`);
-  console.log('call call', data?.length, outputDir, fileName)
   data = JSON.stringify(data)
     data = data.replace(/"-/g, "");
     data = data.replace(/-"/g, "");
