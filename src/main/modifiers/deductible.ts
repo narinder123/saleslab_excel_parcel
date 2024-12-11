@@ -6,6 +6,7 @@ import {
   ModifiersType,
   Option,
   PlansInfo,
+  premiumCondition,
   PremiumModType,
   RateTableCustomerPrice,
   RawRates,
@@ -17,10 +18,12 @@ export const createDeductibleModifiers = (
   premiums: RawRates[],
   InsurerInfo: InsurerInfo,
   index: number | string
-): { data: Modifiers[]; splitFile: string[]; rateTableData: any[] } => {
+): { data: Modifiers[]; splitFile: string[]; rateTableData: any[], splitFilePremiums: any } => {
   let deductibleArr: Modifiers[] = [];
   let splitArr: string[] = [];
   const rateTableData: any[] = [];
+  let splitFilePremiums: any = [];
+
   const rateTableStatus =
     InsurerInfo.rateTable &&
     InsurerInfo.rateTable?.length > 0 &&
@@ -48,8 +51,19 @@ export const createDeductibleModifiers = (
       hasOptions: true,
       options: [],
     };
+
+
     if (!typeNone) deductible.inputLabel = `${type} Co/Pay`;
     data.distinctInfo.map((info) => {
+
+      let splitPlanData: any = {
+        planName: info.plan,
+        rates: {
+          key: "",
+          data: []
+        }
+      }
+
       info.network.map((network) => {
         info.coverage.map((coverage) => {
           let copayList = info.copay;
@@ -124,6 +138,11 @@ export const createDeductibleModifiers = (
                   );
                 }
                 if (!rateTableStatus) {
+
+                  splitPlanData.rates.key = Utils.remove(
+                      `${info.plan}_${coverage}_${network}_${copay}`
+                    )
+
                   let rateBase = filteredRates.map((premium) => {
                     let rate: {
                       price: { currency: string; value: number }[];
@@ -187,22 +206,38 @@ export const createDeductibleModifiers = (
                     return rate;
                   });
 
+
+                  // let baseAnnualPremium =
+                  //   InsurerInfo.splitFile == "true"
+                  //     ? SplitFile(
+                  //         rateBase,
+                  //         `Outputs/${Utils.remove(InsurerInfo.provider)}/PricingTable`,
+                  //         Utils.remove(
+                  //           `${info.plan}_${coverage}_${network}_${copay}`
+                  //         )
+                  //       )
+                  //     : rateBase;
+
+
                   let baseAnnualPremium =
                     InsurerInfo.splitFile == "true"
-                      ? SplitFile(
-                          rateBase,
-                          `Outputs/${Utils.remove(InsurerInfo.provider)}/PricingTable`,
-                          Utils.remove(
-                            `${info.plan}_${coverage}_${network}_${copay}`
-                          )
-                        )
+                      ? `-[...${Utils.remove(
+                        `${info.plan}_${coverage}_${network}_${copay}`
+                      )}]-`
                       : rateBase;
-                  if (InsurerInfo.splitFile == "true")
+
+                  if (InsurerInfo.splitFile == "true") {
+
                     splitArr.push(
                       Utils.remove(
                         `${info.plan}_${coverage}_${network}_${copay}`
                       )
                     );
+
+                    splitPlanData.rates.data.push(rateBase);
+
+                  }
+
                   option.premiumMod.conditionalPrices = baseAnnualPremium;
                 } else {
                   delete option.premiumMod;
@@ -416,9 +451,13 @@ export const createDeductibleModifiers = (
           });
         });
       });
+
+      splitFilePremiums.push(splitPlanData)
+
     });
+    
     deductibleArr.push({ ...deductible });
   });
 
-  return { data: deductibleArr, splitFile: splitArr, rateTableData };
+  return { data: deductibleArr, splitFile: splitArr, rateTableData, splitFilePremiums: splitFilePremiums };
 };
