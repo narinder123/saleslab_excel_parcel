@@ -15,4 +15,6 @@ and for prod include "import:prod"
 
 Impotant Note - you can't run import and V1 command at the same time, these commands needs to be run seperately
 
+Split File:
+For split file add splitFile:true in info.js File
 # ==============
