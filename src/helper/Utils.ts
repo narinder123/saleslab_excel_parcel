@@ -26,7 +26,7 @@ export const Utils = new (class {
         )
         .join("");
     }
-    [",", ":", ".", "(", ")", "/-Or", "+-plus", "*", "\n", "#"].forEach((v) => {
+    [",", ":", ".", "(", ")", "/-Or", "+-plus", "*", "\n", "#", "%"].forEach((v) => {
       if (!v.includes("-")) while (str.includes(v)) str = str.replace(v, "");
       else {
         let [char, word] = v.split("-");

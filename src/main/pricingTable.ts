@@ -40,14 +40,14 @@ export const createPricingTableData = (
         index
       );
 
-      let baseAnnualPremium =
+      let baseAnnualPremium =/* 
         info.splitFile == "true"
           ? SplitFile(
               rateBase,
               `Outputs/${Utils.remove(info.provider)}/PricingTable`,
               Utils.remove(`${planData.plan}_${coverage}`)
             )
-          : rateBase;
+          :  */rateBase;
       if (info.splitFile == "true")
         splitArr.push(Utils.remove(`${planData.plan}_${coverage}`));
       let table: PricingTable = {
