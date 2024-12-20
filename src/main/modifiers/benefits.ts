@@ -46,7 +46,7 @@ export const createBenefitModifiers = (
     if (InsurerInfo.showAddons?.includes(benefit)) obj.showAddon = false;
 
     let benefitMod = data.find((v) => v.Benefit == benefit);
-    let benefitObj = buildBenefitOptions(benefitMod, data);
+    let benefitObj = buildBenefitOptions(benefitMod, data, InsurerInfo);
     benefitObj.plans.map(
       (plan) =>
         planData.plans.includes(plan) &&
@@ -108,7 +108,8 @@ export const createBenefitModifiers = (
 
 const buildBenefitOptions = (
   data: RawBenefits | undefined,
-  benefits: RawBenefits[]
+  benefits: RawBenefits[],
+  info: InsurerInfo
 ) => {
   let res: {
     options: { value: string; plans: string[]; copay?: string }[];
@@ -139,12 +140,17 @@ const buildBenefitOptions = (
         throw new Error(
           "$ column not found, please fill it in the benefit sheet"
         );
+
+      // Copays = info.copayTypes?.length ? info.copayTypes.map((type) => Copays?[plan].replace(`${type}-`, ''))
+
+
       $ = $[plan];
       Copays &&
         Copays[plan]
           .toString()
           .split("/")
           .map((copay, i) => {
+            console.log("$ ", $)
             let str = data[plan].trim();
             let $_copay = $.split("-")[i];
             $_copay = $_copay.includes("/") ? $_copay.split("/") : [$_copay];

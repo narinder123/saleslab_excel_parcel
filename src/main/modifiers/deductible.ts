@@ -324,6 +324,7 @@ export const createDeductibleModifiers = (
                       premium.network == network &&
                       premium.coverage == coverage &&
                       premium.copay == copay &&
+                      premium.area == country[0] &&
                       premium.frequency == variable.Annually &&
                       premium.custom == condition &&
                       (typeNone || premium.copayType == type)
