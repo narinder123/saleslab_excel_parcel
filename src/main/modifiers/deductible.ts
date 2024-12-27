@@ -127,14 +127,17 @@ export const createDeductibleModifiers = (
                 []
               );
 
+              // console.log("premiums ", premiums)
+
               let filteredRates = premiums.filter(
                 (premium) =>
                   premium.planName == info.plan &&
                   premium.network == network &&
                   premium.coverage == coverage &&
                   premium.copay == copay &&
+                  (premium.type == "OP" ? true : premium.area == country[0]) &&
                   premium.frequency == variable.Annually &&
-                  (typeNone || premium.copayType == type) &&
+                  (typeNone || premium.type == type) &&
                   (!customCheck || premium.custom == customConditionsArr[0])
               );
               if (filteredRates.length == 0 && !customCheck)

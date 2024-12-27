@@ -138,10 +138,8 @@ const buildBenefitOptions = (
       let $: any = benefits.find((b) => b.Benefit == "$");
       if (!$)
         throw new Error(
-          "$ column not found, please fill it in the benefit sheet"
+          "$ column not found, please fill it in the benefit sheet---"
         );
-
-      // Copays = info.copayTypes?.length ? info.copayTypes.map((type) => Copays?[plan].replace(`${type}-`, ''))
 
 
       $ = $[plan];

@@ -387,10 +387,6 @@ export const benefitCategories: any[] = [
         userType: "-Enum.userType.All-",
         benefitTypes: ["-core.benefitTypes.physiotherapy-"],
       },
-      {
-        userType: "-Enum.userType.All-",
-        benefitTypes: ["-core.benefitTypes.radiology-"],
-      },
     ],
   },
   {
@@ -476,7 +472,6 @@ export const coreBenefitsTypes: { [key: string]: string } = {
   "In-patient (Hospitalization & Surgery)":
     "-core.benefitTypes.inPatientHospitializationandsurgery-",
   Physiotherapy: "-core.benefitTypes.physiotherapy-",
-  Radiology: "-core.benefitTypes.radiology-",
   "Out-patient Consultations": "-core.benefitTypes.outPatientConsultation-",
   "Out-patient Specialists": "-core.benefitTypes.specialist-",
   "Out-patient Medicines": "-core.benefitTypes.medicine-",
