@@ -25,7 +25,6 @@ export const createPricingTableData = (
   let splitArr: string[] = [];
   PlansInfo.distinctInfo.map((planData) => {
     planData.coverage.map((coverage) => {
-      console.log("planData ", planData)
       const planCopay = info.copayTypes?.length ? info.copayTypes.map((type) => planData.copay[0].replace(`${type}-`, ''))[0] : planData.copay[0]
       
       

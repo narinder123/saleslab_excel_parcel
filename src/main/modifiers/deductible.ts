@@ -24,16 +24,6 @@ export const createDeductibleModifiers = (
   const rateTableData: any[] = [];
   let splitFilePremiums: any = [];
 
-  const countriesByArea = [
-    ["1", ["US"]],
-    ["3", [ "AD", "CC", "GL", "JE", "KN", "AI", "CO", "GD", "KW", "LC", "AG", "CK", "GP", "LB", "MF", "AR", "CR", "GT", "MT", "VC", "AW", "CY", "GG", "MQ", "SR", "BS", "DM", "GY", "AN", "SE", "BB", "DO", "HT", "NI", "TT", "BZ", "EC", "HN", "PA", "TR", "BM", "SV", "HU", "PY", "TC", "BO", "FO", "IS", "PE", "TV", "VG", "FJ", "IQ", "PT", "UY", "KY", "PF", "IM", "QA", "VE", "CL", "GI", "IL", "SM", "CX", "GR", "JM", "ES" ]],
-    ["4", [ "AF", "HR", "KG", "OM", "TJ", "AL", "CZ", "LV", "PS", "TM", "AM", "EE", "LI", "PL", "UZ", "AZ", "GE", "LT", "RO", "YE", "BH", "IN", "MK", "RS", "BA", "JO", "MD", "SK", "BG", "KZ", "ME", "SI" ]],
-    ["5", [ "BD", "KI", "MM", "PW", "TW", "BT", "LA", "NR", "PG", "TH", "BN", "MY", "NP", "PH", "TO", "KH", "MV", "NC", "SB", "VU", "TL", "MH", "MN", "KR", "VN", "ID", "MN", "PK", "LK" ]],
-    ["6", [ "DZ", "CI", "GW", "MZ", "ZA", "AO", "CD", "KE", "NA", "SS", "BJ", "DJ", "LS", "NE", "SD", "BW", "EG", "LR", "NG", "SZ", "BF", "GQ", "LY", "CG", "TZ", "BI", "ER", "MG", "RW", "TG", "CM", "ET", "MW", "ST", "TN", "CV", "GA", "ML", "SN", "UG", "CF", "GM", "MR", "SC", "ZM", "TD", "GH", "MU", "SL", "ZW", "KM", "GN", "MA", "SO" ]],
-    ["10", [ "CN", "HK", "SG" ]],
-    ["11", [ "AU", "FI", "SA", "NL", "GB", "AT", "FR", "LU", "NZ", "BE", "DE", "MO", "NO", "BR", "IT", "MX", "CH", "DK", "JP", "MC", "AE" ]],
-  ]
-
   const rateTableStatus =
     InsurerInfo.rateTable &&
     InsurerInfo.rateTable?.length > 0 &&
@@ -81,9 +71,7 @@ export const createDeductibleModifiers = (
           if (!typeNone)
             copayList = copayList.filter((copay) => copay.includes(`${type}-`));
 
-          copayList.map((copay) => {
-            countriesByArea.forEach((country, ind) => {
-            
+          copayList.map((copay) => {            
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
               id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
@@ -108,10 +96,6 @@ export const createDeductibleModifiers = (
                   value: [
                     `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
                   ],
-                },
-                {
-                  type: "RESIDENCY_EQUALS_TO",
-                  value: [...country[1]],
                 },
               ],
             };
@@ -463,7 +447,6 @@ export const createDeductibleModifiers = (
                   deductible.options.push(...tempOptions);
               }
             }
-          })
           });
         });
       });

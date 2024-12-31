@@ -145,6 +145,7 @@ const buildBenefitOptions = (
           .toString()
           .split("/")
           .map((copay, i) => {
+            console.log("$ ", $)
             let str = data[plan].trim();
             let $_copay = $.split("-")[i];
             $_copay = $_copay.includes("/") ? $_copay.split("/") : [$_copay];
