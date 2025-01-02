@@ -14,6 +14,7 @@ export const DataConverters = new (class {
   }
 
   fetchInsurerInfo(data: any[]): InsurerInfo {
+    console.log("data ", data)
     let info: InsurerInfo = {
       provider: "",
       startDate: new Date(),
@@ -31,7 +32,8 @@ export const DataConverters = new (class {
       rateTable: [],
       copayTypes: [],
       showAddons: [],
-      futureRates: false
+      futureRates: false,
+      companyId: data[0].companyId
     };
 
     for (let key in info) {

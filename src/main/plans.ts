@@ -14,6 +14,14 @@ export const createPlansData = (
         data.info.planNetworksAreSame ? "" : `.${Utils.remove(planData.plan)}`
       }-`,
     ];
+
+    const deductibles = insurer.copayTypes?.length
+      ? insurer.copayTypes.map(
+          (copay) =>
+            `-${Utils.remove(data.provider)}.modifiers${index}.deductible.${copay}-`
+        )
+      : [`-${Utils.remove(data.provider)}.modifiers${index}.deductible-`];
+
     arr.push({
       _id: `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
       provider: `-${Utils.remove(data.provider)}.provider-`,
@@ -31,7 +39,7 @@ export const createPlansData = (
             `-${Utils.remove(data.provider)}.modifiers${index}.benefits.${Utils.remove(b)}-`
         ),
         ...networks,
-        `-${Utils.remove(data.provider)}.modifiers${index}.deductible-`,
+        ...deductibles,
         `-${Utils.remove(data.provider)}.modifiers${index}.paymentFrequency-`,
       ],
     });

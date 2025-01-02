@@ -6,6 +6,7 @@ import {
 } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
+  feeType,
   InsurerInfo,
   Modifiers,
   Option,
@@ -32,7 +33,7 @@ export const createBenefitModifiers = (
       title: benefit,
       label: benefit,
       type: `-core.modifierTypes.${benefit == "Annual Limit" ? "annualLimit" : "benefit"}-`,
-      assignmentType: "PER_PLAN",
+      assignmentType: feeType.PER_PLAN,
       includedBenefits:
         benefit == "Annual Limit" ? [] : [coreBenefitsTypes[benefit]],
       isOptional: false,

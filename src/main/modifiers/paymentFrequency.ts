@@ -6,6 +6,7 @@ import {
 } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
+  feeType,
   InsurerInfo,
   Modifiers,
   ModifiersType,
@@ -40,7 +41,7 @@ export const createPaymentFrequencyModifier = (
     title: "Payment Frequency Modifier",
     label: "Additional Surcharges",
     type: `-core.modifierTypes.paymentFrequency-`,
-    assignmentType: "PER_CUSTOMER",
+    assignmentType: feeType.PER_CUSTOMER,
     includedBenefits: [],
     isOptional: false,
     description: "",

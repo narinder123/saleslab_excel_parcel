@@ -1,6 +1,7 @@
 import { EnumConditions, customConditions, variable } from "../../constants";
 import { Utils } from "../../helper/Utils";
 import {
+  feeType,
   InsurerInfo,
   Modifiers,
   ModifiersType,
@@ -41,7 +42,7 @@ export const createDeductibleModifiers = (
       title: "Deductible modifier",
       label: "Deductibles",
       type: "-core.modifierTypes.deductible-",
-      assignmentType: "PER_CUSTOMER",
+      assignmentType: feeType.PER_CUSTOMER,
       includedBenefits: [],
       isOptional: false,
       description: "",

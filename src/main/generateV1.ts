@@ -21,7 +21,7 @@ export const create_V1_Data = (
   rateSheets: RawRates[][],
   benefits: RawBenefits[][]
 ) => {
-  console.log("> Generating V1 data");
+  console.log("> Generating V1 data ", info);
   let jsonData = info.residencies.map((residency, res_index) => {
     if (!InfoResidencies.includes(residency))
       throw `${residency} residency doesn't exist! please use these defined residencies: ${InfoResidencies.join(",")}`;
@@ -247,7 +247,6 @@ export const create_V1_Data = (
         struc.opticalFilter =
           benefit[BenefitNamesV1.opticalFilter].toLowerCase();
         struc.companyName = info.provider;
-        struc.company = info.compantId;
         struc.startDate = info.startDate;
         struc.repat = rate.repat ? rate.repat : "";
         struc.geoCoverage = "";
@@ -274,6 +273,8 @@ export const create_V1_Data = (
         struc.singleFemale = rate.married == "true" ? "0" : "1";
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
+        struc.status = "true";
+        struc.company = info.companyId ? { $oid: info.companyId } : "";
         if (struc.outPatient?.includes("$")) {
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");
           if (!$)

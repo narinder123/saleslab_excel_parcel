@@ -61,7 +61,7 @@ export interface InsurerInfo {
   frequencies?: string[];
   frequencyFrom?: "benefit" | "rates";
   addons?: string[];
-  compantId?: string;
+  companyId?: string;
   ageCalculationMethod?: string;
   insurerName: string;
   multiCurrency?: ("rates" | "benefits")[];
@@ -187,6 +187,11 @@ export enum ModifiersType {
   BENEFIT = "BENEFIT",
   PRICING_TABLE = "PRICING_TABLE",
   ANNUAL_LIMIT = "ANNUAL_LIMIT",
+}
+
+export enum feeType {
+  PER_PLAN = "PER_PLAN",
+  PER_CUSTOMER = "PER_CUSTOMER",
 }
 
 export interface Modifiers {

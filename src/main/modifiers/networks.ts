@@ -1,5 +1,5 @@
 import { Utils } from "../../helper/Utils";
-import { Modifiers, PlansInfo } from "../../helper/interfaces";
+import { feeType, Modifiers, PlansInfo } from "../../helper/interfaces";
 
 export const createNetworkModifiers = (
   data: PlansInfo,
@@ -16,7 +16,7 @@ export const createNetworkModifiers = (
       title: "Network modifier",
       label: "Network",
       type: "-core.modifierTypes.network-",
-      assignmentType: "PER_PLAN",
+      assignmentType: feeType.PER_PLAN,
       includedBenefits: [],
       isOptional: false,
       description: "",
@@ -43,7 +43,7 @@ export const createNetworkModifiers = (
         title: "Network modifier",
         label: "Network",
         type: "-core.modifierTypes.network-",
-        assignmentType: "PER_PLAN",
+        assignmentType: feeType.PER_PLAN,
         includedBenefits: [],
         isOptional: false,
         description: "",

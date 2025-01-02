@@ -9,6 +9,7 @@ import { DataConverters } from "../../helper/DataConverters";
 import { Utils } from "../../helper/Utils";
 import {
   Addons,
+  feeType,
   InsurerInfo,
   Modifiers,
   ModifiersType,
@@ -71,7 +72,7 @@ export const createAddons = (
           addonInfo[0].sheetName
         );
         mod.isOptional = true;
-        mod.assignmentType = "PER_CUSTOMER";
+        mod.assignmentType = feeType.PER_CUSTOMER;
       }
 
       mod.description = "";
@@ -272,10 +273,9 @@ export const createAddons = (
           ? true
           : false;
       mod.hasOptions = true;
-      mod.assignmentType = "PER_CUSTOMER";
+      mod.assignmentType = feeType.PER_CUSTOMER;
     }
     if (rateTableStatus && rateTableData.length > 0) mod.hasRateTable = true;
-    // mod.assignmentType = "PER_CUSTOMER";
     return { ...mod };
   });
   return { modifiers: mods, rateTableData };
