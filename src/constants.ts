@@ -11,6 +11,8 @@ export const fileTypes = {
   benefits: "benefits",
   info: "info",
   addons: "addons",
+  conversion: "conversion",
+  multiCurrencyBenefits: "multiCurrencyBenefits",
 };
 
 export const InfoTypes = ["plan", "network", "copay", "benefit"];
@@ -33,85 +35,6 @@ export const variable = {
   none: "none",
   Annually: "Annually",
 };
-
-export const InfoResidencies = [
-  "UAE",
-  "NE",
-  "Dubai",
-  "AbuDhabi",
-  "NE_Dubai",
-  "Latin",
-  "Argentina",
-  "Bolivia",
-  "Guatemala & Martinique",
-  "Honduras",
-  "Belize, Nicaragua & El Salvador",
-  "Panama & Puerto Rico",
-  "Costa Rica",
-  "Mexico",
-];
-
-export const V2Residencies: { [key: string]: string[][] } = {
-  UAE: [["AE-DU", "AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"], []],
-  NE: [
-    ["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
-    ["AE-DU", "AE-AZ"],
-  ],
-  Dubai: [["AE-DU"], ["AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
-  AbuDhabi: [["AE-AZ"], ["AE-DU", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
-  NE_Dubai: [["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"], ["AE-AZ"]],
-  Latin: [
-    [
-      "CO", // Colombia
-      "PE", // Peru
-      "VE", // Venezuela
-      "UY", // Uruguay
-      "GF", // French Guiana (Note: GF is for French Guiana, which is an overseas department of France)
-      "EC", // Ecuador
-      "PY", // Paraguay
-      "DO", // Dominican Republic
-      "CU", // Cuba
-      "BZ", // Belize
-      "SR", // Suriname
-      "CL", // Chile
-      "NI", // Nicaragua
-      "HT", // Haiti
-      "GY", // Guyana
-    ],
-    [],
-  ],
-  Argentina: [["AR"], []],
-  Bolivia: [["BO"], []],
-  "Guatemala & Martinique": [["GT", "MQ"], []],
-  Honduras: [["HN"], []],
-  "Belize, Nicaragua & El Salvador": [["BZ", "NI", "SV"], []],
-  "Panama & Puerto Rico": [["PA", "PR"], []],
-  "Costa Rica": [["CR"], []],
-  Mexico: [["MX"], []],
-};
-
-export const EnumConditions: EnumConditionsTypes = {
-  plan: "-Enum.conditions.plans-",
-  coverage: "-Enum.conditions.coverage-",
-  network: "-Enum.conditions.modifier-",
-  minAge: "-Enum.customer.min_age-",
-  maxAge: "-Enum.customer.max_age-",
-  gender: "-Enum.customer.gender-",
-  category: "-Enum.customer.category-",
-  relation: "-Enum.customer.relation-",
-  maritalStatus: "-Enum.customer.maritalStatus-",
-  deductible: "-Enum.conditions.deductible-",
-  frequency: "-Enum.conditions.modifier-",
-};
-
-export const BenefitTypes = {
-  type: "type",
-  none: "none",
-  Pro: "Pro",
-  All: "All",
-  Starter: "Starter",
-};
-
 export const coveredCountries = [
   "US",
   "AU",
@@ -323,6 +246,90 @@ export const coveredCountries = [
   "MA",
   "SO",
 ];
+
+export const InfoResidencies = [
+  "UAE",
+  "NE",
+  "Dubai",
+  "AbuDhabi",
+  "NE_Dubai",
+  "Latin",
+  "Argentina",
+  "Bolivia",
+  "Guatemala & Martinique",
+  "Honduras",
+  "Belize, Nicaragua & El Salvador",
+  "Panama & Puerto Rico",
+  "Costa Rica",
+  "Mexico",
+  "ROW",
+];
+
+export const V2Residencies: { [key: string]: string[][] } = {
+  UAE: [["AE-DU", "AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"], []],
+  NE: [
+    ["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"],
+    ["AE-DU", "AE-AZ"],
+  ],
+  Dubai: [["AE-DU"], ["AE-AZ", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
+  AbuDhabi: [["AE-AZ"], ["AE-DU", "AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ"]],
+  NE_Dubai: [["AE-AJ", "AE-FU", "AE-SH", "AE-RK", "AE-UQ", "AE-DU"], ["AE-AZ"]],
+  Latin: [
+    [
+      "CO", // Colombia
+      "PE", // Peru
+      "VE", // Venezuela
+      "UY", // Uruguay
+      "GF", // French Guiana (Note: GF is for French Guiana, which is an overseas department of France)
+      "EC", // Ecuador
+      "PY", // Paraguay
+      "DO", // Dominican Republic
+      "CU", // Cuba
+      "BZ", // Belize
+      "SR", // Suriname
+      "CL", // Chile
+      "NI", // Nicaragua
+      "HT", // Haiti
+      "GY", // Guyana
+    ],
+    [],
+  ],
+  Argentina: [["AR"], []],
+  Bolivia: [["BO"], []],
+  "Guatemala & Martinique": [["GT", "MQ"], []],
+  Honduras: [["HN"], []],
+  "Belize, Nicaragua & El Salvador": [["BZ", "NI", "SV"], []],
+  "Panama & Puerto Rico": [["PA", "PR"], []],
+  "Costa Rica": [["CR"], []],
+  Mexico: [["MX"], []],
+  ROW: [[...coveredCountries], []],
+};
+
+export const EnumConditions: EnumConditionsTypes = {
+  plan: "-Enum.conditions.plans-",
+  coverage: "-Enum.conditions.coverage-",
+  network: "-Enum.conditions.modifier-",
+  minAge: "-Enum.customer.min_age-",
+  maxAge: "-Enum.customer.max_age-",
+  gender: "-Enum.customer.gender-",
+  category: "-Enum.customer.category-",
+  relation: "-Enum.customer.relation-",
+  maritalStatus: "-Enum.customer.maritalStatus-",
+  deductible: "-Enum.conditions.deductible-",
+  frequency: "-Enum.conditions.modifier-",
+  currency: "-Enum.conditions.currency-",
+  residency: "-Enum.conditions.residency-",
+  custom: "custom",
+  benefitId:"benefitId"
+};
+
+export const BenefitTypes = {
+  type: "type",
+  none: "none",
+  Pro: "Pro",
+  All: "All",
+  Starter: "Starter",
+};
 
 export const benefitCategories: any[] = [
   {
@@ -735,7 +742,7 @@ export const customConditions: any = {
       value: "-Enum.gender.female-",
     },
   ],
-  singleChild_1: [
+  SingleChild_0: [
     {
       type: "-Enum.customer.config-",
       value: [
@@ -757,7 +764,7 @@ export const customConditions: any = {
       ],
     },
   ],
-  singleChild_2: [
+  SingleChild_1a: [
     {
       type: "-Enum.customer.config-",
       value: [
@@ -779,29 +786,7 @@ export const customConditions: any = {
       ],
     },
   ],
-  singleChild_3A: [
-    {
-      type: "-Enum.customer.config-",
-      value: [
-        {
-          type: "-Enum.customer.category-",
-          value: "-Enum.category.primary-",
-          count: "==1",
-        },
-        {
-          type: "-Enum.customer.relation-",
-          value: "-Enum.relation.Spouse-",
-          count: "==1",
-        },
-        {
-          type: "-Enum.customer.relation-",
-          value: "-Enum.relation.Child-",
-          count: ">=2",
-        },
-      ],
-    },
-  ],
-  singleChild_3B: [
+  SingleChild_1b: [
     {
       type: "-Enum.customer.config-",
       value: [
@@ -823,4 +808,189 @@ export const customConditions: any = {
       ],
     },
   ],
+  SingleChild_2: [
+    {
+      type: "-Enum.customer.config-",
+      value: [
+        {
+          type: "-Enum.customer.category-",
+          value: "-Enum.category.primary-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Spouse-",
+          count: "==1",
+        },
+        {
+          type: "-Enum.customer.relation-",
+          value: "-Enum.relation.Child-",
+          count: ">=2",
+        },
+      ],
+    },
+  ],
+};
+
+export const customResidencies: { [key: string]: string[] } = {
+  Range1: ["KM", "ER", "MZ", "PK", "PH", "LK"],
+  Range2: ["DZ", "AO", "ET", "ML", "TW"],
+  Range3: [
+    "AF",
+    "AL",
+    "AZ",
+    "BJ",
+    "BA",
+    "BW",
+    "KH",
+    "CM",
+    "CA",
+    "TD",
+    "DJ",
+    "FO",
+    "GH",
+    "GL",
+    "GN",
+    "GW",
+    "IN",
+    "JP",
+    "KZ",
+    "MG",
+    "MR",
+    "MA",
+    "NG",
+    "OM",
+    "PG",
+    "QA",
+    "SA",
+    "TG",
+  ],
+  Range4: [
+    "AM",
+    "BY",
+    "BF",
+    "BI",
+    "CF",
+    "CK",
+    "GQ",
+    "FJ",
+    "GA",
+    "GE",
+    "GU",
+    "JO",
+    "KG",
+    "KS",
+    "LB",
+    "LS",
+    "LR",
+    "LY",
+    "MW",
+    "MV",
+    "MU",
+    "MD",
+    "ME",
+    "NA",
+    "NP",
+    "NC",
+    "NZ",
+    "NE",
+    "NU",
+    "MP",
+    "RW",
+    "WS",
+    "SN",
+    "RS",
+    "SC",
+    "SL",
+    "SB",
+    "SO",
+    "TL",
+    "TO",
+    "TN",
+    "TM",
+    "UG",
+    "UA",
+    "UZ",
+    "VU",
+    "VN",
+    "ZM",
+    "ZW",
+  ],
+  Range5: [
+    "BT",
+    "CX",
+    "CC",
+    "GF",
+    "PF",
+    "KI",
+    "MH",
+    "YT",
+    "FM",
+    "NR",
+    "NF",
+    "PW",
+    "SM",
+    "ST",
+    "TJ",
+    "TK",
+    "TV",
+    "WF",
+    "EH",
+  ],
+  Range6: [
+    "AS",
+    "AI",
+    "AG",
+    "AR",
+    "AW",
+    "BH",
+    "BD",
+    "BB",
+    "BZ",
+    "BM",
+    "BO",
+    "VG",
+    "KY",
+    "CL",
+    "CO",
+    "CR",
+    "CU",
+    "DM",
+    "DO",
+    "EC",
+    "SV",
+    "GD",
+    "GP",
+    "GG",
+    "GY",
+    "HT",
+    "IQ",
+    "IM",
+    "JM",
+    "JE",
+    "KW",
+    "MQ",
+    "MN",
+    "MS",
+    "NI",
+    "PA",
+    "PY",
+    "PE",
+    "PR",
+    "KN",
+    "LC",
+    "PM",
+    "VC",
+    "GS",
+    "SS",
+    "SD",
+    "SR",
+    "TT",
+    "TC",
+    "UY",
+    "VE",
+    "YE",
+  ],
+  Range7: ["IL"],
+  Range8: ["AD", "GT", "HN", "MX"],
 };

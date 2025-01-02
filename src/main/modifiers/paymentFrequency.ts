@@ -1,5 +1,6 @@
 import {
   customConditions,
+  customResidencies,
   EnumConditions,
   paymentFrequencies,
   variable,
@@ -135,11 +136,16 @@ export const createPaymentFrequencyModifier = (
                     premium.copay == copay &&
                     premium.frequency == frequency &&
                     (typeNone || premium.copayType == type) &&
-                    (!customCheck || premium.custom == customConditionsArr[0])
+                    (!customCheck ||
+                      premium.custom == customConditionsArr[0]) &&
+                    (!premium.residency ||
+                      (premium.residency &&
+                        (premium.residency.length == 2 ||
+                          customResidencies[premium.residency])))
                 );
-                if (filteredPremiums.length == 0 && !customCheck)
+                if (filteredPremiums.length == 0)
                   throw `no record found for - {planName: "${info.plan}", network: "${network}" , coverage: "${coverage}" , copay: "${copay}", frequency: "${frequency}"}`;
-                if (filteredPremiums.length !== 0 && customCheck) {
+                else {
                   if (customCheck) {
                     if (!customConditions[customConditionsArr[0]])
                       throw new Error(
@@ -154,7 +160,10 @@ export const createPaymentFrequencyModifier = (
                     let rateBase = filteredPremiums.map((premium) => {
                       let rate: {
                         price: { currency: string; value: number }[];
-                        conditions: { type: string; value: string | number }[];
+                        conditions: {
+                          type: string;
+                          value: string | number | string[];
+                        }[];
                       } = {
                         price: [
                           {
@@ -206,6 +215,14 @@ export const createPaymentFrequencyModifier = (
                           type: EnumConditions.relation,
                           value: `-Enum.relation.${premium.relation}-`,
                         });
+                      if (premium.residency)
+                        rate.conditions.push({
+                          type: EnumConditions.residency,
+                          value:
+                            premium.residency.length > 2
+                              ? customResidencies[premium.residency]
+                              : [premium.residency],
+                        });
                       if (premium.custom) {
                         if (!customConditions[premium.custom])
                           throw new Error(
@@ -247,6 +264,11 @@ export const createPaymentFrequencyModifier = (
                           };
                           if (premium.gender)
                             value.customer.gender = premium.gender;
+                          if (premium.residency)
+                            value.customer.residency =
+                              premium.residency.length > 2
+                                ? customResidencies[premium.residency]
+                                : [premium.residency];
                           return value;
                         }
                       ),

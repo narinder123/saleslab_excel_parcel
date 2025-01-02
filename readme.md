@@ -10,7 +10,7 @@ exmaple: npm start name:Cigna V1:true V2:true
 
 And for importing V1 data include "import:ENTER_DB_MODE"
 
-For dev include "import:dev"
+We for dev include "import:dev"
 and for prod include "import:prod"
 
 Impotant Note - you can't run import and V1 command at the same time, these commands needs to be run seperately
@@ -18,3 +18,6 @@ Impotant Note - you can't run import and V1 command at the same time, these comm
 Split File:
 For split file add splitFile:true in info.js File
 # ==============
+
+# For multicurrecny benefits run below command to generate conversion rates then follow the above commonds 
+npm start create:conversion

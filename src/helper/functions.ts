@@ -9,7 +9,6 @@ import {
   InputArgumentType,
   OutputSheetFnArguments,
   RawBenefits,
-  Residencies,
 } from "./interfaces";
 import fs from "fs";
 import xlsx from "xlsx";
@@ -110,6 +109,12 @@ export const Helpers = new (class helperFunction {
     console.log(`|- ${provider}/${folder}/${fileName} Created!`);
   }
 
+  getSheetNames(filename: string): string[] {
+    const folderName = this.getInputArguments().name;
+    const path = `./Inputs/${folderName}/${filename}.xlsx`;
+    return xlsx.readFile(path).SheetNames;
+  }
+
   getResidencyArr(residency: string): string[][] {
     if (InfoResidencies.includes(residency)) return V2Residencies[residency];
     else
@@ -146,7 +151,7 @@ export const Helpers = new (class helperFunction {
     if (fs.existsSync(`Outputs/${provider}/V2`) && inputArgv.V2)
       fs.rmSync(`./Outputs/${provider}/V2`, { recursive: true, force: true });
 
-    if (fs.existsSync(`Outputs/${provider}/log`) && inputArgv.log)
+    if (fs.existsSync(`Outputs/${provider}/log`) && (inputArgv.log || inputArgv.create))
       fs.rmSync(`./Outputs/${provider}/log`, { recursive: true, force: true });
   }
 
@@ -242,5 +247,11 @@ export const Helpers = new (class helperFunction {
     const { generateMongoIdFromString } = utils;
     module.exports = ${data};`;
     fs.appendFileSync(`Outputs/${provider}/V2/core-index.js`, str);
+  }
+  createXlsx(data:any[],path:string){
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    xlsx.writeFile(workbook, path);
   }
 })();

@@ -1,3 +1,4 @@
+import fs from "fs";
 import { fileTypes } from "./constants";
 import { Helpers } from "./helper/functions";
 import { DataConverters } from "./helper/DataConverters";
@@ -7,12 +8,17 @@ import { createCoverageData } from "./main/coverages";
 import { createPricingTableData } from "./main/pricingTable";
 import { createModifiersData } from "./main/modifiers";
 import { Utils } from "./helper/Utils";
-import fs from "fs";
 import { Import_V1_Data, create_V1_Data } from "./main/generateV1";
-import { rateTable, V1DBMode } from "./helper/interfaces";
+import {
+  BenefitSheet,
+  KeyStringType,
+  rateTable,
+  V1DBMode,
+} from "./helper/interfaces";
 import { createProvider } from "./main/provider";
 import { createRateTableData } from "./main/modifiers/rateTable";
 import { SplitFile } from "./helper/splitFile";
+import { extractMultiCurrency } from "./helper/extractMultiCurrency";
 
 const InputArguments = Helpers.getInputArguments();
 Helpers.checkInputFolderExists();
@@ -28,6 +34,21 @@ if (InputArguments.import && !InputArguments.V1) {
   else if (InputArguments.import == "prod") mode = "prod";
   else throw `Invalid import mode entered, modes: dev | prod`;
   Import_V1_Data(InfoData.provider, mode);
+} else if (InputArguments.create == "conversion") {
+  const sheets: BenefitSheet[] = Helpers.getSheetNames(
+    fileTypes.multiCurrencyBenefits
+  ).map((sheetName) => ({
+    name: sheetName,
+    benefits: DataConverters.fetchSheet(
+      fileTypes.multiCurrencyBenefits,
+      sheetName
+    ),
+  }));
+  const conversionData = extractMultiCurrency(sheets,InfoData);
+  Helpers.createXlsx(
+    conversionData,
+    `Inputs/${InputArguments.name}/${fileTypes.conversion}.xlsx`
+  );
 } else {
   const planDatas = new Array(InfoData.residencies.length)
     .fill(0)
@@ -45,6 +66,11 @@ if (InputArguments.import && !InputArguments.V1) {
     DataConverters.fetchPlansInfo(planData, InfoData.provider)
   );
 
+  const conversionData: KeyStringType[] = [];
+
+  if (fs.existsSync(`./Inputs/${InputArguments.name}/${fileTypes.conversion}.xlsx`))
+    conversionData.push(...DataConverters.fetchSheet(fileTypes.conversion));
+
   Utils.log(`Input Sheets are converted! \n`);
 
   // Deleting the Provider's folder if exists for new data
@@ -53,9 +79,7 @@ if (InputArguments.import && !InputArguments.V1) {
   if (InputArguments.log) {
     fs.mkdirSync(`Outputs/${InfoData.provider}/log`);
     const LogFilesName = ["planDatas", "rates", "datas", "InsurerInfo"];
-    [
-      planDatas, rates, datas, [InfoData]
-    ].map((data:any[], i:number) => {
+    [planDatas, rates, datas, [InfoData]].map((data: any[], i: number) => {
       fs.writeFileSync(
         `Outputs/${InfoData.provider}/log/${LogFilesName[i]}.json`,
         JSON.stringify(data)
@@ -67,15 +91,19 @@ if (InputArguments.import && !InputArguments.V1) {
   // Generating V1 Data with json files
   if (InputArguments.V1) create_V1_Data(InfoData, rates, planDatas);
 
-  // Generating V2 output files with json files
+  // Generating V2 output with json files
   if (InputArguments.V2) {
     Utils.log("Generating V2 Data");
+
     const getIndex = (i: number): number | string =>
       InfoData.residencies.length > 1 ? i + 1 : "";
+
     const core = createCoreIndexData(datas, InfoData);
+
     const coverages = datas.flatMap((data, i) =>
       createCoverageData(data, InfoData.residencies[i], getIndex(i))
     );
+
     const V2Rates = (i: number) => {
       let filteredRates = rates[i].filter(
         (rate) => rate.platform == "both" || rate.platform == "V2"
@@ -84,6 +112,7 @@ if (InputArguments.import && !InputArguments.V1) {
       if (filteredRates.length == 0) throw new Error("No rates found for V2");
       return filteredRates;
     };
+
     const plans = datas.flatMap((data, i) =>
       createPlansData(data, getIndex(i), InfoData)
     );
@@ -102,10 +131,10 @@ if (InputArguments.import && !InputArguments.V1) {
 
     const rateTableData: rateTable[] = [];
     let splitFilePath: string = ``;
-    let splitFilePremiums:any = [];
+    let splitFilePremiums: any = [];
     let splitFileArr: string[] = [];
 
-    const modifiers = datas.flatMap((data, i) => {
+    let modifiers = datas.flatMap((data, i) => {
       let mods = createModifiersData(
         data,
         V2Rates(i),
@@ -115,18 +144,18 @@ if (InputArguments.import && !InputArguments.V1) {
       );
       if (mods.rateTableData.length > 0)
         rateTableData.push(...mods.rateTableData);
-  
-      if(mods.splitFilePremiums.length > 0) {
-        splitFilePremiums.push(mods.splitFilePremiums)
-        splitFileArr.push(...mods.splitFile)
+
+      if (mods.splitFilePremiums.length > 0) {
+        splitFilePremiums.push(mods.splitFilePremiums);
+        splitFileArr.push(...mods.splitFile);
       }
 
-      if(InfoData.splitFile)
-        mods.splitFile?.length > 0 && mods.splitFile.map((split: string) => {
-          splitFilePath += `
-          const ${split} = require("./${split.split("_")[0]}/${split}.js")`
-
-        })
+      if (InfoData.splitFile)
+        mods.splitFile?.length > 0 &&
+          mods.splitFile.map((split: string) => {
+            splitFilePath += `
+          const ${split} = require("./${split.split("_")[0]}/${split}.js")`;
+          });
 
       return mods.data;
     });
@@ -138,7 +167,12 @@ if (InputArguments.import && !InputArguments.V1) {
       coverage: { data: coverages, Enum: true, core: true },
       plans: { data: plans, Enum: true, core: true },
       PricingTable: { data: pricingTables, Enum: true, core: true },
-      modifiers: { data: modifiers, Enum: true, core: true, addUp: splitFilePath },
+      modifiers: {
+        data: modifiers,
+        Enum: true,
+        core: true,
+        addUp: splitFilePath,
+      },
     };
 
     if (rateTableData.length > 0) {
@@ -152,6 +186,17 @@ if (InputArguments.import && !InputArguments.V1) {
                 const { generateMongoIdFromString } = utils;`,
       };
     }
+
+    if (InfoData.multiCurrency && InfoData.multiCurrency?.length > 1) {
+      console.log('Found coversion sheet, implying multicurrency');      
+      modifiers = DataConverters.multiCurrencyConverter({
+        modifiers,
+        InfoData,
+        conversionData,
+      });
+      console.log("MultiCurrency done!");
+    }
+
     Utils.log("Generating V2 Output folders/files");
 
     // Generating V2 output files
@@ -168,13 +213,18 @@ if (InputArguments.import && !InputArguments.V1) {
       });
 
       if (folder == "modifiers") {
-        if(InfoData.splitFile) {
-          splitFilePremiums?.length > 0 && splitFilePremiums?.map((planData: any) => {
-            planData.map((rate: any) => {
-              SplitFile(rate.rates?.data, `Outputs/${InfoData.provider}/V2/modifiers`, `${rate?.rates?.key}`);
-            })
-          })
-        };
+        if (InfoData.splitFile) {
+          splitFilePremiums?.length > 0 &&
+            splitFilePremiums?.map((planData: any) => {
+              planData.map((rate: any) => {
+                SplitFile(
+                  rate.rates?.data,
+                  `Outputs/${InfoData.provider}/V2/modifiers`,
+                  `${rate?.rates?.key}`
+                );
+              });
+            });
+        }
       }
     }
 

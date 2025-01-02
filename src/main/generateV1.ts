@@ -271,7 +271,7 @@ export const create_V1_Data = (
         struc.residency = residency;
         struc.relation = rate.relation ? rate.relation : "primary";
         struc.singleFemale = rate.married == "true" ? "0" : "1";
-        struc.singleChild = rate.singleChild ? rate.singleChild : "";
+        struc.singleChild = rate.singleChild !== undefined ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
         struc.status = "true";
         struc.company = info.companyId ? { $oid: info.companyId } : "";

@@ -1,7 +1,13 @@
-import { BenefitTypes, variable } from "../constants";
+import { BenefitTypes, EnumConditions, variable } from "../constants";
 import { Utils } from "./Utils";
 import { Helpers } from "./functions";
-import { InsurerInfo, PlansInfo } from "./interfaces";
+import {
+  InsurerInfo,
+  KeyStringType,
+  Modifiers,
+  Option,
+  PlansInfo,
+} from "./interfaces";
 
 export const DataConverters = new (class {
   fetchSheet(filename: string, index: number | string = 0) {
@@ -14,7 +20,7 @@ export const DataConverters = new (class {
   }
 
   fetchInsurerInfo(data: any[]): InsurerInfo {
-    console.log("data ", data)
+    console.log("data ", data);
     let info: InsurerInfo = {
       provider: "",
       startDate: new Date(),
@@ -33,14 +39,20 @@ export const DataConverters = new (class {
       copayTypes: [],
       showAddons: [],
       futureRates: false,
-      companyId: data[0].companyId
+      companyId: data[0].companyId,
     };
 
     for (let key in info) {
-      if (data[0][key])
-        info[key] = data[0][key].toString().includes("/")
+      if (data[0][key]) {
+        let value = data[0][key].toString().includes("/")
           ? data[0][key].split("/").filter((v: string) => v)
           : data[0][key];
+        info[key] = !Array.isArray(info[key])
+          ? value
+          : Array.isArray(value)
+            ? [...value]
+            : value;
+      }
     }
 
     if (info.copayTypes?.length == 0) info.copayTypes.push(variable.none);
@@ -176,5 +188,141 @@ export const DataConverters = new (class {
     };
 
     return InsurerInfo;
+  }
+
+  multiCurrencyConverter({
+    modifiers,
+    InfoData,
+    conversionData,
+  }: {
+    modifiers: Modifiers[];
+    InfoData: InsurerInfo;
+    conversionData: KeyStringType[];
+  }): Modifiers[] {
+    const { currency: fromCurrency } = InfoData;
+    modifiers.map((mod, i) => {
+      if (
+        !(
+          (InfoData.multiCurrency?.includes("deductible") &&
+            mod.label.includes("Deductibles")) ||
+          (InfoData.multiCurrency?.includes("benefits") &&
+            !mod.label.includes("Deductibles"))
+        )
+      )
+        return;
+
+      if (
+        mod.options.length == 0 &&
+        mod.description.includes(`${fromCurrency}`)
+      ) {
+        let options = [
+          {
+            id: "option-0",
+            label: mod.description,
+            description: mod.description,
+            conditions: [
+              {
+                type: EnumConditions.currency,
+                value: [fromCurrency],
+              },
+            ],
+          },
+        ];
+        for (let currency in conversionData[0]) {
+          if (currency == fromCurrency) continue;
+          let str = Utils.currencyConverter({
+            value: mod.description,
+            fromCurrency: InfoData.currency,
+            toCurrency: currency,
+            conversionData,
+          });
+          options.push({
+            id: `option-${options.length}`,
+            label: str,
+            description: str,
+            conditions: [
+              {
+                type: EnumConditions.currency,
+                value: [currency],
+              },
+            ],
+          });
+        }
+        mod.hasOptions = true;
+        mod.options = [...options];
+      } else if (
+        mod.options.length > 0 &&
+        mod.options.some(
+          (opt) =>
+            (opt.label && opt.label.includes(fromCurrency)) ||
+            (opt.description && opt.description.includes(fromCurrency))
+        )
+      ) {
+        let options: Option[] = [];
+        mod.options.map((opt, j) => {
+          if (
+            !opt.label?.includes(fromCurrency) &&
+            !opt.description?.includes(fromCurrency)
+          ) {
+            options.push(opt);
+            return;
+          }
+          let newOpt: Option = {
+            ...opt,
+            id: `option-${j + 1}`,
+            label: opt.label,
+            description: opt.description,
+            conditions: [
+              ...(opt.conditions ? opt.conditions : []),
+              {
+                type: EnumConditions.currency,
+                value: [fromCurrency],
+              },
+            ],
+          };
+          newOpt.altCurrencyOptions = Object.keys(conversionData[0]).map(
+            (currency) => ({ id: `option-${j + 1}`, currency })
+          );
+          options.push(newOpt);
+          for (let currency in conversionData[0]) {
+            if (currency === fromCurrency) continue;
+            let label = opt.label;
+            let description = opt.description;
+            label = Utils.currencyConverter({
+              value: label,
+              fromCurrency: fromCurrency,
+              toCurrency: currency,
+              conversionData,
+            });
+            description = Utils.currencyConverter({
+              value: description || "",
+              fromCurrency: fromCurrency,
+              toCurrency: currency,
+              conversionData,
+            });
+            let temp = {
+              ...opt,
+              id: `option-${j + 1}`,
+              label,
+              description,
+              conditions: [
+                ...(opt.conditions ? opt.conditions : []),
+                {
+                  type: EnumConditions.currency,
+                  value: [currency],
+                },
+              ],
+            };
+            newOpt.altCurrencyOptions = Object.keys(conversionData[0]).map(
+              (currency) => ({ id: `option-${j + 1}`, currency })
+            );
+            options.push(temp);
+          }
+        });
+        mod.options = options;
+      }
+    });
+
+    return modifiers;
   }
 })();
