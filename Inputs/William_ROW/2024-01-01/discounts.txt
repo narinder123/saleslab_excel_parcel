@@ -1,0 +1,145 @@
+{_id: William.modifiers.discount.childDiscount,
+    plans: [William.plans.Bronze,
+      William.plans.SilverLite,
+      William.plans.Silver,
+      William.plans.Gold,],
+    title: "discount",
+    label: "discount",
+    type: core.modifierTypes.discount,
+    assignmentType: "PER_CUSTOMER",
+    includedBenefits: [],
+    isOptional: false,
+    description: "",
+    addonCost: {},
+    premiumMod: "",
+    conditions: [],
+    hasOptions: true,
+    options: [
+      {
+        id: "5%-discount",
+        label: "5% Child Discount",
+        assignmentType: "PER_CUSTOMER",
+        premiumMod: {
+          type: "percentage",
+          price: [{ value: -5 }],
+          applicationType: Enum.applicationType.preBenefit,
+        },
+        description: "5% Child Discount",
+        conditions: [
+          {
+            type: Enum.customer.config,
+            value: [
+              {
+                type: Enum.customer.category,
+                value: Enum.category.primary,
+                count: "==1",
+              },
+            ],
+          },
+          {
+            type: "CUSTOMER_RELATION",
+            value: "Child",
+            orderType: "desc",
+            orderBy: "age",
+            index: ">=1",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    _id: William.modifiers.discount.LifeTimediscount,
+    plans: [William.plans.Bronze,
+      William.plans.SilverLite,
+      William.plans.Silver,
+      William.plans.Gold,],
+    title: "discount",
+    label: "discount",
+    type: core.modifierTypes.discount,
+    assignmentType: "PER_CUSTOMER",
+    includedBenefits: [],
+    isOptional: false,
+    description: "",
+    addonCost: {},
+    premiumMod: "",
+    conditions: [],
+    hasOptions: true,
+    options: [
+      {
+        id: "Lifetime Discount",
+        label: "Lifetime Discount",
+        premiumMod: {
+          type: "percentage",
+          price: [{ value: -20 }],
+          applicationType: Enum.applicationType.postBenefit,
+        },
+        description: "Lifetime Discount",
+        conditions: [
+    {
+      type: Enum.conditions.residency,
+      value: ["BW", "KH", "CL", "CN", "CR", "IN", "JP", "LA", "MO", "MW", "MY", "MU", "MM", "PH", "VN"]
+    }
+  ]
+      },
+    ],
+  },
+  {
+    _id: William.modifiers.discount.childAloneDiscount,
+    plans: [William.plans.Bronze,
+      William.plans.SilverLite,
+      William.plans.Silver,
+      William.plans.Gold,],
+    title: "discount",
+    label: "discount",
+    type: core.modifierTypes.discount,
+    assignmentType: "PER_CUSTOMER",
+    includedBenefits: [],
+    isOptional: false,
+    description: "",
+    addonCost: {},
+    premiumMod: "",
+    conditions: [],
+    hasOptions: true,
+    options: [
+      {
+        id: "child-alone",
+        label: "Child Alone Charges",
+        assignmentType: "PER_CUSTOMER",
+        premiumMod: {
+          type: "percentage",
+          price: [{ value: 19 }],
+          applicationType: Enum.applicationType.postBenefit,
+        },
+        description: "Child Alone Charges",
+        conditions: [
+          {
+            type: Enum.conditions.plans,
+            value: [
+              William.plans.Bronze,
+      William.plans.Gold,
+            ],
+          },
+        ],
+      },
+      {
+        id: "child-alone",
+        label: "Child Alone Charges",
+        assignmentType: "PER_CUSTOMER",
+        premiumMod: {
+          type: "percentage",
+          price: [{ value: 23 }],
+          applicationType: Enum.applicationType.postBenefit,
+        },
+        description: "Child Alone Charges",
+        conditions: [
+          {
+            type: Enum.conditions.plans,
+            value: [
+                    William.plans.SilverLite,
+      William.plans.Silver,
+            ],
+          },
+        ],
+      },
+    ],
+  },
