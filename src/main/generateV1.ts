@@ -247,7 +247,7 @@ export const create_V1_Data = (
         struc.opticalFilter =
           benefit[BenefitNamesV1.opticalFilter].toLowerCase();
         struc.companyName = info.provider;
-        struc.company = info.compantId;
+        struc.company = info.companyId;
         struc.startDate = info.startDate;
         struc.repat = rate.repat ? rate.repat : "";
         struc.geoCoverage = "";
@@ -272,7 +272,7 @@ export const create_V1_Data = (
         struc.residency = residency;
         struc.relation = rate.relation ? rate.relation : "primary";
         struc.singleFemale = rate.married == "true" ? "0" : "1";
-        struc.singleChild = rate.singleChild ? rate.singleChild : "";
+        struc.singleChild = rate.singleChild !== undefined ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
         if (struc.outPatient?.includes("$")) {
           let $: any = benefits[res_index].find((b) => b.Benefit == "$");

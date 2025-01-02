@@ -1,3 +1,5 @@
+import { KeyStringType } from "./interfaces";
+
 export const Utils = new (class {
   log(msg: any, flag?: string): void {
     if (!flag) console.log(`>`, msg);
@@ -26,13 +28,15 @@ export const Utils = new (class {
         )
         .join("");
     }
-    [",", ":", ".", "(", ")", "/-Or", "+-plus", "*", "\n", "#", "%"].forEach((v) => {
-      if (!v.includes("-")) while (str.includes(v)) str = str.replace(v, "");
-      else {
-        let [char, word] = v.split("-");
-        while (str.includes(char)) str = str.replace(char, word);
+    [",", ":", ".", "(", ")", "/-Or", "+-plus", "*", "\n", "#", "%"].forEach(
+      (v) => {
+        if (!v.includes("-")) while (str.includes(v)) str = str.replace(v, "");
+        else {
+          let [char, word] = v.split("-");
+          while (str.includes(char)) str = str.replace(char, word);
+        }
       }
-    });
+    );
     return str;
   }
 
@@ -48,5 +52,30 @@ export const Utils = new (class {
   // removes all the duplicates from the Array
   distinct(arr: string[]): string[] {
     return [...new Set(arr)];
+  }
+
+  currencyConverter({
+    value,
+    fromCurrency,
+    toCurrency,
+    conversionData,
+  }: {
+    value: string;
+    fromCurrency: string;
+    toCurrency: string;
+    conversionData: KeyStringType[];
+  }): string {
+    let limit = 3;
+    let count = 0;
+    while (value.includes(`${fromCurrency} `) && count < limit) {
+      conversionData.map((data) => {
+        let from = `${fromCurrency} ${data[fromCurrency]}`;
+        let to = `${toCurrency} ${data[toCurrency]}`;
+        if (value.includes(from)) value = value.replace(from, to);
+      });
+      count++;
+    }
+    if (count == limit) console.log(`"${value}" not converted`);
+    return value;
   }
 })();

@@ -1,5 +1,6 @@
 import {
   customConditions,
+  customResidencies,
   EnumConditions,
   fileTypes,
   paymentFrequencies,
@@ -26,8 +27,8 @@ export const createAddons = (
   index: number | string
 ): { modifiers: Modifiers[]; rateTableData: rateTable[] } => {
   const rateTableData: rateTable[] = [];
+  const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
   let mods = data.map((mod: Modifiers) => {
-    const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
     if (!addons.includes(mod.label)) return mod;
     let addonInfo: Addons[] = DataConverters.fetchSheet(
       `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
@@ -44,8 +45,7 @@ export const createAddons = (
       InsurerInfo.rateTable &&
       InsurerInfo.rateTable?.length > 0 &&
       InsurerInfo.rateTable.includes(mod.title);
-
-    if (addonInfo[0].placeAt == variable.addonsPlaceAt.outside) {
+    if (addonInfo[0]?.placeAt == variable.addonsPlaceAt.outside) {
       if (addonInfo[0].type == "fixed")
         mod.addonCost = {
           type: addonInfo[0].type,
@@ -146,9 +146,16 @@ export const createAddons = (
             conditions: [],
           };
           if (addonInfo[0].sheetName && addon.flag !== variable.none) {
-            let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
+            let filteredRates = addonRates.filter(
+              (v) =>
+                v.flag == addon.flag &&
+                (!v.residency ||
+                  (v.residency &&
+                    (v.residency.length == 2 ||
+                      customResidencies[v.residency])))
+            );
             if (filteredRates.length == 0)
-              throw `No record found for ${mod.label} index:${index} flag:${addon.flag}`;
+              throw `No record found for ${mod.label} index:${index} flag:${addon.flag} length:${addonRates.length}`;
             if (!rateTableStatus) {
               opt.addonCost = {
                 type: addon.type,
@@ -181,9 +188,16 @@ export const createAddons = (
 
                   Object.keys(EnumConditions).forEach((condition) => {
                     if (!rate[condition]) return;
+                    if (
+                      condition == "custom" &&
+                      !customConditions[rate[condition]]
+                    )
+                      throw new Error(
+                        `${rate[condition]} not included in customCondition array`
+                      );
                     const conditions =
                       condition == "custom"
-                        ? customConditions[condition]
+                        ? customConditions[rate[condition]]
                         : [
                             {
                               type: EnumConditions[condition],
@@ -202,6 +216,7 @@ export const createAddons = (
                 }),
               };
             } else {
+              if (addon.frequency)
               rateTableData.push({
                 plans: addon.plan
                   ? [
@@ -217,13 +232,14 @@ export const createAddons = (
                 value: mod._id,
                 values: [opt.id],
                 rates: filteredRates.map((premium): RateTableCustomerPrice => {
-                  if (!premium.frequency) throw `frequency not found`;
+                  // if (!premium.frequency) throw `frequency not found`;
+                  let frequency = premium.frequency || addon.frequency;
                   let multiplier =
-                    premium.frequency == "semiAnnual"
+                    frequency == "semiAnnual"
                       ? 2
-                      : premium.frequency == "quarter"
+                      : frequency == "quarter"
                         ? 4
-                        : premium.frequency == "month"
+                        : frequency == "month"
                           ? 12
                           : 1;
                   let value: RateTableCustomerPrice = {
@@ -240,6 +256,11 @@ export const createAddons = (
                     },
                   };
                   if (premium.gender) value.customer.gender = premium.gender;
+                  if (premium.residency)
+                    value.customer.residency =
+                      premium.residency.length > 2
+                        ? customResidencies[premium.residency]
+                        : [premium.residency];
                   return value;
                 }),
               });
@@ -248,11 +269,17 @@ export const createAddons = (
 
           Object.keys(EnumConditions).forEach((condition) => {
             if (!addon[condition]) return;
-
-            opt.conditions?.push({
-              type: EnumConditions[condition],
-              value: getConditionValue(condition, addon, InsurerInfo, index),
-            });
+            if (condition == "benefitId") {
+              opt.conditions?.push({
+                type: "-Enum.conditions.modifier-",
+                benefitId: `-core.benefitTypes.${addon[condition].split("/")[0]}-`,
+                value: [addon[condition].split("/")[1]],
+              });
+            } else
+              opt.conditions?.push({
+                type: EnumConditions[condition],
+                value: getConditionValue(condition, addon, InsurerInfo, index),
+              });
           });
 
           if (addon.custom) {
@@ -274,10 +301,96 @@ export const createAddons = (
       mod.hasOptions = true;
       mod.assignmentType = "PER_CUSTOMER";
     }
-    if (rateTableStatus && rateTableData.length > 0) mod.hasRateTable = true;
+    if (rateTableStatus && rateTableData.length > 0) {
+      mod.hasRateTable = true;
+      mod.assignmentType = "PER_CUSTOMER";
+    }
     // mod.assignmentType = "PER_CUSTOMER";
     return { ...mod };
   });
+  if (addons.includes("Repat")) {
+    let addonInfo: Addons[] = DataConverters.fetchSheet(
+      `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
+      `Repat`
+    );
+    let addonRates = [];
+    if (addonInfo[0].sheetName) {
+      addonRates = DataConverters.fetchSheet(
+        `${fileTypes.addons}${index == "" || index == 1 ? "" : Number(index) - 1}`,
+        addonInfo[0].sheetName
+      );
+    }
+    let repat = { ...mods[0] };
+    repat._id = `-${InsurerInfo.provider}.modifiers${index}.benefits.repatriationBenefits-`;
+    repat.title = "Repatriation Optional benefit";
+    repat.label = "Repatriation Added";
+    repat.includedBenefits = ["-core.benefitTypes.repatriation-"];
+    repat.assignmentType = "PER_CUSTOMER";
+    repat.isOptional = true;
+    repat.description = "";
+    repat.hasOptions = true;
+    repat.options = addonInfo.map((addon, i) => {
+      let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
+      return {
+        id: `option-${i + 1}`,
+        label: "Repatriation Optional benefit",
+        addonCost: {
+          type: PremiumModType.ConditionalFixed,
+          conditionalPrices: filteredRates.map((rate) => {
+            let multiplier = 1;
+            if (rate.frequency)
+              multiplier =
+                rate.frequency == "semiAnnual"
+                  ? 2
+                  : rate.frequency == "quarter"
+                    ? 4
+                    : rate.frequency == "month"
+                      ? 12
+                      : 1;
+            let obj: premiumCondition = {
+              conditions: [],
+              price: [
+                {
+                  value:
+                    (multiCurrency
+                      ? rate.value
+                      : parseFloat(rate.value) / InsurerInfo.conversion) *
+                    multiplier,
+                  currency: multiCurrency
+                    ? rate.currency
+                    : InsurerInfo.currency,
+                },
+              ],
+            };
+            Object.keys(EnumConditions).forEach((condition) => {
+              if (!rate[condition]) return;
+              const conditions =
+                condition == "custom"
+                  ? customConditions[rate[condition]]
+                  : [
+                      {
+                        type: EnumConditions[condition],
+                        value: getConditionValue(
+                          condition,
+                          rate,
+                          InsurerInfo,
+                          index
+                        ),
+                      },
+                    ];
+              if (condition == "custom" && conditions.length == 0)
+                throw new Error(
+                  `${rate[condition]} - custom condition not found`
+                );
+              obj.conditions?.push(...conditions);
+            });
+            return obj;
+          }),
+        },
+      };
+    });
+    mods.push({ ...repat });
+  }
   return { modifiers: mods, rateTableData };
 };
 
@@ -299,6 +412,7 @@ const getConditionValue = (
     maritalStatus: "maritalStatus",
     deductible: "deductible",
     frequency: "frequency",
+    residency: "residency",
   };
 
   switch (type) {
@@ -319,14 +433,18 @@ const getConditionValue = (
       return data[type];
     case checks.gender:
       return `-Enum.gender.${data[type].toLowerCase()}-`;
-      case checks.category:
+    case checks.category:
       return `-Enum.category.${data[type]}-`;
-      case checks.relation:
+    case checks.relation:
       return `-Enum.relation.${data[type]}-`;
     case checks.network:
       return [data[type]];
     case checks.deductible:
       return [data[type]];
+    case checks.residency:
+      return data[type].length > 2
+        ? customResidencies[data[type]]
+        : [data[type]];
     case checks.frequency:
       return [
         paymentFrequencies[data[type]]

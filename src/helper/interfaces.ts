@@ -1,13 +1,19 @@
 // Utils Interfaces -------------------------------
 
+export interface KeyStringType {
+  [key: string]: string | Number;
+}
 export interface InputArgumentType {
-  name: string;
+  name?: string;
   V1?: string;
   V2?: string;
   log?: string;
   import?: string;
+  create?: createSheetsEnum;
   [key: string]: string | undefined;
 }
+
+export type createSheetsEnum = "conversion";
 
 export interface OutputSheetFnArguments {
   folder: string;
@@ -44,7 +50,13 @@ export interface RawRates {
   currency?: string;
   custom?: string;
   copayType?: string;
+  residency: string;
   [key: string]: any;
+}
+
+export interface BenefitSheet {
+  name: string;
+  benefits: RawBenefits[];
 }
 
 export type Residencies = "UAE" | "NE" | "Dubai" | "AbuDhabi" | "NE_Dubai";
@@ -61,10 +73,10 @@ export interface InsurerInfo {
   frequencies?: string[];
   frequencyFrom?: "benefit" | "rates";
   addons?: string[];
-  compantId?: string;
+  companyId?: string;
   ageCalculationMethod?: string;
   insurerName: string;
-  multiCurrency?: ("rates" | "benefits")[];
+  multiCurrency?: ("rates" | "benefits" | "deductible")[];
   rateTable?: string[];
   copayTypes: string[];
   showAddons?: string[];
@@ -219,7 +231,11 @@ export interface Option {
   description?: string;
   premiumMod?: premiumMod;
   addonCost?: premiumMod;
-  conditions?: { type: string; value: string[] | string | number }[];
+  conditions?: { type: string; value: string[] | string | number, benefitId?:string }[];
+  altCurrencyOptions?: {
+    id: string;
+    currency: string;
+  }[];
 }
 
 export interface premiumMod {
@@ -246,6 +262,7 @@ export interface Addons {
   plan?: string;
   value?: string | number;
   currency?: string;
+  frequency?: string;
   [key: string]: any;
 }
 
@@ -261,6 +278,8 @@ export interface EnumConditionsTypes {
   maritalStatus: string;
   deductible: string;
   frequency: string;
+  currency: string;
+  residency: string;
   [key: string]: string;
 }
 
@@ -272,6 +291,7 @@ export interface RateTableCustomerPrice {
     gender?: "male" | "female" | "";
     category?: CustomerCategory;
     maritalStatus?: CustomerMaritalStatus;
+    residency?: string[];
   };
   price: {
     currency: string;

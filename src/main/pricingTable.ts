@@ -25,10 +25,11 @@ export const createPricingTableData = (
   let splitArr: string[] = [];
   PlansInfo.distinctInfo.map((planData) => {
     planData.coverage.map((coverage) => {
-      const planCopay = info.copayTypes?.length ? info.copayTypes.map((type) => planData.copay[0].replace(`${type}-`, ''))[0] : planData.copay[0]
-      
-      
-      console.log("planCopay ", planCopay)
+      const planCopay = info.copayTypes?.length
+        ? info.copayTypes.map((type) =>
+            planData.copay[0].replace(`${type}-`, "")
+          )[0]
+        : planData.copay[0];
       let rateBase = buildBasePremium(
         rates,
         planData.plan,
@@ -39,14 +40,14 @@ export const createPricingTableData = (
         index
       );
 
-      let baseAnnualPremium =/* 
+      let baseAnnualPremium = /* 
         info.splitFile == "true"
           ? SplitFile(
               rateBase,
               `Outputs/${Utils.remove(info.provider)}/PricingTable`,
               Utils.remove(`${planData.plan}_${coverage}`)
             )
-          :  */rateBase;
+          :  */ rateBase;
       if (info.splitFile == "true")
         splitArr.push(Utils.remove(`${planData.plan}_${coverage}`));
       let table: PricingTable = {
@@ -92,17 +93,40 @@ const buildBasePremium = (
   index: number | string
 ): BasePremium[] => {
   const multiCurrency = info.multiCurrency?.includes("rates");
-    let rates = data.filter(
-    (rate) => {
-      return rate.planName == plan &&
+  let rates = data.filter((rate) => {
+    return (
+      rate.planName == plan &&
       rate.copay == copay &&
       rate.coverage == coverage &&
       rate.frequency == "Annually"
-    }
-  );
+    );
+  });
   if (rates.length == 0) {
+    // console.log(
+    //   `${
+    //     data.filter((rate) => {
+    //       return rate.planName == plan;
+    //     }).length
+    //   } - ${
+    //     data.filter((rate) => {
+    //       return rate.copay == copay;
+    //     }).length
+    //   } - ${
+    //     data.filter((rate) => {
+    //       return rate.coverage == coverage;
+    //     }).length
+    //   }`
+    // );
+    let copays = data.reduce((acc: any[], rate: RawRates) => {
+      if (!acc.includes(rate.copay)) return [...acc, rate.copay];
+      return acc;
+    }, []);
+    console.log(
+      copay.split("").map((v) => v.charCodeAt(0)),
+      copays[0].split("").map((v:string) => v.charCodeAt(0))
+    );
     throw Error(
-      `No premium found for "${plan}" - "${coverage}" - "${copay}" - index:${index}`
+      `No premium found for "${plan}" - "${coverage}" - "${copay}" - index:${index} , data.length:${data.length}`
     );
   }
   if (networks > 1) {
@@ -141,7 +165,7 @@ const buildBasePremium = (
         },
       ],
     };
-    if(rate.gender){
+    if (rate.gender) {
       res.gender = `-Enum.gender.${rate.gender}-`;
     }
     if (rate.married === "true") {

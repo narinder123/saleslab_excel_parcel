@@ -14,7 +14,7 @@ export const createPlansData = (
         data.info.planNetworksAreSame ? "" : `.${Utils.remove(planData.plan)}`
       }-`,
     ];
-    arr.push({
+    const plan = {
       _id: `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
       provider: `-${Utils.remove(data.provider)}.provider-`,
       title: planData.plan,
@@ -34,7 +34,13 @@ export const createPlansData = (
         `-${Utils.remove(data.provider)}.modifiers${index}.deductible-`,
         `-${Utils.remove(data.provider)}.modifiers${index}.paymentFrequency-`,
       ],
-    });
+    };
+    insurer.addons?.includes("Repat") &&
+      plan.modifiers.push(
+        `-${insurer.provider}.modifiers${index}.benefits.repatriationBenefits-`
+      );
+
+    arr.push({ ...plan });
   });
   return arr;
 };

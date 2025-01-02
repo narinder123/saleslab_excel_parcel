@@ -60,6 +60,11 @@ export const createCoreIndexData = (
       );
     });
 
+    if (InsurerInfo.addons?.includes("Repat"))
+      Ids[`modifiers${multiResidence ? n : ""}`].benefits[
+        "repatriationBenefits"
+      ] = mongoId(`${provider} repat ${n}`);
+
     Ids[`modifiers${multiResidence ? n : ""}`].networks = {};
 
     if (!infoData.info.planNetworksAreSame) {
