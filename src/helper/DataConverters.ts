@@ -20,7 +20,6 @@ export const DataConverters = new (class {
   }
 
   fetchInsurerInfo(data: any[]): InsurerInfo {
-    console.log("data ", data);
     let info: InsurerInfo = {
       provider: "",
       startDate: new Date(),
