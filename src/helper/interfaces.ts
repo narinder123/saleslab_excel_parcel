@@ -163,6 +163,10 @@ export interface PricingTable {
   baseAnnualPremium: BasePremium[] | string;
 }
 
+export interface PremiumFrequencies {
+  [key: string]: number
+}
+
 export enum PremiumModType {
   Percentage = "percentage",
   Fixed = "fixed",

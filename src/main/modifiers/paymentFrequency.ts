@@ -193,18 +193,13 @@ export const createPaymentFrequencyModifier = (
                         });
                       }
 
-                      if (premium.married === "true") {
-                        rate.conditions.push({
-                          type: EnumConditions.maritalStatus,
-                          value: "-Enum.maritalStatus.married-",
-                        });
-                      }
-                      if (premium.married === "false") {
-                        rate.conditions.push({
-                          type: EnumConditions.maritalStatus,
-                          value: "-Enum.maritalStatus.single-",
-                        });
-                      }
+                      rate.conditions.push({
+                        type: EnumConditions.maritalStatus,
+                        value:
+                          premium.married === "true"
+                            ? "-Enum.maritalStatus.married-"
+                            : "-Enum.maritalStatus.single-",
+                      });
                       if (premium.category)
                         rate.conditions.push({
                           type: EnumConditions.category,
