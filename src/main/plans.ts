@@ -16,7 +16,7 @@ export const createPlansData = (
     ];
     arr.push({
       _id: `-${Utils.remove(data.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
-      provider: `-${Utils.remove(data.provider)}.provider-`,
+      provider: `-${Utils.remove(data.provider)}.provider${insurer.splitResidencies ? index : ""}-`,
       title: planData.plan,
       notes: "",
       benefitCategories,

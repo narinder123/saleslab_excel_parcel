@@ -57,19 +57,20 @@ export interface InsurerInfo {
   residencies: string[];
   conversion: number;
   currency: string;
+  insurerName: string;
+  splitResidencies?: boolean;
   splitFile?: string;
   frequencies?: string[];
   frequencyFrom?: "benefit" | "rates";
   addons?: string[];
   compantId?: string;
   ageCalculationMethod?: string;
-  insurerName: string;
   multiCurrency?: ("rates" | "benefits")[];
   rateTable?: string[];
-  copayTypes: string[];
+  copayTypes?: string[];
   showAddons?: string[];
-  [key: string]: any;
   futureRates?: boolean;
+  [key: string]: any;
 }
 
 export interface PlansInfo {

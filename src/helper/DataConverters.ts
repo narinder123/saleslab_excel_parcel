@@ -22,6 +22,7 @@ export const DataConverters = new (class {
       conversion: 1,
       currency: "",
       splitFile: "",
+      splitResidencies: false,
       frequencies: [],
       frequencyFrom: "benefit",
       addons: [],

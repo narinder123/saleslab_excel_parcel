@@ -11,9 +11,14 @@ export const createCoreIndexData = (
   const futureRates = InsurerInfo.futureRates;
   const insurerStartDate = futureRates ? ` ${InsurerInfo?.startDate}` : "";
 
-  let Ids: any = {
-    provider: mongoId(provider),
-  };
+  let Ids: any = {};
+  if (InsurerInfo.splitResidencies) {
+    InsurerInfo.residencies.map(
+      (_, i) => (Ids[`provider${i + 1}`] = mongoId(`${provider} ${i + 1}`))
+    );
+  } else {
+    Ids["provider"] = mongoId(provider);
+  }
   const multiResidence = data.length > 1;
   data.map((infoData, i) => {
     let n = data.length > 1 ? i + 1 : "";
@@ -78,7 +83,7 @@ export const createCoreIndexData = (
       `${provider} paymentFrequency ${n}${insurerStartDate}`
     );
 
-    InsurerInfo.copayTypes.map((type) => {
+    InsurerInfo.copayTypes?.map((type) => {
       if (type == variable.none)
         Ids[`modifiers${multiResidence ? n : ""}`].deductible = mongoId(
           `${provider} deductible ${n}${insurerStartDate}`
