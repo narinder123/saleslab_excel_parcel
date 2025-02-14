@@ -12,6 +12,7 @@ import { Import_V1_Data, create_V1_Data } from "./main/generateV1";
 import {
   BenefitSheet,
   KeyStringType,
+  Modifiers,
   rateTable,
   V1DBMode,
 } from "./helper/interfaces";
@@ -44,7 +45,7 @@ if (InputArguments.import && !InputArguments.V1) {
       sheetName
     ),
   }));
-  const conversionData = extractMultiCurrency(sheets,InfoData);
+  const conversionData = extractMultiCurrency(sheets, InfoData);
   Helpers.createXlsx(
     conversionData,
     `Inputs/${InputArguments.name}/${fileTypes.conversion}.xlsx`
@@ -68,7 +69,11 @@ if (InputArguments.import && !InputArguments.V1) {
 
   const conversionData: KeyStringType[] = [];
 
-  if (fs.existsSync(`./Inputs/${InputArguments.name}/${fileTypes.conversion}.xlsx`))
+  if (
+    fs.existsSync(
+      `./Inputs/${InputArguments.name}/${fileTypes.conversion}.xlsx`
+    )
+  )
     conversionData.push(...DataConverters.fetchSheet(fileTypes.conversion));
 
   Utils.log(`Input Sheets are converted! \n`);
@@ -130,9 +135,6 @@ if (InputArguments.import && !InputArguments.V1) {
     );
 
     const rateTableData: rateTable[] = [];
-    let splitFilePath: string = ``;
-    let splitFilePremiums: any = [];
-    let splitFileArr: string[] = [];
 
     let modifiers = datas.flatMap((data, i) => {
       let mods = createModifiersData(
@@ -144,18 +146,6 @@ if (InputArguments.import && !InputArguments.V1) {
       );
       if (mods.rateTableData.length > 0)
         rateTableData.push(...mods.rateTableData);
-
-      if (mods.splitFilePremiums.length > 0) {
-        splitFilePremiums.push(mods.splitFilePremiums);
-        splitFileArr.push(...mods.splitFile);
-      }
-
-      if (InfoData.splitFile)
-        mods.splitFile?.length > 0 &&
-          mods.splitFile.map((split: string) => {
-            splitFilePath += `
-          const ${split} = require("./${split.split("_")[0]}/${split}.js")`;
-          });
 
       return mods.data;
     });
@@ -171,7 +161,6 @@ if (InputArguments.import && !InputArguments.V1) {
         data: modifiers,
         Enum: true,
         core: true,
-        addUp: splitFilePath,
       },
     };
 
@@ -188,7 +177,7 @@ if (InputArguments.import && !InputArguments.V1) {
     }
 
     if (InfoData.multiCurrency && InfoData.multiCurrency?.length > 1) {
-      console.log('Found coversion sheet, implying multicurrency');      
+      console.log("Found coversion sheet, implying multicurrency");
       modifiers = DataConverters.multiCurrencyConverter({
         modifiers,
         InfoData,
@@ -202,30 +191,37 @@ if (InputArguments.import && !InputArguments.V1) {
     // Generating V2 output files
     for (let folder in Output) {
       let { data, Enum, core, addUp } = Output[folder];
+      let mods = "";
+      if(InfoData.splitFile === "modifiers"){
+        console.log("> spliting Modifiers...")
+        addUp = "";
+        data.map((mod:Modifiers) => {
+          let subFolder = mod._id.split(".")[mod._id.split(".").length-1].replace("-","");
+          addUp += `const ${subFolder} = require("./${subFolder}/index.js");`;
+          mods += `...${subFolder},`;
+          Helpers.convertArrToOutputSheet({
+            folder,
+            fileName: "index",
+            data: JSON.stringify(mod),
+            provider: InfoData.provider,
+            core,
+            Enum,
+            subFolder,
+          });
+        });
+      }
+
+      if(mods) data = `[${mods}]`;
+
       Helpers.convertArrToOutputSheet({
         folder,
         fileName: "index",
-        data: JSON.stringify(data),
+        data: mods ? data : JSON.stringify(data),
         provider: InfoData.provider,
         core,
         Enum,
         addUp,
       });
-
-      if (folder == "modifiers") {
-        if (InfoData.splitFile) {
-          splitFilePremiums?.length > 0 &&
-            splitFilePremiums?.map((planData: any) => {
-              planData.map((rate: any) => {
-                SplitFile(
-                  rate.rates?.data,
-                  `Outputs/${InfoData.provider}/V2/modifiers`,
-                  `${rate?.rates?.key}`
-                );
-              });
-            });
-        }
-      }
     }
 
     Helpers.createV2IndexJS(InfoData.provider, rateTableData.length > 0);

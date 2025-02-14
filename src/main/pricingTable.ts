@@ -9,7 +9,6 @@ import {
   PricingTable,
   RawRates,
 } from "../helper/interfaces";
-import { SplitFile } from "../helper/splitFile";
 
 export const createPricingTableData = (
   PlansInfo: PlansInfo,
@@ -18,11 +17,10 @@ export const createPricingTableData = (
   rates: RawRates[],
   index: number | string,
   res_index: number
-): { data: PricingTable[]; splitFile: string[] } => {
+): { data: PricingTable[];} => {
   if (rates.length == 0)
     throw new Error(`rates not found for V2 index:${index}`);
   let res: PricingTable[] = [];
-  let splitArr: string[] = [];
   PlansInfo.distinctInfo.map((planData) => {
     planData.coverage.map((coverage) => {
       const planCopay = info.copayTypes?.length
@@ -40,16 +38,7 @@ export const createPricingTableData = (
         index
       );
 
-      let baseAnnualPremium = /* 
-        info.splitFile == "true"
-          ? SplitFile(
-              rateBase,
-              `Outputs/${Utils.remove(info.provider)}/PricingTable`,
-              Utils.remove(`${planData.plan}_${coverage}`)
-            )
-          :  */ rateBase;
-      if (info.splitFile == "true")
-        splitArr.push(Utils.remove(`${planData.plan}_${coverage}`));
+      let baseAnnualPremium = rateBase;
       let table: PricingTable = {
         _id: `-${Utils.remove(PlansInfo.provider)}.pricingTables${index}.${Utils.remove(planData.plan)}.${Utils.remove(coverage)}-`,
         plan: `-${Utils.remove(PlansInfo.provider)}.plans${index}.${Utils.remove(planData.plan)}-`,
@@ -73,7 +62,7 @@ export const createPricingTableData = (
     });
   });
 
-  return { data: res, splitFile: splitArr };
+  return { data: res };
 };
 
 const getAnnualLimit = (limit: string): PriceObj[] => {

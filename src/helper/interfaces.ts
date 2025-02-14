@@ -24,6 +24,7 @@ export interface OutputSheetFnArguments {
   Enum?: boolean;
   comment?: string;
   addUp?: string;
+  subFolder?: string;
 }
 
 export interface RawBenefits {
