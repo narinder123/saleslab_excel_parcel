@@ -192,11 +192,13 @@ if (InputArguments.import && !InputArguments.V1) {
     for (let folder in Output) {
       let { data, Enum, core, addUp } = Output[folder];
       let mods = "";
-      if(InfoData.splitFile === "modifiers"){
-        console.log("> spliting Modifiers...")
+      if (InfoData.splitFile === folder) {
+        console.log("> spliting Modifiers...");
         addUp = "";
-        data.map((mod:Modifiers) => {
-          let subFolder = mod._id.split(".")[mod._id.split(".").length-1].replace("-","");
+        data.map((mod: Modifiers) => {
+          let subFolder = mod._id
+            .split(".")
+            [mod._id.split(".").length - 1].replace("-", "");
           addUp += `const ${subFolder} = require("./${subFolder}/index.js");`;
           mods += `...${subFolder},`;
           Helpers.convertArrToOutputSheet({
