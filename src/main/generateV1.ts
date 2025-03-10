@@ -383,7 +383,7 @@ export const Import_V1_Data = (provider: string, mode: V1DBMode) => {
     const path = paths[count];
     Utils.log(`Inserting ${path} in DB`);
     exec(
-      `mongoimport --uri='mongodb+srv://vitavirutesuser:567gytfAFSCMQbmKKA@cluster0.jbdno.mongodb.net/${DBpath[mode]}?retryWrites=true&w=majority' -d=${DBpath[mode]} -c=plans --file=${DirPath}/${path} --jsonArray`,
+      `mongoimport --uri='${process.env.MONGO_URI}/${DBpath[mode]}?retryWrites=true&w=majority' -d=${DBpath[mode]} -c=plans --file=${DirPath}/${path} --jsonArray`,
       (err, stdOut, stderr) => {
         if (err) Utils.log(`err -> ${err}`);
         else if (stdOut) Utils.log("stdOut ->", stdOut);
