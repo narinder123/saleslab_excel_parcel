@@ -29,7 +29,7 @@ export const createDeductibleModifiers = (
     InsurerInfo.rateTable?.length > 0 &&
     InsurerInfo.rateTable.includes("deductible");
   const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
-  InsurerInfo.copayTypes.map((type) => {
+  InsurerInfo?.copayTypes?.map((type) => {
     let count = 1;
     let typeNone = type == variable.none;
     let deductible: Modifiers = {

@@ -67,6 +67,8 @@ export const Helpers = new (class helperFunction {
       if (value) sheetName = value;
     }
 
+    console.log("sheetName ", sheetName)
+
     let data = xlsx.utils.sheet_to_json(
       Sheet.Sheets[
         typeof innerFileName == "string"
@@ -74,6 +76,7 @@ export const Helpers = new (class helperFunction {
           : Sheet.SheetNames[innerFileName]
       ]
     );
+
     return data;
   }
 

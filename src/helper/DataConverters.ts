@@ -6,7 +6,6 @@ import { InsurerInfo, PlansInfo } from "./interfaces";
 export const DataConverters = new (class {
   fetchSheet(filename: string, index: number | string = 0) {
     let folderName = Helpers.getInputArguments().name;
-
     return Helpers.convertXlsxToArr(
       `./Inputs/${folderName}/${filename}.xlsx`,
       index

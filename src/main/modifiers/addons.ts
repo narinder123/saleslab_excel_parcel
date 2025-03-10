@@ -146,6 +146,8 @@ export const createAddons = (
             conditions: [],
           };
           if (addonInfo[0].sheetName && addon.flag !== variable.none) {
+            console.log("addonRates ", addonRates.find((v) => v.flag == addon.flag))
+            console.log("addon.flag ", typeof addon.flag)
             let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
             if (filteredRates.length == 0)
               throw `No record found for ${mod.label} index:${index} flag:${addon.flag}`;

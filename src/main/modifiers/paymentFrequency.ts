@@ -75,7 +75,7 @@ export const createPaymentFrequencyModifier = (
       let frequencyMod = { ...paymentFrequencies[frequency] };
       let multiplier =
         frequency == "semiAnnual" ? 2 : frequency == "quarter" ? 4 : 12;
-      InsurerInfo.copayTypes.map((type) => {
+      InsurerInfo?.copayTypes?.map((type) => {
         let typeNone = type == variable.none;
         data.distinctInfo.forEach((info) => {
           info.network.forEach((network) => {

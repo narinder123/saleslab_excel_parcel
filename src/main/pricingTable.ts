@@ -92,6 +92,7 @@ const buildBasePremium = (
   index: number | string
 ): BasePremium[] => {
   const multiCurrency = info.multiCurrency?.includes("rates");
+  console.log("data ", data.length)
     let rates = data.filter(
     (rate) => {
       return rate.planName == plan &&
@@ -100,6 +101,7 @@ const buildBasePremium = (
       rate.frequency == "Annually"
     }
   );
+  console.log("rates ", rates.length)
   if (rates.length == 0) {
     throw Error(
       `No premium found for "${plan}" - "${coverage}" - "${copay}" - index:${index}`

@@ -173,6 +173,8 @@ export enum CustomerCategory {
   PRIMARY_LOW_SALARY_BAND_DEPENDENT = "Primary (Low Salary Band) - Dependent",
   DEPENDENT_LOW_SALARY_BAND = "Dependent (Low Salary Band)",
   DEPENDENT_LOW_SALARY_BAND_DEPENDENT = "Dependent (Low Salary Band) - Dependent",
+  INVESTOR_DEPENDENT = 'Dependent - Investor',
+  INVESTOR_DEPENDENT_DEPENDENT = 'Investor - Dependent - Dependent',
 }
 
 //  Modifiers Interfaces ----------------------------

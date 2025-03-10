@@ -120,8 +120,8 @@ export const create_V1_Data = (
           : "";
         struc.rateBiannual = rate.rateBiannual ? rate.rateBiannual : "";
         struc.ageRangeStart =
-          rate.ageStart || rate.ageStart == 0 ? rate.ageStart : "";
-        struc.ageRangeEnd = rate.ageEnd || rate.ageEnd == 0 ? rate.ageEnd : "";
+          rate.ageStart || rate.ageStart == 0 ? Number(rate.ageStart) : "";
+        struc.ageRangeEnd = rate.ageEnd || rate.ageEnd == 0 ? Number(rate.ageEnd) : "";
         struc.gender = rate.gender ? rate.gender : "";
         struc.currency = "USD";
         struc.insuranceCoverAmount = "";
@@ -271,7 +271,7 @@ export const create_V1_Data = (
         struc.expiryDate = info.endDate;
         struc.residency = residency;
         struc.relation = rate.relation ? rate.relation : "primary";
-        struc.singleFemale = rate.married == "true" ? "0" : "1";
+        struc.singleFemale = rate.married == "true" ? "1" : "0";
         struc.singleChild = rate.singleChild ? rate.singleChild : "";
         struc.dentalAddon = rate.dentalAddon ? rate.dentalAddon : "";
         if (struc.outPatient?.includes("$")) {
