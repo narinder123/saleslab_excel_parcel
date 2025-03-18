@@ -165,10 +165,12 @@ export const createDeductibleModifiers = (
       "ZM",
       "ZW",
     ]],
-    ["C", ["CA", "JP", "MX", "MO", "ES", "TW"]],
+    ["C", ["CA", "JP", "MX", "MO", "TW"]],
     ["D", ["AE", "AR", "BO", "BR", "CL", "CO", "EC", "PY", "PE", "UY", "VE"]],
     ["E", ["SG"]],
-    ["F", ["HK"]],
+    // ["F", ["HK"]],
+    ["G", ["GB"]],
+    ["H", ["ES"]],
   ];
    let deductibleArr: Modifiers[] = [];
   let splitArr: string[] = [];
