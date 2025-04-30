@@ -1,6 +1,6 @@
 import fs from "fs";
 import { fileTypes } from "./constants";
-import { Helpers } from "./helper/functions";
+import { Helpers } from "./helper/helpers";
 import { DataConverters } from "./helper/DataConverters";
 import { createCoreIndexData } from "./main/core";
 import { createPlansData } from "./main/plans";

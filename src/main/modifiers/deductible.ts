@@ -1,6 +1,7 @@
 import {
   EnumConditions,
   customConditions,
+  customNationalities,
   customResidencies,
   variable,
 } from "../../constants";
@@ -132,7 +133,11 @@ export const createDeductibleModifiers = (
                   (!premium.residency ||
                     (premium.residency &&
                       (premium.residency.length == 2 ||
-                        customResidencies[premium.residency])))
+                        customResidencies[premium.residency]))) &&
+                  (!premium.nationality ||
+                    (premium.nationality &&
+                      (premium.nationality.length == 2 ||
+                        customNationalities[premium.nationality])))
               );
               if (filteredRates.length == 0 && !customCheck)
                 throw new Error(
@@ -218,6 +223,14 @@ export const createDeductibleModifiers = (
                             ? customResidencies[premium.residency]
                             : [premium.residency],
                       });
+                    if (premium.nationality)
+                      rate.conditions.push({
+                        type: EnumConditions.nationality,
+                        value:
+                          premium.nationality.length > 2
+                            ? customNationalities[premium.nationality]
+                            : [premium.nationality],
+                      });
                     if (premium.custom) {
                       if (!customConditions[premium.custom])
                         throw new Error(
@@ -287,6 +300,11 @@ export const createDeductibleModifiers = (
                             premium.residency.length > 2
                               ? customResidencies[premium.residency]
                               : [premium.residency];
+                        if (premium.nationality)
+                          value.customer.nationality =
+                            premium.nationality.length > 2
+                              ? customNationalities[premium.nationality]
+                              : [premium.nationality];
                         return value;
                       }
                     ),

@@ -1,6 +1,6 @@
 import { coveredCountries } from "../constants";
 import { Utils } from "../helper/Utils";
-import { Helpers } from "../helper/functions";
+import { Helpers } from "../helper/helpers";
 import { Coverages, PlansInfo } from "../helper/interfaces";
 
 export const createCoverageData = (

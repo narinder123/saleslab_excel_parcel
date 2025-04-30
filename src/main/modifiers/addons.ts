@@ -1,5 +1,6 @@
 import {
   customConditions,
+  customNationalities,
   customResidencies,
   EnumConditions,
   fileTypes,
@@ -8,6 +9,7 @@ import {
 } from "../../constants";
 import { DataConverters } from "../../helper/DataConverters";
 import { Utils } from "../../helper/Utils";
+import { Helpers } from "../../helper/helpers";
 import {
   Addons,
   InsurerInfo,
@@ -149,10 +151,11 @@ export const createAddons = (
             let filteredRates = addonRates.filter(
               (v) =>
                 v.flag == addon.flag &&
-                (!v.residency ||
-                  (v.residency &&
-                    (v.residency.length == 2 ||
-                      customResidencies[v.residency])))
+                (!v.residency || Helpers.getPremiumResidencyArr(v.residency)) &&
+                (!v.nationality ||
+                  (v.nationality &&
+                    (v.nationality.length == 2 ||
+                      customNationalities[v.nationality])))
             );
             if (filteredRates.length == 0)
               throw `No record found for ${mod.label} index:${index} flag:${addon.flag} length:${addonRates.length}`;
@@ -216,54 +219,60 @@ export const createAddons = (
                 }),
               };
             } else {
-              if (addon.frequency)
-              rateTableData.push({
-                plans: addon.plan
-                  ? [
-                      `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(addon.plan)}-`,
-                    ]
-                  : filteredRates[0].plan
+              // if (addon.frequency)
+                rateTableData.push({
+                  plans: addon.plan
                     ? [
-                        `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(filteredRates[0].plan)}-`,
+                        `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(addon.plan)}-`,
                       ]
-                    : mod.plans,
-                type: ModifiersType.BENEFIT,
-                modType: addon.type,
-                value: mod._id,
-                values: [opt.id],
-                rates: filteredRates.map((premium): RateTableCustomerPrice => {
-                  // if (!premium.frequency) throw `frequency not found`;
-                  let frequency = premium.frequency || addon.frequency;
-                  let multiplier =
-                    frequency == "semiAnnual"
-                      ? 2
-                      : frequency == "quarter"
-                        ? 4
-                        : frequency == "month"
-                          ? 12
-                          : 1;
-                  let value: RateTableCustomerPrice = {
-                    type: PremiumModType.ConditionalOverride,
-                    customer: {
-                      from: premium.minAge,
-                      to: premium.maxAge,
-                    },
-                    price: {
-                      currency: `-Enum.currency.${multiCurrency ? premium.currency : InsurerInfo.currency}-`,
-                      price:
-                        (Number(premium.value) / InsurerInfo.conversion) *
-                        multiplier,
-                    },
-                  };
-                  if (premium.gender) value.customer.gender = premium.gender;
-                  if (premium.residency)
-                    value.customer.residency =
-                      premium.residency.length > 2
-                        ? customResidencies[premium.residency]
-                        : [premium.residency];
-                  return value;
-                }),
-              });
+                    : filteredRates[0].plan
+                      ? [
+                          `-${Utils.remove(InsurerInfo.provider)}.plans${index}.${Utils.remove(filteredRates[0].plan)}-`,
+                        ]
+                      : mod.plans,
+                  type: ModifiersType.BENEFIT,
+                  modType: addon.type,
+                  value: mod._id,
+                  values: [opt.id],
+                  rates: filteredRates.map(
+                    (premium): RateTableCustomerPrice => {
+                      // if (!premium.frequency) throw `frequency not found`;
+                      let frequency = premium.frequency || addon.frequency;
+                      let multiplier =
+                        frequency == "semiAnnual"
+                          ? 2
+                          : frequency == "quarter"
+                            ? 4
+                            : frequency == "month"
+                              ? 12
+                              : 1;
+                      let value: RateTableCustomerPrice = {
+                        type: addon.type || PremiumModType.ConditionalOverride,
+                        customer: {
+                          from: premium.minAge,
+                          to: premium.maxAge,
+                        },
+                        price: {
+                          currency: `-Enum.currency.${multiCurrency ? premium.currency : InsurerInfo.currency}-`,
+                          price:
+                            (Number(premium.value) / InsurerInfo.conversion) *
+                            multiplier,
+                        },
+                      };
+                      if (premium.gender)
+                        value.customer.gender = premium.gender;
+                      if (premium.residency)
+                        value.customer.residency =
+                          Helpers.getPremiumResidencyArr(premium.residency);
+                      if (premium.nationality)
+                        value.customer.nationality =
+                          premium.nationality.length > 2
+                            ? customNationalities[premium.nationality]
+                            : [premium.nationality];
+                      return value;
+                    }
+                  ),
+                });
             }
           }
 
@@ -301,6 +310,11 @@ export const createAddons = (
       mod.hasOptions = true;
       mod.assignmentType = "PER_CUSTOMER";
     }
+    console.log(
+      "rateTableStatus >>",
+      mod.title,
+      rateTableStatus,
+      rateTableData.length);
     if (rateTableStatus && rateTableData.length > 0) {
       mod.hasRateTable = true;
       mod.assignmentType = "PER_CUSTOMER";
@@ -413,6 +427,7 @@ const getConditionValue = (
     deductible: "deductible",
     frequency: "frequency",
     residency: "residency",
+    nationality: "nationality",
   };
 
   switch (type) {
@@ -442,8 +457,10 @@ const getConditionValue = (
     case checks.deductible:
       return [data[type]];
     case checks.residency:
+      return Helpers.getPremiumResidencyArr(data[type]);
+    case checks.nationality:
       return data[type].length > 2
-        ? customResidencies[data[type]]
+        ? customNationalities[data[type]]
         : [data[type]];
     case checks.frequency:
       return [

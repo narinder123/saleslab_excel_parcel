@@ -1,5 +1,6 @@
 import {
   customConditions,
+  customNationalities,
   customResidencies,
   EnumConditions,
   paymentFrequencies,
@@ -140,7 +141,11 @@ export const createPaymentFrequencyModifier = (
                     (!premium.residency ||
                       (premium.residency &&
                         (premium.residency.length == 2 ||
-                          customResidencies[premium.residency])))
+                          customResidencies[premium.residency]))) &&
+                    (!premium.nationality ||
+                      (premium.nationality &&
+                        (premium.nationality.length == 2 ||
+                          customNationalities[premium.nationality])))
                 );
                 if (filteredPremiums.length == 0)
                   throw `no record found for - {planName: "${info.plan}", network: "${network}" , coverage: "${coverage}" , copay: "${copay}", frequency: "${frequency}"}`;
@@ -222,6 +227,14 @@ export const createPaymentFrequencyModifier = (
                               ? customResidencies[premium.residency]
                               : [premium.residency],
                         });
+                      if (premium.nationality)
+                        rate.conditions.push({
+                          type: EnumConditions.nationality,
+                          value:
+                            premium.nationality.length > 2
+                              ? customNationalities[premium.nationality]
+                              : [premium.residency],
+                        });
                       if (premium.custom) {
                         if (!customConditions[premium.custom])
                           throw new Error(
@@ -268,6 +281,11 @@ export const createPaymentFrequencyModifier = (
                               premium.residency.length > 2
                                 ? customResidencies[premium.residency]
                                 : [premium.residency];
+                          if (premium.nationality)
+                            value.customer.nationality =
+                              premium.nationality.length > 2
+                                ? customNationalities[premium.nationality]
+                                : [premium.nationality];
                           return value;
                         }
                       ),

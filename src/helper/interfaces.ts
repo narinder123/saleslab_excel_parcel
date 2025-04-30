@@ -51,6 +51,7 @@ export interface RawRates {
   custom?: string;
   copayType?: string;
   residency: string;
+  nationality: string;
   [key: string]: any;
 }
 
@@ -280,6 +281,8 @@ export interface EnumConditionsTypes {
   frequency: string;
   currency: string;
   residency: string;
+  nationality: string;
+  custom: string;
   [key: string]: string;
 }
 
@@ -292,6 +295,7 @@ export interface RateTableCustomerPrice {
     category?: CustomerCategory;
     maritalStatus?: CustomerMaritalStatus;
     residency?: string[];
+    nationality?: string[];
   };
   price: {
     currency: string;
