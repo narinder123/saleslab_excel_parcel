@@ -146,9 +146,10 @@ export const createAddons = (
             conditions: [],
           };
           if (addonInfo[0].sheetName && addon.flag !== variable.none) {
-            console.log("addonRates ", addonRates.find((v) => v.flag == addon.flag))
-            console.log("addon.flag ", typeof addon.flag)
+            // console.log("addonRates ", addonRates.find((v) => v.flag == addon.flag))
             let filteredRates = addonRates.filter((v) => v.flag == addon.flag);
+            // console.log("filteredRates ", filteredRates);
+            
             if (filteredRates.length == 0)
               throw `No record found for ${mod.label} index:${index} flag:${addon.flag}`;
             if (!rateTableStatus) {
@@ -180,12 +181,12 @@ export const createAddons = (
                       },
                     ],
                   };
-
-                  Object.keys(EnumConditions).forEach((condition) => {
+                  
+                  Object.keys(EnumConditions).forEach((condition) => {                   
                     if (!rate[condition]) return;
                     const conditions =
                       condition == "custom"
-                        ? customConditions[condition]
+                        ? customConditions[rate.custom]
                         : [
                             {
                               type: EnumConditions[condition],
@@ -251,10 +252,26 @@ export const createAddons = (
           Object.keys(EnumConditions).forEach((condition) => {
             if (!addon[condition]) return;
 
-            opt.conditions?.push({
-              type: EnumConditions[condition],
-              value: getConditionValue(condition, addon, InsurerInfo, index),
-            });
+            let conditions =
+              condition == "custom"
+                ? customConditions[condition]
+                : [
+                    {
+                      type: EnumConditions[condition],
+                      value: getConditionValue(
+                        condition,
+                        addon,
+                        InsurerInfo,
+                        index
+                      ),
+                    },
+                  ];
+            opt.conditions?.push(...conditions);
+
+            // opt.conditions?.push({
+            //   type: EnumConditions[condition],
+            //   value: getConditionValue(condition, addon, InsurerInfo, index),
+            // });
           });
 
           if (addon.custom) {

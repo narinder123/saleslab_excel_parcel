@@ -139,7 +139,7 @@ if (InputArguments.import && !InputArguments.V1) {
       plans: { data: plans, Enum: true, core: true },
       PricingTable: { data: pricingTables, Enum: true, core: true },
       modifiers: { data: modifiers, Enum: true, core: true, addUp: splitFilePath },
-    };
+    };    
 
     if (rateTableData.length > 0) {
       let tempData = createRateTableData(rateTableData, InfoData);

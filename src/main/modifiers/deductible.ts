@@ -18,7 +18,12 @@ export const createDeductibleModifiers = (
   premiums: RawRates[],
   InsurerInfo: InsurerInfo,
   index: number | string
-): { data: Modifiers[]; splitFile: string[]; rateTableData: any[], splitFilePremiums: any } => {
+): {
+  data: Modifiers[];
+  splitFile: string[];
+  rateTableData: any[];
+  splitFilePremiums: any;
+} => {
   let deductibleArr: Modifiers[] = [];
   let splitArr: string[] = [];
   const rateTableData: any[] = [];
@@ -28,6 +33,8 @@ export const createDeductibleModifiers = (
     InsurerInfo.rateTable &&
     InsurerInfo.rateTable?.length > 0 &&
     InsurerInfo.rateTable.includes("deductible");
+  console.log("rateTableStatus ", rateTableStatus);
+
   const multiCurrency = InsurerInfo.multiCurrency?.includes("rates");
   InsurerInfo?.copayTypes?.map((type) => {
     let count = 1;
@@ -52,17 +59,15 @@ export const createDeductibleModifiers = (
       options: [],
     };
 
-
     if (!typeNone) deductible.inputLabel = `${type} Co/Pay`;
     data.distinctInfo.map((info) => {
-
       let splitPlanData: any = {
         planName: info.plan,
         rates: {
           key: "",
-          data: []
-        }
-      }
+          data: [],
+        },
+      };
 
       info.network.map((network) => {
         info.coverage.map((coverage) => {
@@ -71,7 +76,7 @@ export const createDeductibleModifiers = (
           if (!typeNone)
             copayList = copayList.filter((copay) => copay.includes(`${type}-`));
 
-          copayList.map((copay) => {            
+          copayList.map((copay) => {
             if (!typeNone) copay = copay.replace(`${type}-`, "");
             let option: Option = {
               id: `${!typeNone ? `${type.toLowerCase()}-` : ""}option${rateTableStatus && index ? `-${index}` : ""}-${count}`,
@@ -137,10 +142,9 @@ export const createDeductibleModifiers = (
                   );
                 }
                 if (!rateTableStatus) {
-
                   splitPlanData.rates.key = Utils.remove(
-                      `${info.plan}_${coverage}_${network}_${copay}`
-                    )
+                    `${info.plan}_${coverage}_${network}_${copay}`
+                  );
 
                   let rateBase = filteredRates.map((premium) => {
                     let rate: {
@@ -205,7 +209,6 @@ export const createDeductibleModifiers = (
                     return rate;
                   });
 
-
                   // let baseAnnualPremium =
                   //   InsurerInfo.splitFile == "true"
                   //     ? SplitFile(
@@ -217,16 +220,14 @@ export const createDeductibleModifiers = (
                   //       )
                   //     : rateBase;
 
-
                   let baseAnnualPremium =
                     InsurerInfo.splitFile == "true"
                       ? `-[...${Utils.remove(
-                        `${info.plan}_${coverage}_${network}_${copay}`
-                      )}]-`
+                          `${info.plan}_${coverage}_${network}_${copay}`
+                        )}]-`
                       : rateBase;
 
                   if (InsurerInfo.splitFile == "true") {
-
                     splitArr.push(
                       Utils.remove(
                         `${info.plan}_${coverage}_${network}_${copay}`
@@ -234,7 +235,6 @@ export const createDeductibleModifiers = (
                     );
 
                     splitPlanData.rates.data.push(rateBase);
-
                   }
 
                   option.premiumMod.conditionalPrices = baseAnnualPremium;
@@ -451,12 +451,16 @@ export const createDeductibleModifiers = (
         });
       });
 
-      splitFilePremiums.push(splitPlanData)
-
+      splitFilePremiums.push(splitPlanData);
     });
-    
+
     deductibleArr.push({ ...deductible });
   });
 
-  return { data: deductibleArr, splitFile: splitArr, rateTableData, splitFilePremiums: splitFilePremiums };
+  return {
+    data: deductibleArr,
+    splitFile: splitArr,
+    rateTableData,
+    splitFilePremiums: splitFilePremiums,
+  };
 };

@@ -250,6 +250,7 @@ export interface Addons {
   value?: string | number;
   currency?: string;
   [key: string]: any;
+  custom?: string;
 }
 
 export interface EnumConditionsTypes {
