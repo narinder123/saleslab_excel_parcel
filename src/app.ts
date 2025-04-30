@@ -187,7 +187,9 @@ if (InputArguments.import && !InputArguments.V1) {
       };
     }
 
-    if (InfoData.multiCurrency && InfoData.multiCurrency?.length > 1) {
+    
+
+    if (InfoData.multiCurrency && InfoData.multiCurrency?.length) {
 
       console.log('Found coversion sheet, implying multicurrency');      
       modifiers=DataConverters.multiCurrencyConverter({
