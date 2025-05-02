@@ -1,0 +1,43 @@
+planName,network,copay,ageStart,ageEnd,rates,frequency,platform,currency,coverage
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,0,17,"1,636.60",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,18,25,"1,900.26",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,26,30,"2,299.92",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,31,35,"2,529.04",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,36,40,"2,754.40",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,41,45,"3,235.40",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,46,50,"3,786.93",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,51,55,"5,075.26",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,56,60,"5,861.98",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,61,65,"7,978.10",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,66,70,"11,020.21",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,71,75,"14,337.92",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,76,79,"17,714.72",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare Core,Simple Care Comprehensive and Simple Care UAE Network,NIL deductible,80,99,"19,511.54",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",0,17,"3,073.29",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",18,25,"3,568.39",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",26,30,"4,318.89",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",31,35,"4,749.15",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",36,40,"5,172.34",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",41,45,"6,075.58",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",46,50,"7,111.27",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",51,55,"9,530.56",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",56,60,"11,007.89",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",61,65,"14,981.64",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",66,70,"20,694.26",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",71,75,"26,924.42",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",76,79,"33,265.52",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Default: Tier 1 20% co-pay, Tier 2 15% co-pay & Tier 3 NIL co-pay",80,99,"36,639.68",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",0,17,"3,073.29",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",18,25,"3,568.39",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",26,30,"4,318.89",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",31,35,"4,749.15",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",36,40,"5,172.34",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",41,45,"6,075.58",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",46,50,"7,111.27",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",51,55,"9,530.56",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",56,60,"11,007.89",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",61,65,"14,981.64",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",66,70,"20,694.26",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",71,75,"26,924.42",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",76,79,"33,265.52",Annually,V2,USD,Worldwide Excluding USA
+SimpleCare 100,Simple Care Comprehensive and Simple Care UAE Network,"Out-Patient Treatment - Option 1: Tier 1 10% co-pay, Tier 2 10% co-pay & Tier 3 NIL co-pay",80,99,"36,639.68",Annually,V2,USD,Worldwide Excluding USA
