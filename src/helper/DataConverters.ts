@@ -311,7 +311,7 @@ export const DataConverters = new (class {
                 },
               ],
             };
-            newOpt.altCurrencyOptions = Object.keys(conversionData[0]).map(
+            temp.altCurrencyOptions = Object.keys(conversionData[0]).map(
               (currency) => ({ id: `option-${j + 1}`, currency })
             );
             options.push(temp);
