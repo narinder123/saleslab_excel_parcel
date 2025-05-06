@@ -64,7 +64,7 @@ export const createDeductibleModifiers = (
       options: [],
     };
 
-    if (!typeNone) deductible.inputLabel = `${type} Co/Pay`;
+    if (!typeNone) deductible.inputLabel = `${type} Co/pay`;
     data.distinctInfo.map((info) => {
       let splitPlanData: any = {
         planName: info.plan,
