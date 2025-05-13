@@ -1,0 +1,92 @@
+const area16 = [
+  "ZM", // Zambia
+  "ZW", // Zimbabwe
+  "SC", // Seychelles
+  "SL", // Sierra Leone
+  "ZA", // South Africa
+  "MW", // Malawi
+  "FJ", // Fiji
+  "KE", // Kenya
+  "JO", // Jordan
+  "LB", // Lebanon
+  "LR", // Liberia
+  "KM", // Comoros
+  "CI", // Côte d'Ivoire
+  "GH", // Ghana
+  "EG", // Egypt
+  "TZ", // Tanzania
+  "TN"  // Tunisia
+];
+
+const area15 = [
+  "PH", // Philippines
+  "ET", // Ethiopia
+  "AO"  // Angola
+];
+
+const area14 = [
+  "TW" // Taiwan
+];
+
+const area12 = [
+  "OM", // Oman
+  "QA"  // Qatar
+];
+
+const area11 = [
+  "SK", // Slovakia
+  "SI", // Slovenia
+  "GM", // Gambia
+  "IS", // Iceland
+  "IN", // India
+  "LU", // Luxembourg
+  "UZ", // Uzbekistan
+  "BR", // Brazil
+  "GE", // Georgia
+  "MR"  // Mauritania
+];
+
+const area10 = [
+  "TH", // Thailand
+  "KH", // Cambodia
+  "JP", // Japan
+  "MY"  // Malaysia
+];
+
+const area9 = [
+  "UZ", // Uzbekistan
+  "VU", // Vanuatu
+  "VN", // Vietnam
+  "YE", // Yemen
+  "WS", // Samoa
+  "SN", // Senegal
+  "LR", // Liberia
+  "IT"  // Italy
+  // and many more...
+];
+
+const area8 = [
+  "VN", // Vietnam
+  "MO", // Macau SAR
+  "NO", // Norway
+  "KR"  // South Korea
+];
+
+const area7 = [
+  "VE", // Venezuela
+  "YE", // Yemen
+  "PA", // Panama
+  "DO"  // Dominican Republic
+  // and many others...
+];
+
+const area5 = [
+  "GB", // United Kingdom
+  "BR"  // Brazil
+];
+
+const area3 = [
+  "MX", // Mexico
+  "GT"  // Guatemala
+];
+
