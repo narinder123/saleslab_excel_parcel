@@ -18,3 +18,6 @@ Impotant Note - you can't run import and V1 command at the same time, these comm
 Split File:
 For split file add splitFile:true in info.js File
 # ==============
+
+# ========= for extracting the conversion from benefits ===========
+npm start name:BUPA_Bins_Africa create:conversion
