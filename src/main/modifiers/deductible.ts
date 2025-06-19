@@ -449,7 +449,7 @@ export const createDeductibleModifiers = (
             }
           });
         });
-      });
+        });
 
       splitFilePremiums.push(splitPlanData);
     });

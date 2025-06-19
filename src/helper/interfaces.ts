@@ -265,7 +265,6 @@ export interface EnumConditionsTypes {
   maritalStatus: string;
   deductible: string;
   frequency: string;
-  residency: string;
   [key: string]: string;
 }
 
