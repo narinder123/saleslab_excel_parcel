@@ -17,7 +17,6 @@ import {
   RateTableCustomerPrice,
   RawRates,
 } from "../../helper/interfaces";
-import { SplitFile } from "../../helper/splitFile";
 
 export const createDeductibleModifiers = (
   data: PlansInfo,
@@ -26,15 +25,11 @@ export const createDeductibleModifiers = (
   index: number | string
 ): {
   data: Modifiers[];
-  splitFile: string[];
   rateTableData: any[];
-  splitFilePremiums: any;
 } => {
   let deductibleArr: Modifiers[] = [];
   let splitArr: string[] = [];
   const rateTableData: any[] = [];
-  let splitFilePremiums: any = [];
-
   const rateTableStatus =
     InsurerInfo.rateTable &&
     InsurerInfo.rateTable?.length > 0 &&
@@ -675,34 +670,7 @@ export const createDeductibleModifiers = (
                     return rate;
                   });
 
-                  // let baseAnnualPremium =
-                  //   InsurerInfo.splitFile == "true"
-                  //     ? SplitFile(
-                  //         rateBase,
-                  //         `Outputs/${Utils.remove(InsurerInfo.provider)}/PricingTable`,
-                  //         Utils.remove(
-                  //           `${info.plan}_${coverage}_${network}_${copay}`
-                  //         )
-                  //       )
-                  //     : rateBase;
-
-                  let baseAnnualPremium =
-                    InsurerInfo.splitFile == "true"
-                      ? `-[...${Utils.remove(
-                          `${info.plan}_${coverage}_${network}_${copay}`
-                        )}]-`
-                      : rateBase;
-
-                  if (InsurerInfo.splitFile == "true") {
-                    splitArr.push(
-                      Utils.remove(
-                        `${info.plan}_${coverage}_${network}_${copay}`
-                      )
-                    );
-
-                    splitPlanData.rates.data.push(rateBase);
-                  }
-
+                  let baseAnnualPremium = rateBase;
                   option.premiumMod.conditionalPrices = baseAnnualPremium;
                 } else {
                   delete option.premiumMod;
@@ -856,22 +824,7 @@ export const createDeductibleModifiers = (
                         return rate;
                       });
 
-                      let baseAnnualPremium =
-                        InsurerInfo.splitFile == "true"
-                          ? SplitFile(
-                              rateBase,
-                              `Outputs/${Utils.remove(InsurerInfo.provider)}/PricingTable`,
-                              Utils.remove(
-                                `${info.plan}_${coverage}_${network}_${copay}`
-                              )
-                            )
-                          : rateBase;
-                      if (InsurerInfo.splitFile == "true")
-                        splitArr.push(
-                          Utils.remove(
-                            `${info.plan}_${coverage}_${network}_${copay}`
-                          )
-                        );
+                      let baseAnnualPremium = rateBase;
                       tempOption.premiumMod.conditionalPrices =
                         baseAnnualPremium;
                     } else {
@@ -916,8 +869,6 @@ export const createDeductibleModifiers = (
           }
         }
       }
-
-      splitFilePremiums.push(splitPlanData);
     }
 
     deductibleArr.push({ ...deductible });
@@ -925,8 +876,6 @@ export const createDeductibleModifiers = (
 
   return {
     data: deductibleArr,
-    splitFile: splitArr,
     rateTableData,
-    splitFilePremiums: splitFilePremiums,
   };
 };

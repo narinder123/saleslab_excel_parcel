@@ -19,7 +19,7 @@ export const createModifiersData = (
   Benefits: RawBenefits[],
   Info: InsurerInfo,
   index: number | string
-): { data: Modifiers[]; splitFile: string[]; rateTableData: rateTable[], splitFilePremiums: any } => {
+): { data: Modifiers[]; rateTableData: rateTable[] } => {
   const rateTableData: rateTable[] = [];
   const deductibles = createDeductibleModifiers(
     PlanData,
@@ -56,8 +56,6 @@ export const createModifiersData = (
       ...deductibles.data,
       paymentFrequency.modifier,
     ],
-    splitFile: deductibles.splitFile,
     rateTableData,
-    splitFilePremiums: deductibles.splitFilePremiums
   };
 };

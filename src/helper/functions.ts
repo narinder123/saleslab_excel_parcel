@@ -85,28 +85,40 @@ export const Helpers = new (class helperFunction {
     Enum,
     comment,
     addUp,
+    subFolder,
   }: OutputSheetFnArguments) {
     data = data.replace(/"-/g, "");
     data = data.replace(/-"/g, "");
     data = data.replace(/\n/g, "");
 
     let str = `${addUp ? addUp : ""}
-      const ${provider} = require("../core-index.js")
-      ${Enum ? "const Enum = require('../../enum.js')" : ""}
-    ${core ? 'const core = require("../../core");' : ""}
+      const ${provider} = require("${subFolder ? "../" : ""}../core-index.js")
+      ${Enum ? `const Enum = require('${subFolder ? "../" : ""}../../enum.js')` : ""}
+    ${core ? `const core = require("${subFolder ? "../" : ""}../../core");` : ""}
     ${comment ? `// ${comment}` : ""}
-    let ${folder} = ${data} ;
-    module.exports = ${folder} ;`;
+    let ${subFolder ? subFolder : folder} = ${data} ;
+    module.exports = ${subFolder ? subFolder : folder} ;`;
+
     if (!fs.existsSync(`Outputs/${provider}`))
       fs.mkdirSync(`Outputs/${provider}`);
+
     if (!fs.existsSync(`Outputs/${provider}/V2`))
       fs.mkdirSync(`Outputs/${provider}/V2`);
 
     if (!fs.existsSync(`Outputs/${provider}/V2/${folder}`))
       fs.mkdirSync(`Outputs/${provider}/V2/${folder}`);
 
-    fs.appendFileSync(`Outputs/${provider}/V2/${folder}/${fileName}.js`, str);
-    console.log(`|- ${provider}/${folder}/${fileName} Created!`);
+    if (!fs.existsSync(`Outputs/${provider}/V2/${folder}/${subFolder}`))
+      fs.mkdirSync(`Outputs/${provider}/V2/${folder}/${subFolder}`);
+
+    fs.appendFileSync(
+      `Outputs/${provider}/V2/${folder}${subFolder ? `/${subFolder}` : ""}/${fileName}.js`,
+      str
+    );
+
+    console.log(
+      `|- ${provider}/${folder}${subFolder ? `/${subFolder}` : ""}/${fileName} Created!`
+    );
   }
 
   getSheetNames(filename: string): string[] {
@@ -151,7 +163,10 @@ export const Helpers = new (class helperFunction {
     if (fs.existsSync(`Outputs/${provider}/V2`) && inputArgv.V2)
       fs.rmSync(`./Outputs/${provider}/V2`, { recursive: true, force: true });
 
-    if (fs.existsSync(`Outputs/${provider}/log`) && (inputArgv.log || inputArgv.create))
+    if (
+      fs.existsSync(`Outputs/${provider}/log`) &&
+      (inputArgv.log || inputArgv.create)
+    )
       fs.rmSync(`./Outputs/${provider}/log`, { recursive: true, force: true });
   }
 
@@ -248,10 +263,10 @@ export const Helpers = new (class helperFunction {
     module.exports = ${data};`;
     fs.appendFileSync(`Outputs/${provider}/V2/core-index.js`, str);
   }
-  createXlsx(data:any[],path:string){
+  createXlsx(data: any[], path: string) {
     const workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.json_to_sheet(data);
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     xlsx.writeFile(workbook, path);
   }
 })();
