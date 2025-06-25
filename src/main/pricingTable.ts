@@ -97,7 +97,7 @@ const buildBasePremium = (
     return (
       rate.planName == plan &&
       rate.copay == copay &&
-      rate.coverage == coverage &&
+      // rate.coverage == coverage &&
       rate.frequency == "Annually"
     );
   });
