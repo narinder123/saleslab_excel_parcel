@@ -95,6 +95,9 @@ export const createDeductibleModifiers = (
     };
 
     if (!typeNone) deductible.inputLabel = `${type} Co/pay`;
+
+    console.log("rateTableStatus ", rateTableStatus);
+    
     data.distinctInfo.map((info) => {
       let splitPlanData: any = {
         planName: info.plan,
@@ -105,7 +108,7 @@ export const createDeductibleModifiers = (
       };
 
       info.network.map((network) => {
-        info.coverage.map((coverage) => {
+        // info.coverage.map((coverage) => {
           let copayList = info.copay;
           // console.log("info ", info)
           if (!typeNone)
@@ -132,12 +135,12 @@ export const createDeductibleModifiers = (
                     type: EnumConditions.network,
                     value: [network],
                   },
-                  {
-                    type: EnumConditions.coverage,
-                    value: [
-                      `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
-                    ],
-                  },
+                  // {
+                  //   type: EnumConditions.coverage,
+                  //   value: [
+                  //     `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
+                  //   ],
+                  // },
                   {
                     type: "RESIDENCY_EQUALS_TO",
                     value: [...country[1]],
@@ -164,7 +167,7 @@ export const createDeductibleModifiers = (
                     premium.copay == copay &&
                     premium.frequency == variable.Annually &&
                     (typeNone || premium.copayType == type) &&
-                    (premium.type == "OP" ? true : premium.area == country[0]) &&
+                    // (premium.type == "OP" ? true : premium.area == country[0]) &&
                     (!customCheck ||
                       premium.custom == customConditionsArr[0]) &&
                     (!premium.residency ||
@@ -176,9 +179,12 @@ export const createDeductibleModifiers = (
                         (premium.nationality.length == 2 ||
                           customNationalities[premium.nationality])))
                 );
+
+                filteredRates.length == 0 && console.log("filteredRates.length ", info.plan, network, copay, variable.Annually);
+                
                 if (filteredRates.length == 0 && !customCheck)
                   throw new Error(
-                    `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${coverage}" | "${copay}" |`
+                    `No deductible rates found for index:${index} "${info.plan}" | "${network}" | "${copay}" |`
                   );
 
                 if (filteredRates.length !== 0) {
@@ -193,7 +199,7 @@ export const createDeductibleModifiers = (
                   }
                   if (!rateTableStatus) {
                     splitPlanData.rates.key = Utils.remove(
-                      `${info.plan}_${coverage}_${network}_${copay}`
+                      `${info.plan}_${network}_${copay}`
                     );
 
                     let rateBase = filteredRates.map((premium) => {
@@ -294,14 +300,14 @@ export const createDeductibleModifiers = (
                     let baseAnnualPremium =
                       InsurerInfo.splitFile == "true"
                         ? `-[...${Utils.remove(
-                            `${info.plan}_${coverage}_${network}_${copay}`
+                            `${info.plan}_${network}_${copay}`
                           )}]-`
                         : rateBase;
 
                     if (InsurerInfo.splitFile == "true") {
                       splitArr.push(
                         Utils.remove(
-                          `${info.plan}_${coverage}_${network}_${copay}`
+                          `${info.plan}_${network}_${copay}`
                         )
                       );
 
@@ -353,6 +359,9 @@ export const createDeductibleModifiers = (
                   count++;
                 }
 
+                console.log("customConditionsArr.length ",customConditionsArr.length);
+                
+
                 if (customConditionsArr.length > 1) {
                   customConditionsArr.map((condition: string, i: number) => {
                     if (i == 0) return;
@@ -374,12 +383,12 @@ export const createDeductibleModifiers = (
                           type: EnumConditions.network,
                           value: [network],
                         },
-                        {
-                          type: EnumConditions.coverage,
-                          value: [
-                            `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
-                          ],
-                        },
+                        // {
+                        //   type: EnumConditions.coverage,
+                        //   value: [
+                        //     `-${Utils.remove(data.provider)}.coverages${index}.${Utils.remove(coverage)}-`,
+                        //   ],
+                        // },
                       ],
                     };
                     let filteredRates = premiums.filter(
@@ -479,14 +488,14 @@ export const createDeductibleModifiers = (
                                 rateBase,
                                 `Outputs/${Utils.remove(InsurerInfo.provider)}/PricingTable`,
                                 Utils.remove(
-                                  `${info.plan}_${coverage}_${network}_${copay}`
+                                  `${info.plan}_${network}_${copay}`
                                 )
                               )
                             : rateBase;
                         if (InsurerInfo.splitFile == "true")
                           splitArr.push(
                             Utils.remove(
-                              `${info.plan}_${coverage}_${network}_${copay}`
+                              `${info.plan}_${network}_${copay}`
                             )
                           );
                         tempOption.premiumMod.conditionalPrices =
@@ -532,7 +541,7 @@ export const createDeductibleModifiers = (
               }
             });
           });
-        });
+        // });
       });
 
       splitFilePremiums.push(splitPlanData);

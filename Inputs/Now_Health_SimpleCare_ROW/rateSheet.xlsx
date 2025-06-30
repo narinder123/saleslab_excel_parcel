@@ -1,4 +1,4 @@
-planName,network,ageStart,ageEnd,rates,copay,frequency,currency,area,platform,type
+planName,network,ageStart,ageEnd,rates,copay,frequency,currency,area,platform,copayType
 SimpleCare Core,Applicable based on Area of Cover,0,17,868.351,NIL per year deductible,Annually,USD,9-A,V2,IP
 SimpleCare Core,Applicable based on Area of Cover,18,25,1008.238,NIL per year deductible,Annually,USD,9-A,V2,IP
 SimpleCare Core,Applicable based on Area of Cover,26,30,1220.285,NIL per year deductible,Annually,USD,9-A,V2,IP
@@ -10205,3 +10205,9 @@ SimpleCare 250,Applicable based on Area of Cover,66,70,4747.17911,"USD 15,000 pe
 SimpleCare 250,Applicable based on Area of Cover,71,75,6176.35568,"USD 15,000 per year deductible",Annually,USD,16-B,V2,IP
 SimpleCare 250,Applicable based on Area of Cover,76,79,7630.97581,"USD 15,000 per year deductible",Annually,USD,16-B,V2,IP
 SimpleCare 250,Applicable based on Area of Cover,80,99,8404.99652,"USD 15,000 per year deductible",Annually,USD,16-B,V2,IP
+SimpleCare 100,Applicable based on Area of Cover,0,99,0,USD 500 per visit excess (default),Annually,USD,,V2,OP
+SimpleCare 250,Applicable based on Area of Cover,0,99,0,USD 500 per visit excess (default),Annually,USD,,V2,OP
+SimpleCare 100,Applicable based on Area of Cover,0,99,0,20% per visit co-pay,Annually,USD,,V2,OP
+SimpleCare 250,Applicable based on Area of Cover,0,99,0,20% per visit co-pay,Annually,USD,,V2,OP
+SimpleCare 100,Applicable based on Area of Cover,0,99,0,USD 25 per visit excess,Annually,USD,,V2,OP
+SimpleCare 250,Applicable based on Area of Cover,0,99,0,USD 25 per visit excess,Annually,USD,,V2,OP
